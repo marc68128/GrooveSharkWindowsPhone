@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
+using GrooveSharkWindowsPhone.Helpers;
 
 namespace GrooveSharkWindowsPhone
 {
@@ -47,6 +48,8 @@ namespace GrooveSharkWindowsPhone
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            var client = new GrooveSharkClient.GrooveSharkClient();
+            AppSettings.SessionIdObs = client.CreateSession();
 
             Frame rootFrame = Window.Current.Content as Frame;
 
