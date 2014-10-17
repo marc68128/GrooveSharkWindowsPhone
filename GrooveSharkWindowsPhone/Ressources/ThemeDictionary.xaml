@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Red"></SolidColorBrush>
+            <SolidColorBrush x:Key="TargetBackground" Color="Red"/>
+            <SolidColorBrush x:Key="TargetBorderBrush" Color="Black"/>
+            <SolidColorBrush x:Key="Circle4Fill" Color="Blue"/>
+            <SolidColorBrush x:Key="Circle3Fill" Color="Green"/>
+            <SolidColorBrush x:Key="Circle2Fill" Color="Yellow"/>
+            <SolidColorBrush x:Key="Circle1Fill" Color="White"/>
+            <SolidColorBrush x:Key="CircleStroke" Color="Black"/>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+</ResourceDictionary>

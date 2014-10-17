@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
 
 namespace GrooveSharkClient.Models
 {
@@ -23,6 +24,9 @@ namespace GrooveSharkClient.Models
             IsAnywhere = r.Result.IsAnywhere;
             IsPremium = r.Result.IsPremium;
         }
+
+        public static User CurrentUser;
+
 
         public int UserID { get; set; }
         public string Email { get; set; }
