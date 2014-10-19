@@ -9,6 +9,7 @@ using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Helpers;
 using GrooveSharkClient.Models;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ using ReactiveUI;
 
 namespace GrooveSharkClient
 {
-    public class GrooveSharkClient
+    public class GrooveSharkClient : IGrooveSharkClient
     {
         private const string ServerURI = "https://api.grooveshark.com/ws3.php?sig={0}";
         private const string ServerKey = "winphone_marc2";
@@ -56,7 +57,7 @@ namespace GrooveSharkClient
             Debug.WriteLine(content);
 
             HttpContent httpContent = new StringContent(content);
-            httpContent.Headers.ContentType.MediaType = "application/json"; 
+            httpContent.Headers.ContentType.MediaType = "application/json";
 
             return await _networkClient.PostAsync(uri, httpContent, default(CancellationToken));
         }
@@ -73,8 +74,8 @@ namespace GrooveSharkClient
                     if (sessionResult.Result.Success)
                     {
                         Debug.WriteLine("Session ID : " + sessionResult.Result.SessionID);
-                        return sessionResult.Result.SessionID; 
-                    }              
+                        return sessionResult.Result.SessionID;
+                    }
                 }
                 return null;
             };
@@ -89,9 +90,7 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object>();
-                param.Add("login", userName);
-                param.Add("password", md5Password);
+                var param = new Dictionary<string, object> { { "login", userName }, { "password", md5Password } };
 
                 var response = SendHttpRequest("authenticate", param, session).Result;
                 if (response.IsSuccessStatusCode)
@@ -102,7 +101,36 @@ namespace GrooveSharkClient
                 }
                 return null;
             });
-          
+        }
+
+        public IObservable<User> GetUserInfo(string session)
+        {
+            return Observable.Start(() =>
+            {
+                var response = SendHttpRequest("getUserInfo", null, session).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    return new User(sessionResult);
+                }
+                return null;
+            });
+        }
+
+        public IObservable<Song[]> GetPopularSongToday(string session)
+        {
+            return Observable.Start(() =>
+            {
+                var response = SendHttpRequest("getPopularSongsToday", sessionId: session).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    return sessionResult.Result.Songs;
+                }
+                return null;
+            });
         }
 
     }

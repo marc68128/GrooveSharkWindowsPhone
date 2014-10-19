@@ -15,10 +15,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-
-// The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
+using GrooveSharkClient.Contracts;
+using GrooveSharkClient.Services;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
+using Microsoft.Practices.Unity;
+using ReactiveUI;
+
 
 namespace GrooveSharkWindowsPhone
 {
@@ -33,6 +36,7 @@ namespace GrooveSharkWindowsPhone
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            this.Resuming += this.OnResuming;
         }
 
         /// <summary>
@@ -49,8 +53,8 @@ namespace GrooveSharkWindowsPhone
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            var client = new GrooveSharkClient.GrooveSharkClient();
-            AppSettings.SessionIdObs = client.CreateSession();
+            DI.Setup();
+
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -91,7 +95,7 @@ namespace GrooveSharkWindowsPhone
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(LoginView), e.Arguments))
+                if (!rootFrame.Navigate(typeof(HomePage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -126,6 +130,11 @@ namespace GrooveSharkWindowsPhone
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private void OnResuming(object sender, object e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

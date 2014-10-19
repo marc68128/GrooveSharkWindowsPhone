@@ -4,14 +4,11 @@
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
-            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="Red"></SolidColorBrush>
-            <SolidColorBrush x:Key="TargetBackground" Color="Red"/>
-            <SolidColorBrush x:Key="TargetBorderBrush" Color="Black"/>
-            <SolidColorBrush x:Key="Circle4Fill" Color="Blue"/>
-            <SolidColorBrush x:Key="Circle3Fill" Color="Green"/>
-            <SolidColorBrush x:Key="Circle2Fill" Color="Yellow"/>
-            <SolidColorBrush x:Key="Circle1Fill" Color="White"/>
-            <SolidColorBrush x:Key="CircleStroke" Color="Black"/>
+            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#ffffff"></SolidColorBrush>
+            <SolidColorBrush x:Key="GrooveSharkOrangeBrush" Color="#f86f05"></SolidColorBrush>
+            <SolidColorBrush x:Key="PhoneForegroundBrush" Color="Black"></SolidColorBrush>
+            <SolidColorBrush x:Key="PhoneForegroundLightBrush" Color="White"></SolidColorBrush>
+            <SolidColorBrush x:Key="ButtonForegroundThemeBrush" Color="White"></SolidColorBrush>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

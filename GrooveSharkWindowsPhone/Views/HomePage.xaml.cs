@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,22 +18,49 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
-using GrooveSharkClient.Contracts;
 using GrooveSharkWindowsPhone.ViewModels;
-using Microsoft.Practices.Unity;
+using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginView : Page
+    public sealed partial class HomePage : Page
     {
-
-        public LoginView()
+        public HomePage()
         {
             this.InitializeComponent();
-          
+            
+            DataContext = new HomeViewModel();
+
+            var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+            statusBar.BackgroundColor = Windows.UI.Color.FromArgb(255, 27,27,27);
+            statusBar.BackgroundOpacity = 0.5;
+            statusBar.ProgressIndicator.ShowAsync();
+
+            ViewModel.WhenAnyValue(vm => vm.Status).Where(s => s != null).Subscribe(s =>
+            {
+                statusBar.ProgressIndicator.Text = s;
+            });
+            ViewModel.WhenAnyValue(vm => vm.IsLoading).Subscribe(x =>
+            {
+                if (x)
+                {
+                    statusBar.ShowAsync();
+                   
+                }
+                else
+                {
+                    statusBar.HideAsync();
+                }
+                    
+            });
+        }
+
+        private HomeViewModel ViewModel
+        {
+            get { return DataContext as HomeViewModel; }
         }
 
         /// <summary>
@@ -39,8 +70,6 @@ namespace GrooveSharkWindowsPhone.Views
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            DataContext = new LoginViewModel(); 
-
         }
     }
 }
