@@ -80,10 +80,7 @@ namespace GrooveSharkClient
                 return null;
             };
 
-            return Observable
-              .Defer(() => Observable.Start(work, RxApp.TaskpoolScheduler))
-              .Publish()
-              .RefCount();
+            return Observable.Start(work);
         }
 
         public IObservable<User> Login(string userName, string md5Password, string session)

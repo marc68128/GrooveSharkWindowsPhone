@@ -43,8 +43,8 @@ namespace GrooveSharkClient
 			if (timeOut != default(TimeSpan))
 				client.Timeout = timeOut;
 
-			Debug.WriteLine(req.RequestUri);
-			DebugHeadersOfRequest(req);
+			//Debug.WriteLine(req.RequestUri);
+			//DebugHeadersOfRequest(req);
 
 			return await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
 		}

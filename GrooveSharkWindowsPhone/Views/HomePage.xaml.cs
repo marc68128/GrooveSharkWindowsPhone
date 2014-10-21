@@ -46,15 +46,9 @@ namespace GrooveSharkWindowsPhone.Views
             ViewModel.WhenAnyValue(vm => vm.IsLoading).Subscribe(x =>
             {
                 if (x)
-                {
                     statusBar.ShowAsync();
-                   
-                }
                 else
-                {
-                    statusBar.HideAsync();
-                }
-                    
+                    statusBar.HideAsync();                  
             });
         }
 
