@@ -115,7 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Images\Logos\Grooveshark_Logo_Horizontal.png" />
-    <Content Include="Assets\Images\Songs\no_cover.png" />
+    <Content Include="Assets\Images\Songs\no_cover_120.png" />
+    <Content Include="Assets\Images\Songs\no_cover_63.png" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-240.png" />

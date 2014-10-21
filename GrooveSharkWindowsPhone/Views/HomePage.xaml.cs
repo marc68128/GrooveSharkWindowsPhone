@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,11 +29,15 @@ namespace GrooveSharkWindowsPhone.Views
     /// </summary>
     public sealed partial class HomePage : Page
     {
+        Stopwatch sw = new Stopwatch(); 
         public HomePage()
         {
             this.InitializeComponent();
             
             DataContext = new HomeViewModel();
+
+            sw.Start();
+            ViewModel.LoadPopularSongsTodayCommand.Execute(null);
 
             var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
             statusBar.BackgroundColor = Windows.UI.Color.FromArgb(255, 27,27,27);
@@ -50,6 +55,8 @@ namespace GrooveSharkWindowsPhone.Views
                 else
                     statusBar.HideAsync();                  
             });
+            ViewModel.PopularSongsToday.Changed.Subscribe(_ => Debug.WriteLine(" !!!! " + sw.ElapsedMilliseconds));
+            this.LayoutUpdated += (sender, o) => Debug.WriteLine("      ------------ >>>>>> " + sw.ElapsedMilliseconds);
         }
 
         private HomeViewModel ViewModel

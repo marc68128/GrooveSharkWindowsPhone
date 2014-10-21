@@ -26,27 +26,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
             LoadPopularSongsTodayCommand.Subscribe(s =>
             {
                 PopularSongsToday.Clear();
-                PopularSongsToday.AddRange(s.Select((x, index) => new SongViewModel(x, index + 1)));
+                PopularSongsToday.AddRange(s.Take(50).Select((x, index) => new SongViewModel(x, index + 1)));
                 IsLoading = false;
                 Status = "";
             });
             LoadPopularSongsTodayCommand.ThrownExceptions.Do(e => IsLoading = false).Subscribe(e => Debug.WriteLine(e.Message));
 
-            LoadPopularSongsTodayCommand.Execute(null);
             IsLoading = true;
             Status = "Loading";
-
-            //var popularSongsObs = _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session));
-
-
-            //popularSongsObs.ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
-            //{
-            //    PopularSongsToday.Clear();
-            //    PopularSongsToday.AddRange(s.Select((x, index) => new SongViewModel(x, index + 1)));
-            //    IsLoading = false;
-            //    Status = "";
-            //});
-
 
 
             NavigateToSettingsCommand = ReactiveCommand.Create();
