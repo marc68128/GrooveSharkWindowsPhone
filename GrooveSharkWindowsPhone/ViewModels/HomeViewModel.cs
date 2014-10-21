@@ -12,7 +12,6 @@ using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
 using ReactiveUI;
 using Splat;
-using ReactiveCommand = ReactiveUI.Legacy.ReactiveCommand;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
@@ -22,31 +21,41 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public HomeViewModel() 
         {
             PopularSongsToday = new ReactiveList<SongViewModel>();
-            LoadPopularSongsTodayCommand = new ReactiveCommand();
 
-            IsLoading = true;
-            Status = "Loading";
-
-            var popularSongsObs = _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session));
-
-
-            popularSongsObs.ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
+            LoadPopularSongsTodayCommand = ReactiveCommand.CreateAsyncObservable(o => _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session)));
+            LoadPopularSongsTodayCommand.Subscribe(s =>
             {
                 PopularSongsToday.Clear();
                 PopularSongsToday.AddRange(s.Select((x, index) => new SongViewModel(x, index + 1)));
                 IsLoading = false;
                 Status = "";
             });
+            LoadPopularSongsTodayCommand.ThrownExceptions.Do(e => IsLoading = false).Subscribe(e => Debug.WriteLine(e.Message));
 
-            
+            LoadPopularSongsTodayCommand.Execute(null);
+            IsLoading = true;
+            Status = "Loading";
 
-            NavigateToSettingsCommand = new ReactiveCommand();
-            NavigateToSettingsCommand.Subscribe(_ => { NavigationHelper.Navigate(typeof (SettingsView)); });
+            //var popularSongsObs = _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session));
+
+
+            //popularSongsObs.ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
+            //{
+            //    PopularSongsToday.Clear();
+            //    PopularSongsToday.AddRange(s.Select((x, index) => new SongViewModel(x, index + 1)));
+            //    IsLoading = false;
+            //    Status = "";
+            //});
+
+
+
+            NavigateToSettingsCommand = ReactiveCommand.Create();
+            NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof (SettingsView)));
         }
 
         public ReactiveList<SongViewModel> PopularSongsToday { get; set; }
 
-        public ReactiveCommand LoadPopularSongsTodayCommand { get; set; }
-        public ReactiveCommand NavigateToSettingsCommand { get; set; }
+        public ReactiveCommand<Song[]> LoadPopularSongsTodayCommand { get; set; }
+        public ReactiveCommand<object> NavigateToSettingsCommand { get; set; }
     }
 }

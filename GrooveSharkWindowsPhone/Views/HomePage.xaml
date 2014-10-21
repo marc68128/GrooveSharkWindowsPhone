@@ -28,7 +28,7 @@
                         <Run Text="."></Run>
                     </TextBlock>
                 </Grid>
-
+          
                 <Grid Grid.Row="1" Grid.Column="1" Margin="5">
                     <Image Height="63" Width="63"  Source="/Assets/Images/Songs/no_cover.png"/>
                 </Grid>

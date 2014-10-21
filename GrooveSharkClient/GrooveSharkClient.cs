@@ -121,7 +121,7 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var response = SendHttpRequest("getPo8pularSongsToday", sessionId: session).Result;
+                var response = SendHttpRequest("getPopularSongsToday", sessionId: session).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
