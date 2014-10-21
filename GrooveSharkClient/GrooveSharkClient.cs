@@ -102,6 +102,26 @@ namespace GrooveSharkClient
             });
         }
 
+        public IObservable<bool> Logout(string session)
+        {
+            return Observable.Start(() =>
+            {
+
+                var response = SendHttpRequest("logout", null, session).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                    {
+                        throw sessionResult.Errors.First();
+                    }
+                    return sessionResult.Result.Success;
+                }
+                return false;
+            });
+        }
+
         public IObservable<User> GetUserInfo(string session)
         {
             return Observable.Start(() =>

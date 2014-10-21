@@ -20,13 +20,10 @@ namespace GrooveSharkClient.Models
             Email = r.Result.Email;
             FName = r.Result.FName;
             LName = r.Result.LName;
-            IsPlus = r.Result.IsPlus;
-            IsAnywhere = r.Result.IsAnywhere;
-            IsPremium = r.Result.IsPremium;
+            IsPlus = r.Result.IsPlus.HasValue && r.Result.IsPlus.Value;
+            IsAnywhere = r.Result.IsAnywhere.HasValue && r.Result.IsAnywhere.Value;
+            IsPremium = r.Result.IsPremium.HasValue && r.Result.IsPremium.Value;
         }
-
-        public static User CurrentUser;
-
 
         public int UserID { get; set; }
         public string Email { get; set; }
@@ -35,5 +32,10 @@ namespace GrooveSharkClient.Models
         public bool IsPlus { get; set; }
         public bool IsAnywhere { get; set; }
         public bool IsPremium { get; set; }
+
+        public override string ToString()
+        {
+            return "UserId : " + UserID;
+        }
     }
 }

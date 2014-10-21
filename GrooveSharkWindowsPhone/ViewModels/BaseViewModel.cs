@@ -21,6 +21,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _client = Locator.Current.GetService<IGrooveSharkClient>();
             _session = Locator.Current.GetService<ISessionService>();
 
+            IsLoading = true; 
+
         }
 
         private string _title;

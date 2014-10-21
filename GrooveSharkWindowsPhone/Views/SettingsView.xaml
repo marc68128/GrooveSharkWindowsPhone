@@ -1,14 +1,31 @@
-﻿<Page
+﻿<views:BaseView
     x:Class="GrooveSharkWindowsPhone.Views.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:GrooveSharkWindowsPhone.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:GrooveSharkWindowsPhone.Views"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Pivot Title="{Binding Title}">
-        <PivotItem Header="Account"></PivotItem>
+        <PivotItem Header="Account">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.ColumnSpan="2" Margin="20" FontSize="25" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding CurrentUserMessage, Mode=OneWay}"></TextBlock>
+                    
+                <Button Grid.Column="0" Grid.Row="1" Command="{Binding ToggleConnectionCommand}" Content="{Binding ToggleConnectionLabel, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="10"></Button>
+                <Button Grid.Column="1" Grid.Row="1" Content="{Binding RegisterLabel, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="10"></Button>
+            </Grid>
+        </PivotItem>
     </Pivot>
-</Page>
+</views:BaseView>

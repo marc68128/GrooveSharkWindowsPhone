@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -16,19 +17,24 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 using GrooveSharkWindowsPhone.ViewModels;
+using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SettingsView : Page
+    public sealed partial class SettingsView : BaseView
     {
-        public SettingsView()
+        public SettingsView() : base(new SettingsViewModel())
         {
             this.InitializeComponent();
-            DataContext = new SettingsViewModel();
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            ViewModel.RefreshCurrentUserCommand.Execute(null);
+        }
+
+        private SettingsViewModel ViewModel
+        {
+            get { return DataContext as SettingsViewModel; }
         }
 
         /// <summary>
@@ -40,19 +46,6 @@ namespace GrooveSharkWindowsPhone.Views
         {
         }
 
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            Frame frame = Window.Current.Content as Frame;
-            if (frame == null)
-            {
-                return;
-            }
 
-            if (frame.CanGoBack)
-            {
-                frame.GoBack();
-                e.Handled = true;
-            }
-        }
     }
 }

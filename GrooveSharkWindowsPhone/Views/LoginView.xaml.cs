@@ -23,10 +23,9 @@ namespace GrooveSharkWindowsPhone.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginView : Page
+    public sealed partial class LoginView : BaseView
     {
-
-        public LoginView()
+        public LoginView() : base(new LoginViewModel())
         {
             this.InitializeComponent();
           
@@ -39,7 +38,6 @@ namespace GrooveSharkWindowsPhone.Views
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            DataContext = new LoginViewModel(); 
 
         }
     }

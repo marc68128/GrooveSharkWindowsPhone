@@ -48,13 +48,13 @@ namespace GrooveSharkClient.Models
         public string LName { get; set; }
 
         [DataMember(Name = "IsPlus")]
-        public bool IsPlus { get; set; }
+        public bool? IsPlus { get; set; }
 
         [DataMember(Name = "IsAnywhere")]
-        public bool IsAnywhere { get; set; }
+        public bool? IsAnywhere { get; set; }
 
         [DataMember(Name = "IsPremium")]
-        public bool IsPremium { get; set; }
+        public bool? IsPremium { get; set; }
 
         [DataMember(Name = "songs")]
         public Song[] Songs { get; set; }
@@ -67,7 +67,7 @@ namespace GrooveSharkClient.Models
         [DataMember(Name = "code")]
         public int Code { get; set; }
         [DataMember(Name = "message")]
-        public new string Message { get; set; }
+        public string Description { get; set; }
     }
 
 

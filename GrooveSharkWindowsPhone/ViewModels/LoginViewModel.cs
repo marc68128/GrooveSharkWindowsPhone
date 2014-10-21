@@ -13,35 +13,40 @@ using Microsoft.Practices.Unity;
 using ReactiveUI;
 using Splat;
 using xBrainLab.Security.Cryptography;
-using ReactiveCommand = ReactiveUI.Legacy.ReactiveCommand;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
-        private IGrooveSharkClient _client;
-        private ISessionService _sessionService;
+
 
         public LoginViewModel()
         {
             Title = "Login";
+            UserNameLabel = "UserName";
+            PasswordLabel = "Password";
 
-            _client = Locator.Current.GetService<IGrooveSharkClient>();
-            _sessionService = Locator.Current.GetService<ISessionService>();
-            
+            LoginCommand =
+                ReactiveCommand.CreateAsyncObservable(
+                    _ => _session.SessionIdObs.SelectMany(s => _client.Login(UserName, MD5.GetHashString(Password), s)));
 
-            LoginCommand = new ReactiveCommand(_sessionService.IsSessionIdAvailable);
-            var userObs = LoginCommand.RegisterAsync(_ =>
+
+            LoginCommand.Where(u => u != null).Subscribe(u =>
             {
-                IsLoading = true; 
-                return _client.Login(UserName, MD5.GetHashString(Password), _sessionService.SessionId);
+                if (u.UserID == 0)
+                {
+                    var messageDialog = new MessageDialog(string.Format("Invalid login/password combinaison !"));
+                    messageDialog.ShowAsync();
+                }
+                else
+                {
+                    NavigationHelper.GoBack();
+                }
+                
             });
 
-            userObs.Subscribe(u =>
-            {
-                MessageDialog messageDialog = new MessageDialog(string.Format("Vous êtes bien connecté :\nEmail : {0}\nName : {1}", u.Email, u.FName));
-                messageDialog.ShowAsync();
-            }); 
+            LoginCommand.ThrownExceptions.OfType<GrooveSharkException>()
+                .Subscribe(e => new MessageDialog(e.Description).ShowAsync());
         }
 
         private string _userName;
@@ -58,17 +63,22 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _password, value); }
         }
 
-        private bool _isLoading;    
-        public bool IsLoading
+        private string _userNameLabel;
+        public string UserNameLabel
         {
-            get { return _isLoading; }
-            set { this.RaiseAndSetIfChanged(ref _isLoading, value); }
+            get { return _userNameLabel; }
+            set { this.RaiseAndSetIfChanged(ref _userNameLabel, value); }
         }
 
-        public IObservable<bool> IsLoadingObs { get { return this.WhenAnyValue(self => self.IsLoading); } }
-        
+        private string _passwordLabel;
+        public string PasswordLabel
+        {
+            get { return _passwordLabel; }
+            set { this.RaiseAndSetIfChanged(ref _passwordLabel, value); }
+        }
 
-        public ReactiveCommand LoginCommand { get; set; }
+
+        public ReactiveCommand<User> LoginCommand { get; set; }
 
     }
 }

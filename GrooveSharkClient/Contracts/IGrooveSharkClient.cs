@@ -11,6 +11,7 @@ namespace GrooveSharkClient.Contracts
     {
         IObservable<string> CreateSession();
         IObservable<User> Login(string userName, string md5Password, string session);
+        IObservable<bool> Logout(string session);
         IObservable<Song[]> GetPopularSongToday(string session);
         IObservable<User> GetUserInfo(string session);
     }

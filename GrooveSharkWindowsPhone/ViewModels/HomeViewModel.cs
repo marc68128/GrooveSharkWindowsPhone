@@ -22,7 +22,19 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             PopularSongsToday = new ReactiveList<SongViewModel>();
 
-            LoadPopularSongsTodayCommand = ReactiveCommand.CreateAsyncObservable(o => _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session)));
+            IsLoading = true;
+            Status = "Loading";
+
+            InitCommands();
+        }
+
+        private void InitCommands()
+        {
+            #region LoadPopularSongsTodayCommand
+
+            LoadPopularSongsTodayCommand =
+                ReactiveCommand.CreateAsyncObservable(
+                    o => _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session)));
             LoadPopularSongsTodayCommand.Subscribe(s =>
             {
                 PopularSongsToday.Clear();
@@ -30,15 +42,26 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 IsLoading = false;
                 Status = "";
             });
-            LoadPopularSongsTodayCommand.ThrownExceptions.Do(e => IsLoading = false).Subscribe(e => Debug.WriteLine(e.Message));
+            LoadPopularSongsTodayCommand.ThrownExceptions
+                .OfType<GrooveSharkException>()
+                .Do(e => IsLoading = false)
+                .Do(e => Debug.WriteLine("[GrooveSharkException] : " + e.Description))
+                .BindTo(this, self => self.GrooveSharkException);
 
-            IsLoading = true;
-            Status = "Loading";
-
+            #endregion
 
             NavigateToSettingsCommand = ReactiveCommand.Create();
-            NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof (SettingsView)));
+            NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(SettingsView)));
         }
+
+        private GrooveSharkException _grooveSharkException;
+
+        public GrooveSharkException GrooveSharkException
+        {
+            get { return _grooveSharkException; }
+            set { this.RaiseAndSetIfChanged(ref _grooveSharkException, value); }
+        }
+        
 
         public ReactiveList<SongViewModel> PopularSongsToday { get; set; }
 
