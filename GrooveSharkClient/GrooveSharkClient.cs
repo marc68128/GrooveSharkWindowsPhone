@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Helpers;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Exceptions;
 using Newtonsoft.Json;
 using ReactiveUI;
 
@@ -22,7 +23,7 @@ namespace GrooveSharkClient
         private const string ServerURI = "https://api.grooveshark.com/ws3.php?sig={0}";
         private const string ServerKey = "winphone_marc2";
         private const string ServerSecret = "86b91a1ef536883aa04243b863db7281";
-        private const string RequestPatern = "{\"method\":\"{0}\",\"parameters\":{{1}},\"header\":{{2}}}";
+        private const string RequestPatern = "{\"meth0od\":\"{0}\",\"parameters\":{{1}},\"header\":{{2}}}";
 
         private NetworkClient _networkClient;
 
@@ -71,8 +72,10 @@ namespace GrooveSharkClient
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
                     var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First(); 
                     if (sessionResult.Result.Success)
-                    {
+                    {   
                         Debug.WriteLine("Session ID : " + sessionResult.Result.SessionID);
                         return sessionResult.Result.SessionID;
                     }

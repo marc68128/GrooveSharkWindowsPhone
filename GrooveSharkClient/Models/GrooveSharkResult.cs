@@ -14,6 +14,8 @@ namespace GrooveSharkClient.Models
         public Header Header { get; set; }
         [DataMember(Name = "result")]
         public Result Result { get; set; }
+        [DataMember(Name = "errors")]
+        public GrooveSharkException[] Errors { get; set; }
 
     }
 
@@ -59,6 +61,14 @@ namespace GrooveSharkClient.Models
     }
 
 
+
+    public class GrooveSharkException : Exception
+    {
+        [DataMember(Name = "code")]
+        public int Code { get; set; }
+        [DataMember(Name = "message")]
+        public new string Message { get; set; }
+    }
 
 
 }
