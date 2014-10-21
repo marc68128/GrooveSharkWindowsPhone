@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -21,10 +22,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public HomeViewModel() 
         {
             PopularSongsToday = new ReactiveList<SongViewModel>();
+            LoadPopularSongsTodayCommand = new ReactiveCommand();
+
             IsLoading = true;
             Status = "Loading";
 
             var popularSongsObs = _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session));
+
+
             popularSongsObs.ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
             {
                 PopularSongsToday.Clear();
@@ -32,6 +37,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 IsLoading = false;
                 Status = "";
             });
+
+            
 
             NavigateToSettingsCommand = new ReactiveCommand();
             NavigateToSettingsCommand.Subscribe(_ => { NavigationHelper.Navigate(typeof (SettingsView)); });
