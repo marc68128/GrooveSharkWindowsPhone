@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
 
-  <Identity Name="b38471c2-d1c5-4d6f-9f76-6ddbcb353a16"
+  <Identity Name="d784fb7c-0e00-4f75-9634-132fc7c1b7db"
             Publisher="CN=14827_000"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b38471c2-d1c5-4d6f-9f76-6ddbcb353a16" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="d784fb7c-0e00-4f75-9634-132fc7c1b7db" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GrooveShark.WindowsPhone</DisplayName>

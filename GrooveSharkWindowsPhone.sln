@@ -9,17 +9,28 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveSharkUnitTest", "Groo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{D9437FE2-183C-4932-97B7-95E433E313C1}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GrooveShark.Shared", "GrooveShark\GrooveShark.Shared.shproj", "{70FB099B-3A18-49FE-BBB3-74E2F86F5ED5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveSharkWindowsPhone", "GrooveShark.WindowsPhone\GrooveSharkWindowsPhone.csproj", "{17255812-8C67-4C05-8C21-1BC5C23B04F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveSharkWindows", "GrooveSharkWindows\GrooveSharkWindows.csproj", "{6C7FE008-5722-49B0-9E6E-2B200D3883F2}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GrooveShark.Shared", "GrooveShark.Shared\GrooveShark.Shared.shproj", "{70FB099B-3A18-49FE-BBB3-74E2F86F5ED5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GrooveShark", "GrooveShark", "{9AFCA818-B7A3-405D-9D69-3ACACB23B8D2}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GrooveShark.Shared", "GrooveShark\GrooveShark.Shared\GrooveShark.Shared.shproj", "{75ACFDB6-02AF-4E16-801E-E72509C5C06B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveShark.Windows", "GrooveShark\GrooveShark.Windows\GrooveShark.Windows.csproj", "{78173B03-A8C8-4249-BC74-8675985408F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveShark.WindowsPhone", "GrooveShark\GrooveShark.WindowsPhone\GrooveShark.WindowsPhone.csproj", "{F74CF58E-23BA-4124-884B-E220AC24932B}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		GrooveShark\GrooveSharkClientS.projitems*{17255812-8c67-4c05-8c21-1bc5c23b04f7}*SharedItemsImports = 4
-		GrooveShark\GrooveSharkClientS.projitems*{6c7fe008-5722-49b0-9e6e-2b200d3883f2}*SharedItemsImports = 4
-		GrooveShark\GrooveSharkClientS.projitems*{70fb099b-3a18-49fe-bbb3-74e2f86f5ed5}*SharedItemsImports = 13
+		GrooveShark.Shared\GrooveSharkClientS.projitems*{17255812-8c67-4c05-8c21-1bc5c23b04f7}*SharedItemsImports = 4
+		GrooveShark\GrooveShark.Shared\GrooveShark.Shared.projitems*{75acfdb6-02af-4e16-801e-e72509c5c06b}*SharedItemsImports = 13
+		GrooveShark.Shared\GrooveSharkClientS.projitems*{6c7fe008-5722-49b0-9e6e-2b200d3883f2}*SharedItemsImports = 4
+		GrooveShark\GrooveShark.Shared\GrooveShark.Shared.projitems*{f74cf58e-23ba-4124-884b-e220ac24932b}*SharedItemsImports = 4
+		GrooveShark.Shared\GrooveSharkClientS.projitems*{70fb099b-3a18-49fe-bbb3-74e2f86f5ed5}*SharedItemsImports = 13
+		GrooveShark\GrooveShark.Shared\GrooveShark.Shared.projitems*{78173b03-a8c8-4249-bc74-8675985408f5}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,13 +141,72 @@ Global
 		{6C7FE008-5722-49B0-9E6E-2B200D3883F2}.Release|x86.ActiveCfg = Release|x86
 		{6C7FE008-5722-49B0-9E6E-2B200D3883F2}.Release|x86.Build.0 = Release|x86
 		{6C7FE008-5722-49B0-9E6E-2B200D3883F2}.Release|x86.Deploy.0 = Release|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|ARM.Build.0 = Debug|ARM
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|x64.ActiveCfg = Debug|x64
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|x64.Build.0 = Debug|x64
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|x64.Deploy.0 = Debug|x64
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|x86.ActiveCfg = Debug|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|x86.Build.0 = Debug|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Debug|x86.Deploy.0 = Debug|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|ARM.ActiveCfg = Release|ARM
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|ARM.Build.0 = Release|ARM
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|ARM.Deploy.0 = Release|ARM
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|Mixed Platforms.Build.0 = Release|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|x64.ActiveCfg = Release|x64
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|x64.Build.0 = Release|x64
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|x64.Deploy.0 = Release|x64
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|x86.ActiveCfg = Release|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|x86.Build.0 = Release|x86
+		{78173B03-A8C8-4249-BC74-8675985408F5}.Release|x86.Deploy.0 = Release|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|ARM.Build.0 = Debug|ARM
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|ARM.Deploy.0 = Debug|ARM
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|x86.ActiveCfg = Debug|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|x86.Build.0 = Debug|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Debug|x86.Deploy.0 = Debug|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|ARM.ActiveCfg = Release|ARM
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|ARM.Build.0 = Release|ARM
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|ARM.Deploy.0 = Release|ARM
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|x64.ActiveCfg = Release|Any CPU
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|x86.ActiveCfg = Release|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|x86.Build.0 = Release|x86
+		{F74CF58E-23BA-4124-884B-E220AC24932B}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{70FB099B-3A18-49FE-BBB3-74E2F86F5ED5} = {D9437FE2-183C-4932-97B7-95E433E313C1}
 		{17255812-8C67-4C05-8C21-1BC5C23B04F7} = {D9437FE2-183C-4932-97B7-95E433E313C1}
 		{6C7FE008-5722-49B0-9E6E-2B200D3883F2} = {D9437FE2-183C-4932-97B7-95E433E313C1}
+		{70FB099B-3A18-49FE-BBB3-74E2F86F5ED5} = {D9437FE2-183C-4932-97B7-95E433E313C1}
+		{75ACFDB6-02AF-4E16-801E-E72509C5C06B} = {9AFCA818-B7A3-405D-9D69-3ACACB23B8D2}
+		{78173B03-A8C8-4249-BC74-8675985408F5} = {9AFCA818-B7A3-405D-9D69-3ACACB23B8D2}
+		{F74CF58E-23BA-4124-884B-E220AC24932B} = {9AFCA818-B7A3-405D-9D69-3ACACB23B8D2}
 	EndGlobalSection
 EndGlobal

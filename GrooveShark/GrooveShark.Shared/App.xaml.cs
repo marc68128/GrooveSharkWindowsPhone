@@ -15,28 +15,28 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using GrooveSharkClient.Contracts;
+using GrooveSharkClient.Services;
+using GrooveSharkWindowsPhone.Helpers;
+using GrooveSharkWindowsPhone.Views;
+using Microsoft.Practices.Unity;
+using ReactiveUI;
 
-// The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
-namespace GrooveShark
+namespace GrooveSharkWindowsPhone
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public sealed partial class App : Application
     {
-#if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
-#endif
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
         public App()
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            this.Resuming += this.OnResuming;
         }
 
         /// <summary>
@@ -53,6 +53,8 @@ namespace GrooveShark
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            DI.Setup();
+
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -77,7 +79,6 @@ namespace GrooveShark
 
             if (rootFrame.Content == null)
             {
-#if WINDOWS_PHONE_APP
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
                 {
@@ -90,12 +91,11 @@ namespace GrooveShark
 
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
-#endif
 
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(HomeView), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -105,7 +105,6 @@ namespace GrooveShark
             Window.Current.Activate();
         }
 
-#if WINDOWS_PHONE_APP
         /// <summary>
         /// Restores the content transitions after the app has launched.
         /// </summary>
@@ -117,7 +116,6 @@ namespace GrooveShark
             rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
             rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
-#endif
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
@@ -132,6 +130,11 @@ namespace GrooveShark
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private void OnResuming(object sender, object e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
