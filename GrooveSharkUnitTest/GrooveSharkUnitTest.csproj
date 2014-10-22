@@ -89,10 +89,6 @@
       <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
       <Name>GrooveSharkClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GrooveSharkWindowsPhone\GrooveSharkWindowsPhone.csproj">
-      <Project>{17255812-8c67-4c05-8c21-1bc5c23b04f7}</Project>
-      <Name>GrooveSharkWindowsPhone</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
 using Windows.Phone.UI.Input;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -34,6 +35,7 @@ namespace GrooveSharkWindowsPhone.Views
         {
             this.InitializeComponent();   
             ViewModel.LoadPopularSongsTodayCommand.Execute(null);
+            
         }
 
         private HomeViewModel ViewModel
