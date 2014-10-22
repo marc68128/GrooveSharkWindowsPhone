@@ -16,6 +16,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             _s = s;
             SongPosition = position; 
+            ThumbnailUrl = !string.IsNullOrEmpty(s.CoverArtFilename) ? "http://images.gs-cdn.net/static/albums/70_" + s.CoverArtFilename : "/Assets/Images/Songs/no_cover_63.png";
         }
 
         public string ArtistName { get { return _s.ArtistName;  } }

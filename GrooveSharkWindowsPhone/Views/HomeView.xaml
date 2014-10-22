@@ -28,7 +28,7 @@
                         <Run Text="."></Run>
                 </TextBlock>
 
-                <Image Height="63" Width="63" Grid.Row="1" Grid.Column="1" Margin="5" Source="/Assets/Images/Songs/no_cover_63.png"/>
+                <Image Height="63" Width="63" Grid.Row="1" Grid.Column="1" Margin="5" Source="{Binding ThumbnailUrl}"/>
 
 
                 <StackPanel Grid.Row="1" Grid.Column="2" Margin="5" VerticalAlignment="Center">
