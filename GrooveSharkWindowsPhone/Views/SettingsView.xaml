@@ -7,9 +7,9 @@
     xmlns:views="using:GrooveSharkWindowsPhone.Views"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Pivot Title="{Binding Title}">
-        <PivotItem Header="Account">
+   
+    <Pivot Title="{Binding Title, FallbackValue=Settings}" Style="{StaticResource GrooveSharkPivotTemplate}">
+        <PivotItem Header="General">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -22,10 +22,14 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.ColumnSpan="2" Margin="20" FontSize="25" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding CurrentUserMessage, Mode=OneWay}"></TextBlock>
-                    
+
                 <Button Grid.Column="0" Grid.Row="1" Command="{Binding ToggleConnectionCommand}" Content="{Binding ToggleConnectionLabel, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="10"></Button>
                 <Button Grid.Column="1" Grid.Row="1" Content="{Binding RegisterLabel, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="10"></Button>
+
             </Grid>
+        </PivotItem>
+        <PivotItem Header="About">
+           
         </PivotItem>
     </Pivot>
 </views:BaseView>

@@ -21,6 +21,10 @@ namespace GrooveSharkWindowsPhone.ViewModels
             RegisterLabel = "Register";
             InitCommands();
 
+
+            CurrentUser = _session.User; 
+            _session.UserInfoObs.ObserveOn(RxApp.MainThreadScheduler).Do(_ => IsLoading = false).BindTo(this, self => self.CurrentUser); 
+
             this.WhenAnyValue(self => self.CurrentUser)
                 .Where(u => u != null)
                 .Subscribe(u =>
@@ -42,17 +46,27 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
         private void InitCommands()
         {
-            RefreshCurrentUserCommand = ReactiveCommand.CreateAsyncObservable(_ => _session.SessionIdObs.SelectMany(s => _client.GetUserInfo(s)));
-            RefreshCurrentUserCommand
-                .Do(_ => IsLoading = false)
-                .BindTo(this, self => self.CurrentUser);
+            RefreshCurrentUserCommand = ReactiveCommand.Create();
+            RefreshCurrentUserCommand.Subscribe(_ =>
+            {
+                IsLoading = true;
+                _session.RefreshUserCommand.Execute(null);
+            });
 
-            LogoutCommand =
-                ReactiveCommand.CreateAsyncObservable(_ => _session.SessionIdObs.SelectMany(s => _client.Logout(s)));
+
+            LogoutCommand = ReactiveCommand.CreateAsyncObservable(_ => _session.SessionIdObs.SelectMany(s => _client.Logout(s)));
             LogoutCommand
-                .Select(b => b ? "Logout successfull" : "Error : failed to logout")
                 .Do(s => RefreshCurrentUserCommand.Execute(null))
-                .Subscribe(s => new MessageDialog(s).ShowAsync());
+                .Subscribe(b =>
+                {
+                    if (b)
+                    {
+                        AppSettings.RemoveValue("UserName");
+                        AppSettings.RemoveValue("Md5Password");
+                    }
+                    var message = b ? "Logout successfull" : "Error : failed to logout";
+                    new MessageDialog(message).ShowAsync();
+                });
 
             ToggleConnectionCommand = ReactiveCommand.Create(this.WhenAnyValue(self => self.CurrentUser).Select(u => u != null));
             ToggleConnectionCommand.Subscribe(_ =>
@@ -70,7 +84,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
         }
 
-        public ReactiveCommand<User> RefreshCurrentUserCommand { get; set; }
+        public ReactiveCommand<object> RefreshCurrentUserCommand { get; set; }
 
         public ReactiveCommand<object> ToggleConnectionCommand { get; set; }
 

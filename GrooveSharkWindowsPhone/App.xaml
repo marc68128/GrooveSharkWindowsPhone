@@ -6,7 +6,12 @@
     RequestedTheme="Light">
 
     <Application.Resources>
-        <ResourceDictionary Source="Ressources/ThemeDictionary.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Ressources/ThemeDictionary.xaml"/>
+                <ResourceDictionary Source="Ressources/PivotStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 
 </Application>

@@ -25,6 +25,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
             Title = "Login";
             UserNameLabel = "UserName";
             PasswordLabel = "Password";
+            UserName = "marc68128";
+
 
             LoginCommand =
                 ReactiveCommand.CreateAsyncObservable(
@@ -40,6 +42,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 }
                 else
                 {
+                    AppSettings.AddValue("UserName", UserName);
+                    AppSettings.AddValue("Md5Password", MD5.GetHashString(Password));
                     NavigationHelper.GoBack();
                 }
                 

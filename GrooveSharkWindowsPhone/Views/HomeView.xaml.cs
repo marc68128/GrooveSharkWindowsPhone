@@ -33,7 +33,7 @@ namespace GrooveSharkWindowsPhone.Views
             : base(new HomeViewModel())
         {
             this.InitializeComponent();   
-            ViewModel.LoadPopularSongsTodayCommand.Execute(null);
+            ViewModel.PopularSongViewModel.LoadPopularSongsTodayCommand.Execute(null);
         }
 
         private HomeViewModel ViewModel

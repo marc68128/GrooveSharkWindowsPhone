@@ -46,59 +46,6 @@
             </Grid>
         </DataTemplate>
 
-        <Style x:Key="PivotCustomTitleStyle" TargetType="ContentControl">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContentControl">
-                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="PivotCustomStyle" TargetType="Pivot">
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Foreground" Value="{ThemeResource PhoneForegroundLightBrush}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="ItemsPanel">
-                <Setter.Value>
-                    <ItemsPanelTemplate>
-                        <Grid/>
-                    </ItemsPanelTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Pivot">
-                        <Grid x:Name="RootElement" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <ContentControl x:Name="TitleContentControl" Background="{ThemeResource GrooveSharkOrangeBrush}" ContentTemplate="{TemplateBinding TitleTemplate}" Content="{TemplateBinding Title}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource PivotCustomTitleStyle}"/>
-                            <ScrollViewer x:Name="ScrollViewer" HorizontalSnapPointsAlignment="Center" HorizontalSnapPointsType="MandatorySingle" HorizontalScrollBarVisibility="Hidden" Margin="{TemplateBinding Padding}" Grid.Row="1" Template="{StaticResource ScrollViewerScrollBarlessTemplate}" VerticalSnapPointsType="None" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled" VerticalContentAlignment="Stretch" ZoomMode="Disabled">
-                                <PivotPanel x:Name="Panel" VerticalAlignment="Stretch">
-                                    <PivotHeaderPanel x:Name="Header" Background="{ThemeResource GrooveSharkOrangeBrush}">
-                                        <PivotHeaderPanel.RenderTransform>
-                                            <CompositeTransform x:Name="HeaderTranslateTransform" TranslateX="0"/>
-                                        </PivotHeaderPanel.RenderTransform>
-                                    </PivotHeaderPanel>
-                                    <ItemsPresenter x:Name="PivotItemPresenter">
-                                        <ItemsPresenter.RenderTransform>
-                                            <TranslateTransform x:Name="ItemsPresenterTranslateTransform" X="0"/>
-                                        </ItemsPresenter.RenderTransform>
-                                    </ItemsPresenter>
-                                </PivotPanel>
-                            </ScrollViewer>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="ListBoxCustomItemStyle" TargetType="ListBoxItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Template">
@@ -136,7 +83,7 @@
     </Page.Resources>
 
 
-    <Pivot Style="{StaticResource PivotCustomStyle}">
+    <Pivot Style="{StaticResource GrooveSharkPivotTemplate}">
 
         <Pivot.TitleTemplate>
             <DataTemplate>
@@ -150,7 +97,7 @@
                 <TextBlock Foreground="{ThemeResource PhoneForegroundLightBrush}" Text="{Binding}"></TextBlock>
             </DataTemplate>
         </Pivot.HeaderTemplate>
-        <PivotItem Margin="14,20,14,0" Header="Popular songs">
+        <PivotItem Margin="14,20,14,0" Header="Popular songs" DataContext="{Binding PopularSongViewModel}">
             <ListBox ItemsSource="{Binding PopularSongsToday}" ItemTemplate="{StaticResource SongTemplate}" Background="Transparent" ItemContainerStyle="{StaticResource ListBoxCustomItemStyle}">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -159,8 +106,11 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </PivotItem>
-        <PivotItem Margin="14,20,14,0" Header="Search"></PivotItem>
-        <PivotItem Margin="14,20,14,0" Header="Popular songs"></PivotItem>
+        <PivotItem Margin="14,20,14,0" Header="Search">
+            <StackPanel>
+                <TextBox PlaceholderText="Search for songs, artists or playlists" ></TextBox>
+            </StackPanel>
+        </PivotItem>
     </Pivot>
 
     <Page.BottomAppBar>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
 using ReactiveUI;
@@ -17,55 +18,47 @@ namespace GrooveSharkWindowsPhone.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-
         public HomeViewModel() 
         {
-            PopularSongsToday = new ReactiveList<SongViewModel>();
-
-            IsLoading = true;
-            Status = "Loading";
-
+            PopularSongViewModel = new PopularSongViewModel();
             InitCommands();
+
+            SearchCommand = ReactiveCommand.CreateAsyncObservable(_ => _country.CountryObs.SelectMany(c => _session.SessionIdObs.SelectMany(s => _client.SearchAll("World on fire", c.GetCountryInfoAsJsonString(), s))));
+            SearchCommand.BindTo(this, self => self.SearchResult);
+
+            this.WhenAnyValue(self => self.SearchResult).Subscribe(res =>
+            {
+                var a = res; 
+            });
+            SearchCommand.Execute(null);
         }
 
         private void InitCommands()
         {
-            #region LoadPopularSongsTodayCommand
-
-            LoadPopularSongsTodayCommand =
-                ReactiveCommand.CreateAsyncObservable(
-                    o => _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session)));
-            LoadPopularSongsTodayCommand.Subscribe(s =>
-            {
-                PopularSongsToday.Clear();
-                PopularSongsToday.AddRange(s.Take(50).Select((x, index) => new SongViewModel(x, index + 1)));
-                IsLoading = false;
-                Status = "";
-            });
-            LoadPopularSongsTodayCommand.ThrownExceptions
-                .OfType<GrooveSharkException>()
-                .Do(e => IsLoading = false)
-                .Do(e => Debug.WriteLine("[GrooveSharkException] : " + e.Description))
-                .BindTo(this, self => self.GrooveSharkException);
-
-            #endregion
-
             NavigateToSettingsCommand = ReactiveCommand.Create();
             NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(SettingsView)));
         }
 
-        private GrooveSharkException _grooveSharkException;
+        public ReactiveCommand<object> NavigateToSettingsCommand { get; set; }
 
-        public GrooveSharkException GrooveSharkException
+
+        private PopularSongViewModel _popularSongViewModel;
+        public PopularSongViewModel PopularSongViewModel
         {
-            get { return _grooveSharkException; }
-            set { this.RaiseAndSetIfChanged(ref _grooveSharkException, value); }
+            get { return _popularSongViewModel; }
+            set { this.RaiseAndSetIfChanged(ref _popularSongViewModel, value); }
         }
+
+        private Tuple<Song[], Playlist[], Artist[], Album[]> _searchResult;
+
+        public Tuple<Song[], Playlist[], Artist[], Album[]> SearchResult
+        {
+            get { return _searchResult; }
+            set { this.RaiseAndSetIfChanged(ref _searchResult, value); }
+        }
+
+        public ReactiveCommand<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchCommand { get; set; }
         
 
-        public ReactiveList<SongViewModel> PopularSongsToday { get; set; }
-
-        public ReactiveCommand<Song[]> LoadPopularSongsTodayCommand { get; set; }
-        public ReactiveCommand<object> NavigateToSettingsCommand { get; set; }
     }
 }

@@ -15,12 +15,13 @@ namespace GrooveSharkWindowsPhone.ViewModels
     {
         protected IGrooveSharkClient _client;
         protected ISessionService _session;
+        protected ICountryService _country; 
 
         public BaseViewModel()
         {
             _client = Locator.Current.GetService<IGrooveSharkClient>();
             _session = Locator.Current.GetService<ISessionService>();
-
+            _country = Locator.Current.GetService<ICountryService>();
             IsLoading = true; 
 
         }
