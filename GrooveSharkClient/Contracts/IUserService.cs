@@ -13,6 +13,11 @@ namespace GrooveSharkClient.Contracts
         User ConnectedUser { get; }
         IObservable<User> ConnectedUserObs { get; }
         ReactiveCommand<User> RefreshConnectedUser { get; }
-        IObservable<bool> IsLoadingObs { get; } 
+        IObservable<bool> IsLoadingObs { get; }
+
+        ReactiveCommand<User> Login { get; }
+
+        string Username { get; set; }
+        string Password { get; set; }
     }
 }
