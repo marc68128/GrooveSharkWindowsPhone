@@ -131,10 +131,12 @@ namespace GrooveSharkClient
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    return new User(sessionResult);
+                    var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
+                        throw grooveSharkResult.Errors.First();
+                    return new User(grooveSharkResult);
                 }
-                return null;
+                throw new WebException("Unable To Connect");
             });
         }
 

@@ -26,6 +26,11 @@ namespace GrooveSharkClient.Models
             Description = e.Message;
         }
 
+        public GrooveSharkException()
+        {
+            
+        }
+
     }
 
 }

@@ -18,18 +18,27 @@ namespace GrooveSharkWindowsPhone.ViewModels
     {
         protected IGrooveSharkClient _client;
         protected ISessionService _session;
-        protected ICountryService _country; 
+        protected ICountryService _country;
+        protected IUserService _user; 
 
         public BaseViewModel()
         {
             _client = Locator.Current.GetService<IGrooveSharkClient>();
             _session = Locator.Current.GetService<ISessionService>();
             _country = Locator.Current.GetService<ICountryService>();
+            _user = Locator.Current.GetService<IUserService>();
 
+            _session.IsLoadingObs
+                .CombineLatest(_user.IsLoadingObs, (b, b1) => b || b1)
+                .Do(b => Debug.WriteLine("[BaseViewModel] ShowLoader : " + b))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .BindTo(this, self => self.ShowLoader);
 
-            _session.IsLoadingObs.Do(b => Debug.WriteLine("[BaseViewModel] ShowLoader : " + b)).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.ShowLoader);
-            _session.IsSessionAvailableObs.Do(b => Debug.WriteLine("[BaseViewModel] ShowData : " + b)).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.ShowData);
-            
+            _session.IsSessionAvailableObs
+                .CombineLatest(_user.IsUserAvailableObs, (b, b1) => b && b1)
+                .Do(b => Debug.WriteLine("[BaseViewModel] ShowData : " + b))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .BindTo(this, self => self.ShowData);
         }
 
         private string _title;

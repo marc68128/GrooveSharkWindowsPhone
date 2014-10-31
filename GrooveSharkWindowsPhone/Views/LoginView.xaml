@@ -43,7 +43,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox Text="{Binding UserName, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" PlaceholderText="{Binding UserNameLabel}" HorizontalAlignment="Stretch"></TextBox>
                 <PasswordBox IsPasswordRevealButtonEnabled="True" Password="{Binding Password, Mode=TwoWay}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" PlaceholderText="{Binding PasswordLabel}" HorizontalAlignment="Stretch"></PasswordBox>
-                <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Command="{Binding LoginCommand}">Login</Button>
+                <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Command="{Binding LoginCommand}">LoginCommand</Button>
 
             </Grid>
         </Grid>

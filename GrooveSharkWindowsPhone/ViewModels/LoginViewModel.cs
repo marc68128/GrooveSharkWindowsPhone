@@ -49,8 +49,10 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 
             });
 
-            LoginCommand.ThrownExceptions.OfType<GrooveSharkException>()
-                .Subscribe(e => new MessageDialog(e.Description).ShowAsync());
+            LoginCommand = _user.LoginCommand;
+
+            this.WhenAnyValue(self => self.UserName).BindTo(_user, u => u.Username);
+            this.WhenAnyValue(self => self.Password).BindTo(_user, u => u.Password);
         }
 
         private string _userName;

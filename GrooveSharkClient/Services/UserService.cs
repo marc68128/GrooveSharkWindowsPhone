@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace GrooveSharkClient.Services
             Username = username;
             Password = password;
 
-            #region Login
+            #region LoginCommand
 
             var canLogin =
                 session.IsSessionAvailableObs.CombineLatest(
@@ -27,34 +28,56 @@ namespace GrooveSharkClient.Services
                         .CombineLatest(this.WhenAnyValue(self => self.Password)
                             .Select(p => !string.IsNullOrEmpty(p)), (a, b) => a & b), (b, b1) => b1 & b);
 
-            Login = ReactiveCommand.CreateAsyncObservable(canLogin, _ =>
+            LoginCommand = ReactiveCommand.CreateAsyncObservable(canLogin, _ =>
                 {
                     IsLoading = true;
                     return client.Login(username, password, session.SessionId);
                 });
 
-            Login.Where(u => u != null).Do(_ => IsLoading = false).BindTo(this, self => self.ConnectedUser);
+            LoginCommand.Where(u => u != null).Subscribe(u =>
+            {
+                Debug.WriteLine("[UserService] User : " + u.FName);
+                IsLoading = false;
+                IsUserAvailable = true;
+                ConnectedUser = u; 
+            });
 
+            LoginCommand.ThrownExceptions.Subscribe(ex =>
+            {
+                Debug.WriteLine("[UserService]" + ex);
+                IsLoading = false;
+                IsUserAvailable = false; 
+            });
             #endregion
 
+            #region RefreshUser
 
-            if (username != null && password != null)
-            {
-                Login.CanExecuteObservable.Where(b => b).Take(1).Subscribe(_ => Login.Execute(null));
-            }
-
-            RefreshConnectedUser = ReactiveCommand.CreateAsyncObservable(session.IsSessionAvailableObs, _ =>
+            RefreshConnectedUserCommand = ReactiveCommand.CreateAsyncObservable(session.IsSessionAvailableObs, _ =>
             {
                 IsLoading = true;
+                IsUserAvailable = false; 
                 return client.GetUserInfo(session.SessionId);
             });
 
-            RefreshConnectedUser
-                .Do(_ => IsLoading = false)
-                .Where(u => u != null)
-                .BindTo(this, self => self.ConnectedUser);
+            RefreshConnectedUserCommand.Where(u => u != null).Subscribe(u =>
+            {
+                Debug.WriteLine("[UserService] User : " + u.FName);
+                IsLoading = false;
+                IsUserAvailable = true;
+                ConnectedUser = u; 
+            });
+
+
+            #endregion
+
+            if (username != null && password != null)
+                LoginCommand.CanExecuteObservable.Where(b => b).Take(1).Subscribe(_ => LoginCommand.Execute(null));
+            else
+                RefreshConnectedUserCommand.CanExecuteObservable.Where(b => b).Take(1).Subscribe(_ => RefreshConnectedUserCommand.Execute(null));
 
         }
+
+        #region UserInfos
 
         private string _username;
         public string Username
@@ -70,7 +93,15 @@ namespace GrooveSharkClient.Services
             set { this.RaiseAndSetIfChanged(ref _password, value); }
         }
 
-        public ReactiveCommand<User> Login { get; protected set; }
+        #endregion
+
+        #region ReactiveCommands
+
+        public ReactiveCommand<User> LoginCommand { get; protected set; }
+        public ReactiveCommand<User> RefreshConnectedUserCommand { get; private set; }
+
+        #endregion
+
 
         private User _connectedUser;
         public User ConnectedUser
@@ -80,7 +111,9 @@ namespace GrooveSharkClient.Services
         }
         public IObservable<User> ConnectedUserObs { get { return this.WhenAnyValue(self => self.ConnectedUser); } }
 
-        public ReactiveCommand<User> RefreshConnectedUser { get; private set; }
+
+
+        #region Loading
 
         private bool _isLoading;
         public bool IsLoading
@@ -88,6 +121,23 @@ namespace GrooveSharkClient.Services
             get { return _isLoading; }
             set { this.RaiseAndSetIfChanged(ref _isLoading, value); }
         }
-        public IObservable<bool> IsLoadingObs { get { return this.WhenAnyValue(self => self.IsLoading); } }
+        public IObservable<bool> IsLoadingObs
+        {
+            get { return this.WhenAnyValue(self => self.IsLoading); }
+        }
+
+        private bool _isUserAvailable;
+        public bool IsUserAvailable
+        {
+            get { return _isUserAvailable; }
+            set { this.RaiseAndSetIfChanged(ref _isUserAvailable, value); }
+        }
+        public IObservable<bool> IsUserAvailableObs
+        {
+            get { return this.WhenAnyValue(self => self.IsUserAvailable); }
+        }
+
+        #endregion
+
     }
 }
