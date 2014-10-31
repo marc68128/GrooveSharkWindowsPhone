@@ -10,12 +10,12 @@ namespace GrooveSharkClient.Contracts
 {
     public interface ISessionService
     {
-        IObservable<bool> IsSessionIdAvailable { get; }
-        IObservable<string> SessionIdObs { get; }
-        IObservable<User> UserInfoObs { get; }
-        User User { get; }
-        string SessionId { get; }
+        IObservable<bool> IsLoadingObs { get; }
+        IObservable<bool> IsSessionAvailableObs { get; }
 
-        ReactiveCommand<User> RefreshUserCommand { get; set; }
+        IObservable<string> SessionIdObs { get; }
+
+        string SessionId { get; }
+        ReactiveCommand<string> LoadSessionId { get; }
     }
 }

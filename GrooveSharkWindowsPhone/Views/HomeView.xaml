@@ -5,47 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:GrooveSharkWindowsPhone.Views"
+    xmlns:helpers="using:GrooveSharkWindowsPhone.Helpers"
+    xmlns:userControls="using:GrooveSharkWindowsPhone.UserControls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <DataTemplate x:Name="SongTemplate">
-            <Grid Height="75">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-
-
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#888888">
-                        <Run Text="{Binding SongPosition}"></Run>
-                        <Run Text="."></Run>
-                </TextBlock>
-
-                <Image Height="63" Width="63" Grid.Row="1" Grid.Column="1" Margin="5" Source="{Binding ThumbnailUrl}"/>
-
-
-                <StackPanel Grid.Row="1" Grid.Column="2" Margin="5" VerticalAlignment="Center">
-
-                    <TextBlock  FontSize="16" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
-
-                    <TextBlock  FontSize="16" TextTrimming="CharacterEllipsis">
-                        <Run Text="{Binding ArtistName}"></Run>
-                        <Run Text=" • "></Run>
-                         <Run Text="{Binding AlbumName}"></Run>
-                    </TextBlock>
-                </StackPanel>
-
-                <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="0" Height="2" Background="#888888"></StackPanel>
-            </Grid>
-        </DataTemplate>
-
         <Style x:Key="ListBoxCustomItemStyle" TargetType="ListBoxItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Template">
@@ -88,7 +53,7 @@
         <Pivot.TitleTemplate>
             <DataTemplate>
                 <Grid Background="{ThemeResource GrooveSharkOrangeBrush}">
-                    <Image HorizontalAlignment="Left" Margin="19,38,0,0" Source="/Assets/Images/Logos/Grooveshark_Logo_Horizontal.png" Height="25"></Image>
+                    <Image HorizontalAlignment="Left" Margin="19,2,0,2" Source="/Assets/Images/Logos/Grooveshark_Logo_Horizontal.png" Height="25"></Image>
                 </Grid>
             </DataTemplate>
         </Pivot.TitleTemplate>
@@ -106,10 +71,8 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </PivotItem>
-        <PivotItem Margin="14,20,14,0" Header="Search">
-            <StackPanel>
-                <TextBox PlaceholderText="Search for songs, artists or playlists" ></TextBox>
-            </StackPanel>
+        <PivotItem Margin="14,20,14,0" Header="Search" DataContext="{Binding SearchViewModel}">
+           <userControls:UCSearch DataContext="{Binding}"></userControls:UCSearch>
         </PivotItem>
     </Pivot>
 

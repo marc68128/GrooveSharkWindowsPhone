@@ -1,0 +1,31 @@
+﻿<UserControl
+    x:Class="GrooveSharkWindowsPhone.UserControls.UCError"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GrooveSharkWindowsPhone.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="500"
+    d:DesignWidth="400">
+
+    <Grid Background="{ThemeResource GrooveSharkOrangeBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="250"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="1" MaxHeight="250" Source="/Assets/Images/Logos/Grooveshark.png"></Image>
+        
+        <TextBlock Grid.Row="2" Foreground="White" FontSize="20" TextWrapping="Wrap" TextAlignment="Center" Margin="10">
+            Sorry, We are not able to get any datas from server
+        </TextBlock>
+        
+        <Button Tapped="TryAgainTap" Grid.Row="3" HorizontalAlignment="Center" Content="Try again"></Button>
+
+    </Grid>
+</UserControl>

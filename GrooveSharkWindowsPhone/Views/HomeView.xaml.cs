@@ -49,5 +49,6 @@ namespace GrooveSharkWindowsPhone.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
         }
+
     }
 }

@@ -93,6 +93,12 @@
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\UCError.xaml.cs">
+      <DependentUpon>UCError.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UCSearch.xaml.cs">
+      <DependentUpon>UCSearch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -117,6 +123,11 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Images\Icons\Album.png" />
+    <Content Include="Assets\Images\Icons\Artist.png" />
+    <Content Include="Assets\Images\Icons\Playlist.png" />
+    <Content Include="Assets\Images\Icons\Song.png" />
+    <Content Include="Assets\Images\Logos\Grooveshark.png" />
     <Content Include="Assets\Images\Logos\Grooveshark_Logo_Horizontal.png" />
     <Content Include="Assets\Images\Songs\no_cover_120.png" />
     <Content Include="Assets\Images\Songs\no_cover_63.png" />
@@ -132,7 +143,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Ressources\PivotStyle.xaml">
+    <Page Include="Ressources\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Ressources\ListBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Ressources\PivotStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -141,6 +162,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="UserControls\UCError.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UCSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>

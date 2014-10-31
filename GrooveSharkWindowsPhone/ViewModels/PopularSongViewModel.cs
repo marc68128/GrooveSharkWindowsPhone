@@ -16,7 +16,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             PopularSongsToday = new ReactiveList<SongViewModel>();
 
-            IsLoading = true;
+            //IsLoading = true;
             Status = "Loading";
 
             InitCommands();
@@ -28,16 +28,16 @@ namespace GrooveSharkWindowsPhone.ViewModels
             LoadPopularSongsTodayCommand =
                 ReactiveCommand.CreateAsyncObservable(
                     o => _session.SessionIdObs.SelectMany(session => _client.GetPopularSongToday(session)));
-            LoadPopularSongsTodayCommand.Subscribe(s =>
+            LoadPopularSongsTodayCommand.Where(s => s != null).Subscribe(s =>
             {
                 PopularSongsToday.Clear();
                 PopularSongsToday.AddRange(s.Take(50).Select((x, index) => new SongViewModel(x, index + 1)));
-                IsLoading = false;
+                //IsLoading = false;
                 Status = "";
             });
             LoadPopularSongsTodayCommand.ThrownExceptions
                 .OfType<GrooveSharkException>()
-                .Do(e => IsLoading = false)
+                //.Do(e => IsLoading = false)
                 .Do(e => Debug.WriteLine("[GrooveSharkException] : " + e.Description))
                 .BindTo(this, self => self.GrooveSharkException);
 

@@ -19,20 +19,20 @@ namespace GrooveSharkWindowsPhone.Views
             DataContext = viewModel;
 
             var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
-            statusBar.BackgroundColor = Windows.UI.Color.FromArgb(255, 27, 27, 27);
-            statusBar.BackgroundOpacity = 0.5;
-            statusBar.ProgressIndicator.ShowAsync();
+            statusBar.BackgroundColor = Windows.UI.Color.FromArgb(255, 248, 111, 5);
+            statusBar.BackgroundOpacity = 1;
+            statusBar.ShowAsync();
 
             (DataContext as BaseViewModel).WhenAnyValue(vm => vm.Status).Where(s => s != null).Subscribe(s =>
             {
                 statusBar.ProgressIndicator.Text = s;
             });
-            (DataContext as BaseViewModel).WhenAnyValue(vm => vm.IsLoading).Subscribe(x =>
+            (DataContext as BaseViewModel).WhenAnyValue(vm => vm.ShowLoader).Subscribe(x =>
             {
                 if (x)
-                    statusBar.ShowAsync();
+                    statusBar.ProgressIndicator.ShowAsync();
                 else
-                    statusBar.HideAsync();
+                    statusBar.ProgressIndicator.HideAsync();
             });
 
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;

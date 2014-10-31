@@ -22,16 +22,9 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public HomeViewModel() 
         {
             PopularSongViewModel = new PopularSongViewModel();
+            SearchViewModel = new SearchViewModel();
+
             InitCommands();
-
-            SearchCommand = ReactiveCommand.CreateAsyncObservable(_ => _country.CountryObs.SelectMany(c => _session.SessionIdObs.SelectMany(s => _client.SearchAll("World on fire", c.GetCountryInfoAsJsonString(), s))));
-            SearchCommand.BindTo(this, self => self.SearchResult);
-
-            this.WhenAnyValue(self => self.SearchResult).Subscribe(res =>
-            {
-                var a = res; 
-            });
-            SearchCommand.Execute(null);
         }
 
         private void InitCommands()
@@ -50,16 +43,12 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _popularSongViewModel, value); }
         }
 
-        private Tuple<Song[], Playlist[], Artist[], Album[]> _searchResult;
-
-        public Tuple<Song[], Playlist[], Artist[], Album[]> SearchResult
+        private SearchViewModel _searchViewModel;
+        public SearchViewModel SearchViewModel
         {
-            get { return _searchResult; }
-            set { this.RaiseAndSetIfChanged(ref _searchResult, value); }
+            get { return _searchViewModel; }
+            set { this.RaiseAndSetIfChanged(ref _searchViewModel, value); }
         }
-
-        public ReactiveCommand<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchCommand { get; set; }
-
 
         
 

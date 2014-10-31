@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Security.Credentials;
 using Windows.Storage;
 
 namespace GrooveSharkWindowsPhone.Helpers
@@ -34,5 +35,27 @@ namespace GrooveSharkWindowsPhone.Helpers
             return _localSettings.Values.ContainsKey(key);
         }
 
+        public static void SaveCredential(string userName, string password)
+        {
+            var vault = new PasswordVault();
+            var cred = new PasswordCredential("GrooveSharkCredential", userName, password);
+            vault.Add(cred);
+        }
+
+        public static PasswordCredential RetrieveCredential()
+        {
+            var vault = new PasswordVault();
+            if (vault.RetrieveAll().Count != 0)
+                return vault.FindAllByResource("GrooveSharkCredential").FirstOrDefault();
+            return null;
+        }
+
+
+        public static void RemoveCredential()
+        {
+            var vault = new PasswordVault();
+            if (vault.RetrieveAll().Count != 0)
+                vault.Remove(vault.FindAllByResource("GrooveSharkCredential").FirstOrDefault());
+        }
     }
 }

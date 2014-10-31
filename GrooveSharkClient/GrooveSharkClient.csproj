@@ -81,12 +81,14 @@
   <ItemGroup>
     <Compile Include="Contracts\ICountryService.cs" />
     <Compile Include="Contracts\IGrooveSharkClient.cs" />
+    <Compile Include="Contracts\IUserService.cs" />
     <Compile Include="GrooveSharkClient.cs" />
     <Compile Include="Helpers\HmacMd5.cs" />
     <Compile Include="Models\Entity\Album.cs" />
     <Compile Include="Models\Entity\Artist.cs" />
     <Compile Include="Models\Entity\CountryInfo.cs" />
     <Compile Include="Models\Entity\Playlist.cs" />
+    <Compile Include="Models\Exception\GrooveSharkException.cs" />
     <Compile Include="Models\GrooveSharkResult.cs" />
     <Compile Include="Models\Entity\Song.cs" />
     <Compile Include="Models\Entity\User.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Contracts\ISessionService.cs" />
     <Compile Include="Services\CountryService.cs" />
     <Compile Include="Services\SessionService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Practices.Unity.WindowsPhone">

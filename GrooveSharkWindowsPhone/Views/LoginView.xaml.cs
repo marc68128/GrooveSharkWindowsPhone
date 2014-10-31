@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -17,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 using GrooveSharkClient.Contracts;
 using GrooveSharkWindowsPhone.ViewModels;
 using Microsoft.Practices.Unity;
+using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.Views
 {
@@ -28,14 +31,17 @@ namespace GrooveSharkWindowsPhone.Views
         public LoginView() : base(new LoginViewModel())
         {
             this.InitializeComponent();
-          
+
+            ViewModel.ShowDataObs.CombineLatest(ViewModel.ShowLoaderObs, (showData, showLoader) => !showData && !showLoader)
+                .Select(b => b ? Visibility.Visible : Visibility.Collapsed)
+                .BindTo(UcError, x => x.Visibility);
         }
 
-        /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
-        /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.
-        /// This parameter is typically used to configure the page.</param>
+        private LoginViewModel ViewModel
+        {
+            get { return DataContext as LoginViewModel; }
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
 

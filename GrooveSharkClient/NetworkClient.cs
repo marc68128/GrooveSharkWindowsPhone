@@ -31,43 +31,23 @@ namespace GrooveSharkClient
 			}
 		}
 
-		HttpRequestMessage CreateRequest(HttpMethod method, string requestUri)
-		{
-			HttpRequestMessage req = new HttpRequestMessage(method, requestUri);
-			return req;
-		}
-
-		async Task<HttpResponseMessage> SendRequest(HttpRequestMessage req, CancellationToken ct, TimeSpan timeOut)
-		{
-			HttpClient client = new HttpClient();
-			if (timeOut != default(TimeSpan))
-				client.Timeout = timeOut;
-
-			//Debug.WriteLine(req.RequestUri);
-			//DebugHeadersOfRequest(req);
-
-			return await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
-		}
-
-		public async Task<HttpResponseMessage> GetAsync(string requestUri, CancellationToken ct, Action<HttpRequestMessage> customizeRequest = null, TimeSpan timeOut = default(TimeSpan)) 
-		{
-			HttpRequestMessage req = CreateRequest(HttpMethod.Get, requestUri);
-
-			if (customizeRequest != null)
-				customizeRequest(req);
-
-			return await SendRequest(req, ct, timeOut);
-		}
 
 		public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content, CancellationToken ct, Action<HttpRequestMessage> customizeRequest = null, TimeSpan timeOut = default(TimeSpan)) 
 		{
-			HttpRequestMessage req = CreateRequest(HttpMethod.Post, requestUri);
-			req.Content = content;
+			var req = new HttpRequestMessage(HttpMethod.Post, requestUri) {Content = content};
 
-			if (customizeRequest != null)
+		    if (customizeRequest != null)
 				customizeRequest(req);
 
-			return await SendRequest(req, ct, timeOut);
+
+            var client = new HttpClient();
+            if (timeOut != default(TimeSpan))
+                client.Timeout = timeOut;
+
+            //Debug.WriteLine(req.RequestUri);
+            //DebugHeadersOfRequest(req);
+
+            return await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
 		}
 	}
 }

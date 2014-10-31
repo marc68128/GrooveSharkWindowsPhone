@@ -22,8 +22,9 @@ namespace GrooveSharkWindowsPhone.ViewModels
             InitCommands();
 
 
-            CurrentUser = _session.User; 
-            _session.UserInfoObs.ObserveOn(RxApp.MainThreadScheduler).Do(_ => IsLoading = false).BindTo(this, self => self.CurrentUser); 
+            //_session.UserInfoObs.BindTo(this, self => self.CurrentUser);
+
+            //_session.UserInfoObs.ObserveOn(RxApp.MainThreadScheduler).Do(_ => IsLoading = false).BindTo(this, self => self.CurrentUser); 
 
             this.WhenAnyValue(self => self.CurrentUser)
                 .Where(u => u != null)
@@ -49,8 +50,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
             RefreshCurrentUserCommand = ReactiveCommand.Create();
             RefreshCurrentUserCommand.Subscribe(_ =>
             {
-                IsLoading = true;
-                _session.RefreshUserCommand.Execute(null);
+                ShowLoader = true;
+               // _session.RefreshUserCommand.Execute(null);
             });
 
 
@@ -61,8 +62,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 {
                     if (b)
                     {
-                        AppSettings.RemoveValue("UserName");
-                        AppSettings.RemoveValue("Md5Password");
+                        AppSettings.RemoveCredential();
                     }
                     var message = b ? "Logout successfull" : "Error : failed to logout";
                     new MessageDialog(message).ShowAsync();

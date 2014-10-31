@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -21,6 +22,7 @@ using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
 using Microsoft.Practices.Unity;
 using ReactiveUI;
+using Splat;
 
 
 namespace GrooveSharkWindowsPhone
@@ -47,13 +49,24 @@ namespace GrooveSharkWindowsPhone
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            //AppSettings.RemoveCredential();
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            DI.Setup();
+
+            var credential = AppSettings.RetrieveCredential();
+            string username = null;
+            string password = null;
+            if (credential != null)
+            {
+                credential.RetrievePassword();
+                username = credential.UserName;
+                password = credential.Password;
+            }
+            DI.Setup(username, password);
 
 
             Frame rootFrame = Window.Current.Content as Frame;
@@ -95,10 +108,23 @@ namespace GrooveSharkWindowsPhone
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(HomeView), e.Arguments))
+                if (credential == null)
                 {
-                    throw new Exception("Failed to create initial page");
+                    if (!rootFrame.Navigate(typeof(LoginView), e.Arguments))
+                    {
+                        throw new Exception("Failed to create initial page");
+                    }
                 }
+                else
+                {
+                    if (!rootFrame.Navigate(typeof(HomeView), e.Arguments))
+                    {
+                        throw new Exception("Failed to create initial page");
+                    }
+                }
+
+
+
             }
 
             // Ensure the current window is active

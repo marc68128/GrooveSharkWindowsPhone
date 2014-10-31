@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
@@ -25,6 +26,7 @@ namespace GrooveSharkClient
         private const string ServerKey = "winphone_marc2";
         private const string ServerSecret = "86b91a1ef536883aa04243b863db7281";
         private const string RequestPatern = "{\"method\":\"{0}\",\"parameters\":{{1}},\"header\":{{2}}}";
+        private readonly TimeSpan _defautTimeOut = new TimeSpan(0, 0, 15);
 
         private NetworkClient _networkClient;
 
@@ -38,7 +40,7 @@ namespace GrooveSharkClient
             return (value is string && !(value as string).StartsWith("{") && !(value as string).EndsWith("}"));
         }
 
-        private async Task<HttpResponseMessage> SendHttpRequest(string method, Dictionary<string, object> parameters = null, string sessionId = null)
+        private async Task<HttpResponseMessage> SendHttpRequest(string method, Dictionary<string, object> parameters = null, string sessionId = null, CancellationToken ct = default(CancellationToken), TimeSpan timeOut = default(TimeSpan))
         {
             var header = "\"wsKey\":\"" + ServerKey + "\"";
             if (sessionId != null)
@@ -60,20 +62,19 @@ namespace GrooveSharkClient
             var sig = HmacMd5.Hash(ServerSecret, content);
             var uri = string.Format(ServerURI, sig);
 
-            Debug.WriteLine(uri);
-            Debug.WriteLine(content);
+            Debug.WriteLine("[Networking]" + uri + "\n[Networking]" + content);
 
             HttpContent httpContent = new StringContent(content);
             httpContent.Headers.ContentType.MediaType = "application/json";
 
-            return await _networkClient.PostAsync(uri, httpContent, default(CancellationToken));
+            return await _networkClient.PostAsync(uri, httpContent, ct, null, timeOut);
         }
 
         public IObservable<string> CreateSession()
         {
             Func<string> work = () =>
             {
-                var response = SendHttpRequest("startSession").Result;
+                var response = SendHttpRequest("startSession", timeOut: _defautTimeOut).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
@@ -82,21 +83,26 @@ namespace GrooveSharkClient
                         throw sessionResult.Errors.First();
                     if (sessionResult.Result.Success)
                     {
-                        Debug.WriteLine("Session ID : " + sessionResult.Result.SessionID);
                         return sessionResult.Result.SessionID;
                     }
                 }
+                else
+                {
+                    throw new WebException("Unable to access the server !\nVerify your network connection.");
+                }
                 return null;
+
             };
 
             return Observable.Start(work);
+
         }
 
         public IObservable<CountryInfo> GetCountry()
         {
             Func<CountryInfo> work = () =>
             {
-                var response = SendHttpRequest("getCountry").Result;
+                var response = SendHttpRequest("getCountry", timeOut: _defautTimeOut).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
@@ -121,7 +127,7 @@ namespace GrooveSharkClient
             {
                 var param = new Dictionary<string, object> { { "login", userName }, { "password", md5Password } };
 
-                var response = SendHttpRequest("authenticate", param, session).Result;
+                var response = SendHttpRequest("authenticate", param, session, timeOut: _defautTimeOut).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
@@ -137,7 +143,7 @@ namespace GrooveSharkClient
             return Observable.Start(() =>
             {
 
-                var response = SendHttpRequest("logout", null, session).Result;
+                var response = SendHttpRequest("logout", null, session, timeOut: _defautTimeOut).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
@@ -156,7 +162,7 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var response = SendHttpRequest("getUserInfo", null, session).Result;
+                var response = SendHttpRequest("getUserInfo", null, session, timeOut: _defautTimeOut).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
@@ -171,7 +177,7 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var response = SendHttpRequest("getPopularSongsToday", sessionId: session).Result;
+                var response = SendHttpRequest("getPopularSongsToday", sessionId: session, timeOut: _defautTimeOut).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -195,7 +201,7 @@ namespace GrooveSharkClient
                 if (offset != 0)
                     param.Add("offset", offset);
 
-                var response = SendHttpRequest("getSongSearchResults", param,  session).Result;
+                var response = SendHttpRequest("getSongSearchResults", param, session).Result;
 
                 if (response.IsSuccessStatusCode)
                 {

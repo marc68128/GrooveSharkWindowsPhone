@@ -1,0 +1,86 @@
+﻿<UserControl
+    x:Class="GrooveSharkWindowsPhone.UserControls.UCSearch"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GrooveSharkWindowsPhone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helpers="using:GrooveSharkWindowsPhone.Helpers"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+
+        <Grid Grid.Row="0" Height="40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="0"  Tapped="PivotSelectorTap">
+                <Image Source="/Assets/Images/Icons/Song.png" ></Image>
+            </Button>
+
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="1" Tapped="PivotSelectorTap">
+                <Image Source="/Assets/Images/Icons/Artist.png"  ></Image>
+            </Button>
+
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="2" Tapped="PivotSelectorTap">
+                <Image  Source="/Assets/Images/Icons/Album.png"></Image>
+            </Button>
+
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="3"  Tapped="PivotSelectorTap">
+                <Image Source="/Assets/Images/Icons/Playlist.png" ></Image>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding SearchTerm, Mode=TwoWay}" PlaceholderText="Search for songs, artists or playlists" ></TextBox>
+            <Button Grid.Column="1" Content="Go" Margin="5,0,0,0" Command="{Binding SearchCommand}"></Button>
+        </Grid>
+
+
+        <Pivot x:Name="Pivot" Grid.Row="2" IsLocked="True" VerticalAlignment="Stretch">
+            <Pivot.TitleTemplate>
+                <DataTemplate>
+                    <StackPanel Height="0"></StackPanel>
+                </DataTemplate>
+            </Pivot.TitleTemplate>
+
+            <PivotItem x:Name="Songs" Margin="0" HorizontalAlignment="Stretch">
+                <ListBox ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource ListBoxCustomItemStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </PivotItem>
+            <PivotItem x:Name="Artists" Margin="0">
+                <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item3, Mode=OneWay}"></ListBox>
+            </PivotItem>
+            <PivotItem x:Name="Albums" Margin="0">
+                <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListBox>
+            </PivotItem>
+            <PivotItem x:Name="Playlists" Margin="0">
+                <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item2, Mode=OneWay}"></ListBox>
+            </PivotItem>
+
+        </Pivot>
+
+
+    </Grid>
+</UserControl>

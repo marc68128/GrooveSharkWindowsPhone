@@ -14,5 +14,10 @@ namespace GrooveSharkClient.Models.Entity
         public string LName { get; set; }
         public string PlaylistName { get; set; }
         public string TSAdded { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("[Playlist] Name : {0} - User : {1}", PlaylistName, FName);
+        }
     }
 }
