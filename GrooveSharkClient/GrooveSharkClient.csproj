@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Contracts\ICountryService.cs" />
     <Compile Include="Contracts\IGrooveSharkClient.cs" />
+    <Compile Include="Contracts\IService.cs" />
     <Compile Include="Contracts\IUserService.cs" />
     <Compile Include="GrooveSharkClient.cs" />
     <Compile Include="Helpers\HmacMd5.cs" />

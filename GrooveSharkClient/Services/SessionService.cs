@@ -20,21 +20,20 @@ namespace GrooveSharkClient.Services
     {
         public SessionService(IGrooveSharkClient client)
         {
-
             LoadSessionId = ReactiveCommand.CreateAsyncObservable(_ =>
             {
-                IsLoading = true; 
+                IsLoading = true;
                 return client.CreateSession();
             });
 
             SessionIdObs = LoadSessionId;
 
             SessionIdObs.Where(s => !string.IsNullOrEmpty(s)).Subscribe(s =>
-            { 
+            {
                 Debug.WriteLine("[SessionService] Session : " + s);
-                SessionId = s; 
+                SessionId = s;
                 IsLoading = false;
-                IsSessionAvailable = true;
+                IsDataAvailable = true;
             });
 
 
@@ -42,11 +41,10 @@ namespace GrooveSharkClient.Services
             LoadSessionId.ThrownExceptions.Subscribe(ex =>
             {
                 Debug.WriteLine("[SessionService]" + ex);
+                ThrownException = ex; 
                 IsLoading = false;
-                IsSessionAvailable = false; 
+                IsDataAvailable = false;
             });
-
-
         }
 
         public IObservable<string> SessionIdObs { get; private set; }
@@ -67,18 +65,36 @@ namespace GrooveSharkClient.Services
             get { return this.WhenAnyValue(self => self.IsLoading); }
         }
 
-        private bool _isSessionAvailable;
-        public bool IsSessionAvailable
+        private bool _isDataAvailable;
+        public bool IsDataAvailable
         {
-            get { return _isSessionAvailable; }
-            set { this.RaiseAndSetIfChanged(ref _isSessionAvailable, value); }
+            get { return _isDataAvailable; }
+            set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
         }
-        public IObservable<bool> IsSessionAvailableObs
+        public IObservable<bool> IsDataAvailableObs
         {
-            get { return this.WhenAnyValue(self => self.IsSessionAvailable); }
+            get { return this.WhenAnyValue(self => self.IsDataAvailable); }
         }
 
         #endregion
 
+        #region Exceptions
+
+        private Exception _thrownException;
+        public Exception ThrownException
+        {
+            get { return _thrownException; }
+            set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
+        }
+
+        public IObservable<Exception> ThrownExceptionObs
+        {
+            get
+            {
+                return this.WhenAnyValue(self => self.ThrownException);
+            }
+        }
+
+        #endregion
     }
 }

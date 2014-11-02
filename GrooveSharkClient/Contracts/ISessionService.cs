@@ -8,14 +8,11 @@ using ReactiveUI;
 
 namespace GrooveSharkClient.Contracts
 {
-    public interface ISessionService
+    public interface ISessionService : IService
     {
-        IObservable<bool> IsLoadingObs { get; }
-        IObservable<bool> IsSessionAvailableObs { get; }
-
         IObservable<string> SessionIdObs { get; }
-
         string SessionId { get; }
+
         ReactiveCommand<string> LoadSessionId { get; }
     }
 }
