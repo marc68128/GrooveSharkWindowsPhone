@@ -8,7 +8,6 @@ namespace GrooveSharkClient.Contracts
 {
     public interface IService
     {
-        IObservable<bool> IsLoadingObs { get; }
         IObservable<bool> IsDataAvailableObs { get; }
 
         IObservable<Exception> ThrownExceptionObs { get; } 

@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
 using GrooveSharkWindowsPhone.Helpers;
+using GrooveSharkWindowsPhone.Views;
 using Microsoft.Practices.Unity;
 using ReactiveUI;
 using Splat;
@@ -27,11 +28,16 @@ namespace GrooveSharkWindowsPhone.ViewModels
             PasswordLabel = "Password";
             UserName = "marc68128";
 
+            this.WhenAnyValue(self => self.UserName).BindTo(_user, service => service.Username);
+            this.WhenAnyValue(self => self.Password).Select(MD5.GetHashString).BindTo(_user, service => service.Password);
 
-            LoginCommand =
-                ReactiveCommand.CreateAsyncObservable(
-                    _ => _session.SessionIdObs.SelectMany(s => _client.Login(UserName, MD5.GetHashString(Password), s)));
 
+            LoginCommand = ReactiveCommand.CreateAsyncObservable(_ =>
+            {
+                _user.Username = UserName;
+                _user.Password = MD5.GetHashString(Password);
+                return _user.LoginCommand.ExecuteAsync(null);
+            }); 
 
             LoginCommand.Where(u => u != null).Subscribe(u =>
             {
@@ -42,17 +48,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 }
                 else
                 {
-                    AppSettings.AddValue("UserName", UserName);
-                    AppSettings.AddValue("Md5Password", MD5.GetHashString(Password));
-                    NavigationHelper.GoBack();
+                    AppSettings.SaveCredential(UserName, MD5.GetHashString(Password));
+                    if (NavigationHelper.CanGoBack())
+                        NavigationHelper.GoBack();
+                    else
+                        NavigationHelper.Navigate(typeof (HomeView));
                 }
                 
             });
-
-            LoginCommand = _user.LoginCommand;
-
-            this.WhenAnyValue(self => self.UserName).BindTo(_user, u => u.Username);
-            this.WhenAnyValue(self => self.Password).BindTo(_user, u => u.Password);
         }
 
         private string _userName;

@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 using GrooveSharkClient.Contracts;
+using GrooveSharkWindowsPhone.UserControls;
 using GrooveSharkWindowsPhone.ViewModels;
 using Microsoft.Practices.Unity;
 using ReactiveUI;
@@ -32,9 +33,12 @@ namespace GrooveSharkWindowsPhone.Views
         {
             this.InitializeComponent();
 
-            ViewModel.ShowDataObs.CombineLatest(ViewModel.ShowLoaderObs, (showData, showLoader) => !showData && !showLoader)
-                .Select(b => b ? Visibility.Visible : Visibility.Collapsed)
-                .BindTo(UcError, x => x.Visibility);
+            ViewModel.ShowSessionErrorObs.Select(x => x ? Visibility.Visible : Visibility.Collapsed)
+                .BindTo(UcSessionError, error => error.Visibility);
+
+            ViewModel.WebExceptionObs.Where(ex => ex != null).Subscribe(ex => new MessageDialog("No network !").ShowAsync());
+            ViewModel.GrooveSharkExceptionObs.Where(ex => ex != null).Subscribe(ex => new MessageDialog(ex.Description).ShowAsync());
+
         }
 
         private LoginViewModel ViewModel

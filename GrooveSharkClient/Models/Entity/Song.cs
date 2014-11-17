@@ -19,5 +19,6 @@ namespace GrooveSharkClient.Models
         public bool IsLowBitrateAvailable { get; set; }
         public bool IsVerified { get; set; }
         public int Flags { get; set; }
+        public int Sort { get; set; }
     }
 }

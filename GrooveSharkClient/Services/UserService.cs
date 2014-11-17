@@ -14,39 +14,34 @@ namespace GrooveSharkClient.Services
     public class UserService : ReactiveObject, IUserService
     {
 
-        public UserService(IGrooveSharkClient client, ISessionService session, string username = null, string password = null)
+        public UserService(IGrooveSharkClient client, ISessionService session, LoadingService loadingService, string username = null, string password = null)
         {
+
             Username = username;
             Password = password;
 
             #region LoginCommand
 
-            var canLogin =
-                session.IsDataAvailableObs.CombineLatest(
-                    this.WhenAnyValue(self => self.Username)
-                        .Select(u => !string.IsNullOrEmpty(u))
-                        .CombineLatest(this.WhenAnyValue(self => self.Password)
-                            .Select(p => !string.IsNullOrEmpty(p)), (a, b) => a & b), (b, b1) => b1 & b);
-
-            LoginCommand = ReactiveCommand.CreateAsyncObservable(canLogin, _ =>
-                {
-                    IsLoading = true;
-                    return client.Login(username, password, session.SessionId);
-                });
+            LoginCommand = ReactiveCommand.CreateAsyncObservable(session.IsDataAvailableObs, _ =>
+            {
+                loadingService.AddLoadingStatus("Login...");
+                return client.Login(Username, Password, session.SessionId);
+            });
 
             LoginCommand.Where(u => u != null).Subscribe(u =>
             {
                 Debug.WriteLine("[UserService] User : " + u.FName);
-                IsLoading = false;
-                IsUserAvailable = true;
-                ConnectedUser = u; 
+                loadingService.RemoveLoadingStatus("Login...");
+                IsDataAvailable = true;
+                ConnectedUser = u;
             });
 
             LoginCommand.ThrownExceptions.Subscribe(ex =>
             {
                 Debug.WriteLine("[UserService]" + ex);
-                IsLoading = false;
-                IsUserAvailable = false; 
+                ThrownException = ex;
+                loadingService.RemoveLoadingStatus("Login...");
+                IsDataAvailable = false;
             });
             #endregion
 
@@ -54,17 +49,25 @@ namespace GrooveSharkClient.Services
 
             RefreshConnectedUserCommand = ReactiveCommand.CreateAsyncObservable(session.IsDataAvailableObs, _ =>
             {
-                IsLoading = true;
-                IsUserAvailable = false; 
+                loadingService.AddLoadingStatus("Refresh User...");
+                IsDataAvailable = false;
                 return client.GetUserInfo(session.SessionId);
             });
 
             RefreshConnectedUserCommand.Where(u => u != null).Subscribe(u =>
             {
                 Debug.WriteLine("[UserService] User : " + u.FName);
-                IsLoading = false;
-                IsUserAvailable = true;
-                ConnectedUser = u; 
+                loadingService.RemoveLoadingStatus("Refresh User...");
+                IsDataAvailable = true;
+                ConnectedUser = u;
+            });
+
+            RefreshConnectedUserCommand.ThrownExceptions.Subscribe(ex =>
+            {
+                Debug.WriteLine("[UserService]" + ex);
+                ThrownException = ex;
+                loadingService.RemoveLoadingStatus("Refresh User...");
+                IsDataAvailable = false;
             });
 
 
@@ -72,28 +75,8 @@ namespace GrooveSharkClient.Services
 
             if (username != null && password != null)
                 LoginCommand.CanExecuteObservable.Where(b => b).Take(1).Subscribe(_ => LoginCommand.Execute(null));
-            else
-                RefreshConnectedUserCommand.CanExecuteObservable.Where(b => b).Take(1).Subscribe(_ => RefreshConnectedUserCommand.Execute(null));
 
         }
-
-        #region UserInfos
-
-        private string _username;
-        public string Username
-        {
-            get { return _username; }
-            set { this.RaiseAndSetIfChanged(ref _username, value); }
-        }
-
-        private string _password;
-        public string Password
-        {
-            get { return _password; }
-            set { this.RaiseAndSetIfChanged(ref _password, value); }
-        }
-
-        #endregion
 
         #region ReactiveCommands
 
@@ -102,6 +85,7 @@ namespace GrooveSharkClient.Services
 
         #endregion
 
+        #region User
 
         private User _connectedUser;
         public User ConnectedUser
@@ -109,35 +93,48 @@ namespace GrooveSharkClient.Services
             get { return _connectedUser; }
             set { this.RaiseAndSetIfChanged(ref _connectedUser, value); }
         }
-        public IObservable<User> ConnectedUserObs { get { return this.WhenAnyValue(self => self.ConnectedUser); } }
+        public IObservable<User> ConnectedUserObs
+        {
+            get { return this.WhenAnyValue(self => self.ConnectedUser); }
+        }
 
+        public string Username { get; set; }
+        public string Password { get; set; }
 
+        #endregion
 
         #region Loading
 
-        private bool _isLoading;
-        public bool IsLoading
+        private bool _isDataAvailable;
+        public bool IsDataAvailable
         {
-            get { return _isLoading; }
-            set { this.RaiseAndSetIfChanged(ref _isLoading, value); }
+            get { return _isDataAvailable; }
+            set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
         }
-        public IObservable<bool> IsLoadingObs
+        public IObservable<bool> IsDataAvailableObs
         {
-            get { return this.WhenAnyValue(self => self.IsLoading); }
-        }
-
-        private bool _isUserAvailable;
-        public bool IsUserAvailable
-        {
-            get { return _isUserAvailable; }
-            set { this.RaiseAndSetIfChanged(ref _isUserAvailable, value); }
-        }
-        public IObservable<bool> IsUserAvailableObs
-        {
-            get { return this.WhenAnyValue(self => self.IsUserAvailable); }
+            get { return this.WhenAnyValue(self => self.IsDataAvailable); }
         }
 
         #endregion
 
+        #region Exceptions
+
+        private Exception _thrownException;
+        public Exception ThrownException
+        {
+            get { return _thrownException; }
+            set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
+        }
+
+        public IObservable<Exception> ThrownExceptionObs
+        {
+            get
+            {
+                return this.WhenAnyValue(self => self.ThrownException);
+            }
+        }
+
+        #endregion
     }
 }

@@ -1,25 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using GrooveSharkClient.Models;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
-    public class SongViewModel : ReactiveObject
+    public class SongViewModel : BaseViewModel
     {
-        private Song _s; 
+        private Song _s;
 
-        public SongViewModel(Song s, int position)
+        public SongViewModel(Song s, int position, bool isFavorite = false)
         {
             _s = s;
-            SongPosition = position; 
+            IsFavorite = isFavorite;
+            SongPosition = position;
             ThumbnailUrl = (!string.IsNullOrEmpty(s.CoverArtFilename) && s.CoverArtFilename != "0") ? "http://images.gs-cdn.net/static/albums/70_" + s.CoverArtFilename : "/Assets/Images/Songs/no_cover_63.png";
+            InitCommands();
         }
 
-        public string ArtistName { get { return _s.ArtistName;  } }
+        private void InitCommands()
+        {
+            #region AddSongtoUserFavourites
+
+            AddSongToUserFavouritesCommand = ReactiveCommand.CreateAsyncObservable(this.WhenAnyValue(self => self.IsFavorite).Select(x => !x),
+                _ =>
+                {
+                    _loading.AddLoadingStatus("Adding song to your favorites...");
+                    return _client.AddSongToUserFavourites(_session.SessionId, _s.SongID.ToString());
+                });
+
+            AddSongToUserFavouritesCommand.Subscribe(x =>
+            {
+                IsFavorite = true; 
+                _loading.RemoveLoadingStatus("Adding song to your favorites...");
+                new MessageDialog(SongName + " added to your favourites.").ShowAsync();
+            });
+
+            AddSongToUserFavouritesCommand.ThrownExceptions.OfType<WebException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Adding song to your favorites..."))
+                .BindTo(this, self => self.WebException);
+
+            AddSongToUserFavouritesCommand.ThrownExceptions.OfType<GrooveSharkException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Adding song to your favorites..."))
+                .BindTo(this, self => self.GrooveSharkException);
+
+            #endregion
+
+            #region RemoveSongFromUserFavourites
+
+            RemoveSongFromUserFavouritesCommand = ReactiveCommand.CreateAsyncObservable(this.WhenAnyValue(self => self.IsFavorite),
+                _ =>
+                {
+                    _loading.AddLoadingStatus("Removing song from your favorites...");
+                    return _client.RemoveUserFavoriteSongs(_s.SongID.ToString() , _session.SessionId);
+                });
+
+            RemoveSongFromUserFavouritesCommand.Subscribe(x =>
+            {
+                IsFavorite = false;
+                _loading.RemoveLoadingStatus("Removing song from your favorites...");
+                new MessageDialog(SongName + " removed from your favourites.").ShowAsync();
+            });
+
+            RemoveSongFromUserFavouritesCommand.ThrownExceptions.OfType<WebException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Removing song from your favorites..."))
+                .BindTo(this, self => self.WebException);
+
+            RemoveSongFromUserFavouritesCommand.ThrownExceptions.OfType<GrooveSharkException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Removing song from your favorites..."))
+                .BindTo(this, self => self.GrooveSharkException);
+
+            #endregion
+        }
+
+        public string ArtistName { get { return _s.ArtistName; } }
         public string SongName { get { return _s.SongName; } }
         public string AlbumName { get { return _s.AlbumName; } }
 
@@ -29,7 +90,6 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _songPosition; }
             set { this.RaiseAndSetIfChanged(ref _songPosition, value); }
         }
-        
 
         private string _thumbnailUrl;
         public string ThumbnailUrl
@@ -37,7 +97,18 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _thumbnailUrl; }
             set { this.RaiseAndSetIfChanged(ref _thumbnailUrl, value); }
         }
-        
+
+        private bool _isFavorite;
+        public bool IsFavorite
+        {
+            get { return _isFavorite; }
+            set { this.RaiseAndSetIfChanged(ref _isFavorite, value); }
+        }
+
+
+        public ReactiveCommand<bool> AddSongToUserFavouritesCommand { get; private set; }
+        public ReactiveCommand<bool> RemoveSongFromUserFavouritesCommand { get; private set; }
+
     }
 
 }

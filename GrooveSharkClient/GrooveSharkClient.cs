@@ -132,8 +132,10 @@ namespace GrooveSharkClient
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
                     var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+
                     if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
                         throw grooveSharkResult.Errors.First();
+
                     return new User(grooveSharkResult);
                 }
                 throw new WebException("Unable To Connect");
@@ -156,7 +158,7 @@ namespace GrooveSharkClient
                     }
                     return sessionResult.Result.Success;
                 }
-                return false;
+                throw new WebException("Unable To Logout");
             });
         }
 
@@ -189,7 +191,7 @@ namespace GrooveSharkClient
                         throw sessionResult.Errors.First();
                     return sessionResult.Result.Songs;
                 }
-                return null;
+                throw new WebException("Unable To GetPopular song");
             });
         }
 
@@ -294,6 +296,166 @@ namespace GrooveSharkClient
             var albumsObs = SearchAlbum(query, session, limit);
 
             return Observable.When(songsObs.And(playlistsObs).And(artistsObs).And(albumsObs).Then(Tuple.Create));
+        }
+
+        public IObservable<Playlist[]> GetUserPlaylists(string session, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object>();
+                if (limit != 0)
+                    param.Add("limit", limit);
+                else
+                    param = null;
+
+                var response = SendHttpRequest("getUserPlaylists", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Playlists;
+                }
+                throw new WebException("Unable to get User Playlists");
+
+            });
+        }
+
+        public IObservable<Song[]> GetUserFavoriteSongs(string session, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object>();
+                if (limit != 0)
+                    param.Add("limit", limit);
+                else
+                    param = null;
+
+                var response = SendHttpRequest("getUserFavoriteSongs", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Songs;
+                }
+                throw new WebException("Unable to get User Favourites");
+
+            });
+        }
+
+        public IObservable<Song[]> GetUserLibrarySongs(string session, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object>();
+                if (limit != 0)
+                    param.Add("limit", limit);
+                else
+                    param = null;
+
+                var response = SendHttpRequest("getUserLibrarySongs", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Songs;
+                }
+                throw new WebException("Unable to get User Library songs");
+
+            });
+        }
+
+        public IObservable<bool> RemoveUserFavoriteSongs(string songId, string session)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object> { { "songIDs", songId } };
+
+                var response = SendHttpRequest("removeUserFavoriteSongs", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Success;
+                }
+                return false;
+            });
+        }
+
+        public IObservable<bool> AddSongToUserFavourites(string session, string songId)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object>{{"songID", songId}};
+
+
+                var response = SendHttpRequest("addUserFavoriteSong", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Success;
+                }
+                throw new WebException("Unable to Add song to user favourites");
+            });
+        }
+
+        public IObservable<Playlist> GetPlaylist(string session, string playlistId, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object>{{"playlistID", playlistId}};
+                if (limit != 0)
+                    param.Add("limit", limit);
+
+                var response = SendHttpRequest("getPlaylist", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return new Playlist(sessionResult);
+                }
+                throw new WebException("Unable to get Playlist");
+
+            });
+        }
+
+        public IObservable<Playlist> GetPlaylistInfos(string session, string playlistId)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object> { { "playlistID", playlistId } };
+
+                var response = SendHttpRequest("getPlaylistInfo", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return new Playlist(sessionResult);
+                }
+                throw new WebException("Unable to get Playlist");
+
+            });
         }
     }
 }

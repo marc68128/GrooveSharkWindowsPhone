@@ -1,0 +1,32 @@
+﻿<UserControl
+    x:Class="GrooveSharkWindowsPhone.UserControls.UCSongMinimized"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GrooveSharkWindowsPhone.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="30"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Horizontal" Height="30" Holding="OnHolding" Background="#00000000">
+        <FlyoutBase.AttachedFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem Text="Play now" />
+                <MenuFlyoutItem Text="Play next" />
+                <MenuFlyoutItem Text="Add to favourites" Command="{Binding AddSongToUserFavouritesCommand}" />
+            </MenuFlyout>
+        </FlyoutBase.AttachedFlyout>
+        <TextBlock Width="15" Margin="0,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#888888">
+            <Run Text="{Binding SongPosition}"></Run>
+            <Run Text="."></Run>
+        </TextBlock>
+
+        <TextBlock  FontSize="12" Text="{Binding SongName}" FontWeight="Bold" VerticalAlignment="Center"></TextBlock>
+
+        <TextBlock Text="{Binding ArtistName}" Margin="10,0,0,0" FontSize="12" TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
+        </TextBlock>
+
+
+    </StackPanel>
+</UserControl>

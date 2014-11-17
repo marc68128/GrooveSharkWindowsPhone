@@ -31,9 +31,13 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             NavigateToSettingsCommand = ReactiveCommand.Create();
             NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(SettingsView)));
+
+            NavigateToAccountCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.UserID != 0));
+            NavigateToAccountCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(AccountView)));
         }
 
         public ReactiveCommand<object> NavigateToSettingsCommand { get; set; }
+        public ReactiveCommand<object> NavigateToAccountCommand { get; set; }
 
 
         private PopularSongViewModel _popularSongViewModel;

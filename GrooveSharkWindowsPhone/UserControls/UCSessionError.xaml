@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="GrooveSharkWindowsPhone.UserControls.UCError"
+    x:Class="GrooveSharkWindowsPhone.UserControls.UCSessionError"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GrooveSharkWindowsPhone.UserControls"

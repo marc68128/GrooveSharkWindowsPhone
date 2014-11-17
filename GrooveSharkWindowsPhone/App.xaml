@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GrooveSharkWindowsPhone"
+    xmlns:converters="using:GrooveSharkWindowsPhone.Converters"
     RequestedTheme="Light">
 
     <Application.Resources>
@@ -12,6 +13,7 @@
                 <ResourceDictionary Source="Ressources/PivotStyles.xaml" />
                 <ResourceDictionary Source="Ressources/ListBoxStyles.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="Ressources/DataTemplates.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Ressources/Converters.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

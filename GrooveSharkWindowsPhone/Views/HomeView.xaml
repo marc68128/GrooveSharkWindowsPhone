@@ -10,43 +10,6 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.Resources>
-        <Style x:Key="ListBoxCustomItemStyle" TargetType="ListBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <Border x:Name="LayoutRoot" BorderThickness="0" BorderBrush="Black" >
-                            <ContentControl x:Name="ContentContainer" 
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" 
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"  
-                                    Margin="0"
-                                    Content="{TemplateBinding Content}" 
-                                    ContentTemplate="{TemplateBinding ContentTemplate}" 
-                                    Foreground="{TemplateBinding Foreground}" Background="{ThemeResource GrooveSharkOrangeBrush}" />
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Pressed">
-                                    </VisualState>
-                                    <VisualState x:Name="Normal">
-                                    </VisualState>
-                                    <VisualState x:Name="MouseOver" />
-                                    <VisualState x:Name="Disabled"/>
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="SelectionStates">
-                                    <VisualState x:Name="Unselected"/>
-                                    <VisualState x:Name="Selected">
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Border>
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Page.Resources>
-
 
     <Pivot Style="{StaticResource GrooveSharkPivotTemplate}">
 
@@ -79,8 +42,8 @@
     <Page.BottomAppBar>
         <CommandBar Background="{ThemeResource GrooveSharkOrangeBrush}" ClosedDisplayMode="Minimal">
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Settings" Command="{Binding NavigateToSettingsCommand}">
-                </AppBarButton>
+                <AppBarButton Label="My Account" Command="{Binding NavigateToAccountCommand}"></AppBarButton>
+                <AppBarButton Label="Settings" Command="{Binding NavigateToSettingsCommand}"></AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

@@ -69,6 +69,23 @@ namespace GrooveSharkClient.Models
         [DataMember(Name = "albums")]
         public Album[] Albums { get; set; }
 
+        #region Playlists Infos
+
+        [DataMember(Name = "PlaylistName")]
+        public string PlaylistName { get; set; }
+
+        [DataMember(Name = "TSModified")]
+        public int LastModificationTimeSpan { get; set; }
+
+        [DataMember(Name = "PlaylistDescription")]
+        public string PlaylistDescription { get; set; }
+
+        [DataMember(Name = "CoverArtFilename")]
+        public string CoverArtFilename { get; set; }
+
+        #endregion
+
+
         #region CountryInfos
 
         [DataMember(Name = "ID")]
@@ -95,6 +112,8 @@ namespace GrooveSharkClient.Models
         #endregion
 
     }
+
+    
 
 
 

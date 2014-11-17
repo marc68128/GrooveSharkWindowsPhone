@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Phone.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.ViewModels;
 using ReactiveUI;
 
@@ -23,11 +24,11 @@ namespace GrooveSharkWindowsPhone.Views
             statusBar.BackgroundOpacity = 1;
             statusBar.ShowAsync();
 
-            (DataContext as BaseViewModel).WhenAnyValue(vm => vm.Status).Where(s => s != null).Subscribe(s =>
+            (DataContext as BaseViewModel).StatusObs.WhereNotNull().Subscribe(s =>
             {
                 statusBar.ProgressIndicator.Text = s;
             });
-            (DataContext as BaseViewModel).WhenAnyValue(vm => vm.ShowLoader).Subscribe(x =>
+            (DataContext as BaseViewModel).ShowLoaderObs.Subscribe(x =>
             {
                 if (x)
                     statusBar.ProgressIndicator.ShowAsync();

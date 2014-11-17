@@ -14,13 +14,20 @@ namespace GrooveSharkWindowsPhone.ViewModels
     {
         public SearchViewModel()
         {
-            SearchCommand = ReactiveCommand.CreateAsyncObservable(_ => _country.CountryObs.SelectMany(c => _session.SessionIdObs.SelectMany(s => _client.SearchAll("World on fire", c.GetCountryInfoAsJsonString(), s))));
-            SearchCommand.BindTo(this, self => self.SearchResult);
+            SearchCommand = ReactiveCommand.CreateAsyncObservable(
+                _country.IsDataAvailableObs.CombineLatest(_session.IsDataAvailableObs, (b, b1) => b && b1),
+                _ =>
+                {
+                    _loading.AddLoadingStatus("Search...");
+                   return  _client.SearchAll(SearchTerm, _country.Country.GetCountryInfoAsJsonString(), _session.SessionId);
+                });
+
+            SearchCommand.Do(_ => _loading.RemoveLoadingStatus("Search...")).BindTo(this, self => self.SearchResult);
             this.WhenAnyValue(self => self.SearchResult).Where(x => x != null).Subscribe(r =>
             {
-                SongResult = r.Item1.Select((s, index) => new SongViewModel(s, index + 1));
+                SongResult = r.Item1.Select((s, index) => new SongViewModel(s, index + 1)).ToList();
+                PlaylistResult = r.Item2.Select(p => new PlaylistViewModel(p, true)).ToList();
             });
-            ShowLoader = false; 
         }
 
 
@@ -38,15 +45,19 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _searchTerm, value); }
         }
 
-        private IEnumerable<SongViewModel> _songResult;
-
-        public IEnumerable<SongViewModel> SongResult
+        private List<SongViewModel> _songResult;
+        public List<SongViewModel> SongResult
         {
             get { return _songResult; }
             set { this.RaiseAndSetIfChanged(ref _songResult, value); }
         }
 
-
+        private List<PlaylistViewModel> _playlistResult;
+        public List<PlaylistViewModel> PlaylistResult
+        {
+            get { return _playlistResult; }
+            set { this.RaiseAndSetIfChanged(ref _playlistResult, value); }
+        }
 
         public ReactiveCommand<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchCommand { get; set; }
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,23 +15,24 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
-using GrooveSharkClient.Contracts;
-using Splat;
 
 namespace GrooveSharkWindowsPhone.UserControls
 {
-    public sealed partial class UCError : UserControl
+    public sealed partial class UCSongMinimized : UserControl
     {
-        private ISessionService _session; 
-        public UCError()
+        public UCSongMinimized()
         {
             this.InitializeComponent();
-            _session = Locator.Current.GetService<ISessionService>(); 
         }
 
-        private void TryAgainTap(object sender, TappedRoutedEventArgs e)
+        private void OnHolding(object sender, HoldingRoutedEventArgs e)
         {
-            _session.LoadSessionId.Execute(null);
+            if (e.HoldingState != HoldingState.Started) return;
+
+            var element = sender as FrameworkElement;
+            if (element == null) return;
+
+            FlyoutBase.ShowAttachedFlyout(element);
         }
     }
 }

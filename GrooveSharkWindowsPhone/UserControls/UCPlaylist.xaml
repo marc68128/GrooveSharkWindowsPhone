@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="GrooveSharkWindowsPhone.UserControls.UCPlaylist"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GrooveSharkWindowsPhone.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    
+    <UserControl.Resources>
+        
+        <Storyboard x:Name="RotateArrow">
+            <DoubleAnimation Duration="0:0:1" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="ArrowStackPanel" d:IsOptimized="True"/>
+        </Storyboard>
+        
+        <Storyboard x:Name="ReverseRotateArrow">
+            <DoubleAnimation Duration="0:0:1" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="ArrowStackPanel" d:IsOptimized="True"/>
+        </Storyboard>
+        
+        <Storyboard x:Name="OpenSongs">
+            <DoubleAnimation x:Name="OpenDoubleAnimation" Duration="0:0:1" Storyboard.TargetProperty="(FrameworkElement.MaxHeight)" Storyboard.TargetName="SongStackPanel" EnableDependentAnimation="True" d:IsOptimized="True"/>
+        </Storyboard>
+
+        <Storyboard x:Name="CloseSongs">
+            <DoubleAnimation Duration="0:0:1" To="0" Storyboard.TargetProperty="(FrameworkElement.MaxHeight)" Storyboard.TargetName="SongStackPanel" EnableDependentAnimation="True" d:IsOptimized="True"/>
+        </Storyboard>
+        
+    </UserControl.Resources>
+
+    <StackPanel HorizontalAlignment="Stretch">
+        <Grid  Holding="OnHolding" HorizontalAlignment="Stretch" Tapped="PlaylistGridTap">
+            <FlyoutBase.AttachedFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Play now" />
+                    <MenuFlyoutItem Text="Play next" />
+                    <MenuFlyoutItem Text="Refresh" Command="{Binding LoadPlaylistSongCommand}" />
+                </MenuFlyout>
+            </FlyoutBase.AttachedFlyout>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Image x:Name="ThumbnailImage" Width="70" Height="70" Grid.Column="0" Source="{Binding ThumbnailUrl}"></Image>
+            <StackPanel Grid.Column="1"  VerticalAlignment="Center" Margin="5">
+                <TextBlock TextTrimming="WordEllipsis" Text="{Binding PlaylistName}" FontSize="23"></TextBlock>
+                <TextBlock TextTrimming="WordEllipsis" FontSize="20" Visibility="{Binding Creator, Converter={StaticResource NullOrEmptyToVisibilityConverter}}">
+                    <Run Text="by "></Run>
+                    <Run Text="{Binding Creator}"></Run>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel x:Name="ArrowStackPanel" Grid.Column="2" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                <StackPanel.RenderTransform>
+                    <CompositeTransform/>
+                </StackPanel.RenderTransform>
+                <Polygon Margin="10" VerticalAlignment="Center" Points="0,0 20,0 10,15" Fill="Black"></Polygon>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel x:Name="SongStackPanel" MaxHeight="20">
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Stretch" Height="1" Margin="0,5,0,5" Background="Black"></StackPanel>
+    </StackPanel>
+</UserControl>

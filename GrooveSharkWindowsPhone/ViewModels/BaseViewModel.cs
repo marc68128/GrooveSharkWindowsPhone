@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml.Controls;
-using GrooveSharkClient.Contracts;
+﻿using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
 using ReactiveUI;
 using Splat;
+using System;
+using System.Diagnostics;
+using System.Net;
+using System.Reactive.Linq;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
@@ -19,7 +14,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
         protected IGrooveSharkClient _client;
         protected ISessionService _session;
         protected ICountryService _country;
-        protected IUserService _user; 
+        protected IUserService _user;
+        protected ILoadingService _loading;
 
         public BaseViewModel()
         {
@@ -27,19 +23,19 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _session = Locator.Current.GetService<ISessionService>();
             _country = Locator.Current.GetService<ICountryService>();
             _user = Locator.Current.GetService<IUserService>();
+            _loading = Locator.Current.GetService<ILoadingService>();
 
-            _session.IsLoadingObs
-                .CombineLatest(_user.IsLoadingObs, (b, b1) => b || b1)
-                .Do(b => Debug.WriteLine("[BaseViewModel] ShowLoader : " + b))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .BindTo(this, self => self.ShowLoader);
 
-            _session.IsDataAvailableObs
-                .CombineLatest(_user.IsUserAvailableObs, (b, b1) => b && b1)
-                .Do(b => Debug.WriteLine("[BaseViewModel] ShowData : " + b))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .BindTo(this, self => self.ShowData);
+            ShowSessionErrorObs = _loading.IsLoadingObs.CombineLatest(_session.IsDataAvailableObs, (b, b1) => !b && !b1);
+
+
+            _session.ThrownExceptionObs.OfType<WebException>().BindTo(this, self => self.WebException);
+            _session.ThrownExceptionObs.OfType<GrooveSharkException>().BindTo(this, self => self.GrooveSharkException);
+
+            _user.ThrownExceptionObs.OfType<WebException>().BindTo(this, self => self.WebException);
+            _user.ThrownExceptionObs.OfType<GrooveSharkException>().BindTo(this, self => self.GrooveSharkException);
         }
+
 
         private string _title;
         public string Title
@@ -48,30 +44,44 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _title, value); }
         }
 
-        private bool _showLoader;
-        public bool ShowLoader
+        public IObservable<bool> ShowLoaderObs
         {
-            get { return _showLoader; }
-            set { this.RaiseAndSetIfChanged(ref _showLoader, value); }
+            get
+            {
+                return this._loading.IsLoadingObs;
+            }
         }
-        public IObservable<bool> ShowLoaderObs { get { return this.WhenAnyValue(self => self.ShowLoader); } } 
-
-        private bool _showData;
-        public bool ShowData
+        public IObservable<bool> ShowSessionErrorObs { get; private set; }
+        public IObservable<string> StatusObs
         {
-            get { return _showData; }
-            set { this.RaiseAndSetIfChanged(ref _showData, value); }
+            get
+            {
+                return this._loading.CurrentStatusObs;
+            }
         }
-        public IObservable<bool> ShowDataObs { get { return this.WhenAnyValue(self => self.ShowData); } } 
-
-        private string _status;
-        public string Status
-        {
-            get { return _status; }
-            set { this.RaiseAndSetIfChanged(ref _status, value); }
-        }
+      
 
         public string AppTitle { get { return "GrooveShark"; } }
+
+        #region Exception
+
+        private WebException _webException;
+        protected WebException WebException
+        {
+            get { return _webException; }
+            set { this.RaiseAndSetIfChanged(ref _webException, value); }
+        }
+        public IObservable<WebException> WebExceptionObs { get { return this.WhenAnyValue(self => self.WebException); } }
+
+        private GrooveSharkException _grooveSharkException;
+        protected GrooveSharkException GrooveSharkException
+        {
+            get { return _grooveSharkException; }
+            set { this.RaiseAndSetIfChanged(ref _grooveSharkException, value); }
+        }
+        public IObservable<GrooveSharkException> GrooveSharkExceptionObs { get { return this.WhenAnyValue(self => self.GrooveSharkException); } }
+
+        #endregion
 
     }
 }

@@ -24,7 +24,6 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
 
-            _user.IsLoadingObs.BindTo(this, self => self.ShowLoader);
 
             this.WhenAnyValue(self => self.CurrentUser)
                 .Where(u => u != null)

@@ -76,7 +76,13 @@
                 <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListBox>
             </PivotItem>
             <PivotItem x:Name="Playlists" Margin="0">
-                <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item2, Mode=OneWay}"></ListBox>
+                <ListBox Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource ListBoxCustomItemStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
             </PivotItem>
 
         </Pivot>

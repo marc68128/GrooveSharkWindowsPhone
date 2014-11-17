@@ -8,18 +8,15 @@ using ReactiveUI;
 
 namespace GrooveSharkClient.Contracts
 {
-    public interface IUserService
+    public interface IUserService : IService
     {
         User ConnectedUser { get; }
         IObservable<User> ConnectedUserObs { get; }
+
         ReactiveCommand<User> RefreshConnectedUserCommand { get; }
-        IObservable<bool> IsLoadingObs { get; }
-        IObservable<bool> IsUserAvailableObs { get; }
         ReactiveCommand<User> LoginCommand { get; }
 
         string Username { get; set; }
         string Password { get; set; }
-
-
     }
 }

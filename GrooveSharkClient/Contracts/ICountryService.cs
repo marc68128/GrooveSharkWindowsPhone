@@ -7,8 +7,10 @@ using GrooveSharkClient.Models.Entity;
 
 namespace GrooveSharkClient.Contracts
 {
-    public interface ICountryService
+    public interface ICountryService : IService
     {
         IObservable<CountryInfo> CountryObs { get; }
+        CountryInfo Country { get; }
+    
     }
 }

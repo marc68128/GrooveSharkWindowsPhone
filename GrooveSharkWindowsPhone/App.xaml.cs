@@ -49,14 +49,6 @@ namespace GrooveSharkWindowsPhone
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            //AppSettings.RemoveCredential();
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                this.DebugSettings.EnableFrameRateCounter = true;
-            }
-#endif
-
             var credential = AppSettings.RetrieveCredential();
             string username = null;
             string password = null;
@@ -117,7 +109,7 @@ namespace GrooveSharkWindowsPhone
                 }
                 else
                 {
-                    if (!rootFrame.Navigate(typeof(HomeView), e.Arguments))
+                    if (!rootFrame.Navigate(typeof(AccountView), e.Arguments))
                     {
                         throw new Exception("Failed to create initial page");
                     }

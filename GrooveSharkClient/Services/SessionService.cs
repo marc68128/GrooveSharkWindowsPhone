@@ -18,11 +18,11 @@ namespace GrooveSharkClient.Services
 {
     public class SessionService : ReactiveObject, ISessionService
     {
-        public SessionService(IGrooveSharkClient client)
+        public SessionService(IGrooveSharkClient client, LoadingService loadingService)
         {
             LoadSessionId = ReactiveCommand.CreateAsyncObservable(_ =>
             {
-                IsLoading = true;
+                loadingService.AddLoadingStatus("Stating Session...");
                 return client.CreateSession();
             });
 
@@ -32,7 +32,7 @@ namespace GrooveSharkClient.Services
             {
                 Debug.WriteLine("[SessionService] Session : " + s);
                 SessionId = s;
-                IsLoading = false;
+                loadingService.RemoveLoadingStatus("Stating Session...");
                 IsDataAvailable = true;
             });
 
@@ -41,8 +41,8 @@ namespace GrooveSharkClient.Services
             LoadSessionId.ThrownExceptions.Subscribe(ex =>
             {
                 Debug.WriteLine("[SessionService]" + ex);
-                ThrownException = ex; 
-                IsLoading = false;
+                ThrownException = ex;
+                loadingService.RemoveLoadingStatus("Stating Session...");
                 IsDataAvailable = false;
             });
         }
@@ -53,17 +53,6 @@ namespace GrooveSharkClient.Services
         public ReactiveCommand<string> LoadSessionId { get; private set; }
 
         #region Loading
-
-        private bool _isLoading;
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            private set { this.RaiseAndSetIfChanged(ref _isLoading, value); }
-        }
-        public IObservable<bool> IsLoadingObs
-        {
-            get { return this.WhenAnyValue(self => self.IsLoading); }
-        }
 
         private bool _isDataAvailable;
         public bool IsDataAvailable
