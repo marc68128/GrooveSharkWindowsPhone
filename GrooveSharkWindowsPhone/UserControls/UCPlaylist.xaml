@@ -8,17 +8,17 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
+
     <UserControl.Resources>
-        
+
         <Storyboard x:Name="RotateArrow">
             <DoubleAnimation Duration="0:0:1" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="ArrowStackPanel" d:IsOptimized="True"/>
         </Storyboard>
-        
+
         <Storyboard x:Name="ReverseRotateArrow">
             <DoubleAnimation Duration="0:0:1" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="ArrowStackPanel" d:IsOptimized="True"/>
         </Storyboard>
-        
+
         <Storyboard x:Name="OpenSongs">
             <DoubleAnimation x:Name="OpenDoubleAnimation" Duration="0:0:1" Storyboard.TargetProperty="(FrameworkElement.MaxHeight)" Storyboard.TargetName="SongStackPanel" EnableDependentAnimation="True" d:IsOptimized="True"/>
         </Storyboard>
@@ -26,11 +26,12 @@
         <Storyboard x:Name="CloseSongs">
             <DoubleAnimation Duration="0:0:1" To="0" Storyboard.TargetProperty="(FrameworkElement.MaxHeight)" Storyboard.TargetName="SongStackPanel" EnableDependentAnimation="True" d:IsOptimized="True"/>
         </Storyboard>
-        
+
     </UserControl.Resources>
 
-    <StackPanel HorizontalAlignment="Stretch">
+    <StackPanel HorizontalAlignment="Stretch" Margin="0,5">
         <Grid  Holding="OnHolding" HorizontalAlignment="Stretch" Tapped="PlaylistGridTap">
+          
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Play now" />
@@ -38,7 +39,7 @@
                     <MenuFlyoutItem Text="Refresh" Command="{Binding LoadPlaylistSongCommand}" />
                 </MenuFlyout>
             </FlyoutBase.AttachedFlyout>
-            
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -61,9 +62,6 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel x:Name="SongStackPanel" MaxHeight="20">
-            </StackPanel>
-
-            <StackPanel HorizontalAlignment="Stretch" Height="1" Margin="0,5,0,5" Background="Black"></StackPanel>
+        <StackPanel x:Name="SongStackPanel" MaxHeight="20" />
     </StackPanel>
 </UserControl>

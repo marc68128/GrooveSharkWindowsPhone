@@ -43,6 +43,9 @@ namespace GrooveSharkWindowsPhone.UserControls
             if (Minimized)
                 ThumbnailImage.Visibility = Visibility.Collapsed;
 
+            if (ViewModel == null)
+                return;
+
             ViewModel.WhenAnyValue(vm => vm.Songs).WhereNotNull().Subscribe(s =>
             {
                 SongStackPanel.Children.Clear();

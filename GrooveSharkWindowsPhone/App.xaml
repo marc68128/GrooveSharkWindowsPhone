@@ -11,7 +11,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Ressources/ThemeDictionary.xaml"/>
                 <ResourceDictionary Source="Ressources/PivotStyles.xaml" />
-                <ResourceDictionary Source="Ressources/ListBoxStyles.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Ressources/ListViewStyles.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="Ressources/DataTemplates.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="Ressources/Converters.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>

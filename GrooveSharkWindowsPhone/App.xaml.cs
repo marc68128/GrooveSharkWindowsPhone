@@ -97,26 +97,11 @@ namespace GrooveSharkWindowsPhone
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                if (credential == null)
+
+                if (!rootFrame.Navigate(typeof(HomeView), e.Arguments))
                 {
-                    if (!rootFrame.Navigate(typeof(LoginView), e.Arguments))
-                    {
-                        throw new Exception("Failed to create initial page");
-                    }
+                    throw new Exception("Failed to create initial page");
                 }
-                else
-                {
-                    if (!rootFrame.Navigate(typeof(AccountView), e.Arguments))
-                    {
-                        throw new Exception("Failed to create initial page");
-                    }
-                }
-
-
-
             }
 
             // Ensure the current window is active

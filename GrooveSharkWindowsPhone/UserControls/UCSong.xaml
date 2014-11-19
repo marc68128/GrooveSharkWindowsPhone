@@ -49,6 +49,6 @@
             </TextBlock>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="0" Height="2" Background="#888888"></StackPanel>
+        <!--<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="0" Height="2" Background="#888888"></StackPanel>-->
     </Grid>
 </UserControl>

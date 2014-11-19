@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GrooveSharkClient.Models;
 using ReactiveUI;
 

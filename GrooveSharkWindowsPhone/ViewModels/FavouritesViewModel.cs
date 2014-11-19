@@ -4,10 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GrooveSharkClient.Models;
-using Microsoft.Practices.ObjectBuilder2;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
@@ -26,7 +23,6 @@ namespace GrooveSharkWindowsPhone.ViewModels
                     return _client.GetUserFavoriteSongs(_session.SessionId);
                 });
             });
-
 
             LoadUserFavouritesCommand.Where(p => p != null).Subscribe(p =>
             {

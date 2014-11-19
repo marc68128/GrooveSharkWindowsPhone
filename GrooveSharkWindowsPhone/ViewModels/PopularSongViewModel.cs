@@ -14,7 +14,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
     {
         public PopularSongViewModel()
         {
-            PopularSongsToday = new ReactiveList<SongViewModel>();
+            PopularSongs = new List<SongViewModel>();
 
             InitCommands();
         }
@@ -22,18 +22,18 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             #region LoadPopularSongsTodayCommand
 
-            LoadPopularSongsTodayCommand =  ReactiveCommand.CreateAsyncObservable( _session.IsDataAvailableObs, _ =>
+            LoadPopularSongsCommand = ReactiveCommand.CreateAsyncObservable(_session.IsDataAvailableObs, _ =>
             {
                 _loading.AddLoadingStatus("Loading popular songs...");
                 return _client.GetPopularSongToday(_session.SessionId); 
             });
-            LoadPopularSongsTodayCommand.Where(s => s != null).Subscribe(s =>
+            LoadPopularSongsCommand.Where(s => s != null).Subscribe(s =>
             {
                 _loading.RemoveLoadingStatus("Loading popular songs..."); 
-                PopularSongsToday.Clear();
-                PopularSongsToday.AddRange(s.Take(50).Select((x, index) => new SongViewModel(x, index + 1)));
+
+                PopularSongs = s.Take(50).Select((x, index) => new SongViewModel(x, index + 1)).ToList();
             });
-            LoadPopularSongsTodayCommand.ThrownExceptions
+            LoadPopularSongsCommand.ThrownExceptions
                 .OfType<GrooveSharkException>()
                 .Do(e =>  _loading.RemoveLoadingStatus("Loading popular songs..."))
                 .Do(e => Debug.WriteLine("[PopularSongViewModel] : " + e.Description))
@@ -43,8 +43,15 @@ namespace GrooveSharkWindowsPhone.ViewModels
       
         }
 
-        public ReactiveList<SongViewModel> PopularSongsToday { get; set; }
-        public ReactiveCommand<Song[]> LoadPopularSongsTodayCommand { get; set; }
+
+        private List<SongViewModel> _popularSongs;
+        public List<SongViewModel> PopularSongs
+        {
+            get { return _popularSongs; }
+            set { this.RaiseAndSetIfChanged(ref _popularSongs, value); }
+        }
+
+        public ReactiveCommand<Song[]> LoadPopularSongsCommand { get; set; }
 
     }
 }

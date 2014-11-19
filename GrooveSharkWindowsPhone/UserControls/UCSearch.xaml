@@ -61,28 +61,18 @@
             </Pivot.TitleTemplate>
 
             <PivotItem x:Name="Songs" Margin="0" HorizontalAlignment="Stretch">
-                <ListBox ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource ListBoxCustomItemStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
+                <ListView ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}">
+                </ListView>
             </PivotItem>
             <PivotItem x:Name="Artists" Margin="0">
-                <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item3, Mode=OneWay}"></ListBox>
+                <ListView Background="Transparent" ItemsSource="{Binding SearchResult.Item3, Mode=OneWay}"></ListView>
             </PivotItem>
             <PivotItem x:Name="Albums" Margin="0">
-                <ListBox Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListBox>
+                <ListView Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListView>
             </PivotItem>
             <PivotItem x:Name="Playlists" Margin="0">
-                <ListBox Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource ListBoxCustomItemStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
+                <ListView Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
+                </ListView>
             </PivotItem>
 
         </Pivot>

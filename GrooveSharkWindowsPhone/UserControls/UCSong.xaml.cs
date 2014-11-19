@@ -38,13 +38,16 @@ namespace GrooveSharkWindowsPhone.UserControls
 
         private void SetupBindings()
         {
+            if (ViewModel == null)
+                return;
+
             ViewModel.WhenAnyValue(vm => vm.IsFavorite)
                 .Select(x => x ? Visibility.Collapsed : Visibility.Visible)
                 .BindTo(AddToFavouritesFlyoutItem, item => item.Visibility);
 
             ViewModel.WhenAnyValue(vm => vm.IsFavorite)
-            .Select(x => !x ? Visibility.Collapsed : Visibility.Visible)
-            .BindTo(RemoveFromFavouritesFlyoutItem, item => item.Visibility);
+                .Select(x => !x ? Visibility.Collapsed : Visibility.Visible)
+                .BindTo(RemoveFromFavouritesFlyoutItem, item => item.Visibility);
         }
 
         private void UIElement_OnHolding(object sender, HoldingRoutedEventArgs e)
