@@ -115,7 +115,7 @@ namespace GrooveSharkClient
                     return new CountryInfo(grooveSharkResult);
 
                 }
-                return null;
+                throw new WebException("Unable to access the server !\nVerify your network connection.");
             };
 
             return Observable.Start(work);

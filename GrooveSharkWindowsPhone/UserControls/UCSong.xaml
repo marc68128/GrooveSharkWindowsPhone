@@ -9,7 +9,26 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Height="75" Holding="UIElement_OnHolding">
+    <Grid x:Name="SongGrid" Height="75" Holding="UIElement_OnHolding" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CommonStates">
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Pressed" To="Normal">
+                        <Storyboard>
+                            <PointerUpThemeAnimation Storyboard.TargetName="SongGrid"/>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Normal"/>
+                <VisualState x:Name="Pressed">
+                    <Storyboard>
+                        <PointerDownThemeAnimation Storyboard.TargetName="SongGrid"/>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <FlyoutBase.AttachedFlyout>
             <MenuFlyout>
                 <MenuFlyoutItem Text="Play now" />
@@ -45,10 +64,10 @@
             <TextBlock  FontSize="16" TextTrimming="CharacterEllipsis">
                         <Run Text="{Binding ArtistName}"></Run>
                         <Run Text=" • "></Run>
-                         <Run Text="{Binding AlbumName}"></Run>
+                        <Run Text="{Binding AlbumName}"></Run>
             </TextBlock>
         </StackPanel>
 
-        <!--<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="0" Height="2" Background="#888888"></StackPanel>-->
+
     </Grid>
 </UserControl>

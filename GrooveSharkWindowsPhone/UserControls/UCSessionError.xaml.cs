@@ -21,17 +21,17 @@ namespace GrooveSharkWindowsPhone.UserControls
 {
     public sealed partial class UCSessionError : UserControl
     {
-        private ISessionService _session;
+        public event EventHandler ReloadTap;
         public UCSessionError()
         {
             this.InitializeComponent();
-            _session = Locator.Current.GetService<ISessionService>(); 
         }
 
         private void TryAgainTap(object sender, TappedRoutedEventArgs e)
         {
+            if (ReloadTap != null)
+                ReloadTap.Invoke(this, null);
             e.Handled = true;
-            _session.LoadSessionId.Execute(null);
         }
     }
 }

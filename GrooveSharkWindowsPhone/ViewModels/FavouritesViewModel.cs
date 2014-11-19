@@ -13,7 +13,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
     {
         public FavouritesViewModel()
         {
-            UserFavourites = new List<SongViewModel>();
+            UserFavourites = new ReactiveList<SongViewModel>();
 
             LoadUserFavouritesCommand = ReactiveCommand.CreateAsyncObservable(_user.IsDataAvailableObs, _ =>
             {
@@ -28,24 +28,20 @@ namespace GrooveSharkWindowsPhone.ViewModels
             {
                 _loading.RemoveLoadingStatus("Loading your favourites songs...");
                 Debug.WriteLine("[FavouritesViewModel] Favourites : " + p.Count());
-                UserFavourites = p.Select((pl, index) => new SongViewModel(pl, index + 1, true)).ToList();
+                UserFavourites.Clear();
+                UserFavourites.AddRange(p.Select((pl, index) => new SongViewModel(pl, index + 1, true)));
             });
 
             LoadUserFavouritesCommand.ThrownExceptions.OfType<WebException>().BindTo(this, self => self.WebException);
             LoadUserFavouritesCommand.ThrownExceptions.OfType<GrooveSharkException>().BindTo(this, self => self.GrooveSharkException);
 
-           
+
         }
 
 
+        public ReactiveList<SongViewModel> UserFavourites { get; set; }
 
-        private List<SongViewModel> _userFavourites;   
-        public List<SongViewModel> UserFavourites
-        {
-            get { return _userFavourites; }
-            set { _userFavourites = value; }
-        }
-        
+
 
         public ReactiveCommand<Song[]> LoadUserFavouritesCommand { get; private set; }
     }

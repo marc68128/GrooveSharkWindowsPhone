@@ -29,9 +29,29 @@
 
     </UserControl.Resources>
 
+
     <StackPanel HorizontalAlignment="Stretch" Margin="0,5">
-        <Grid  Holding="OnHolding" HorizontalAlignment="Stretch" Tapped="PlaylistGridTap">
-          
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CommonStates">
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Pressed" To="Normal">
+                        <Storyboard>
+                            <PointerUpThemeAnimation Storyboard.TargetName="PlaylistGrid"/>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Normal"/>
+                <VisualState x:Name="Pressed">
+                    <Storyboard>
+                        <PointerDownThemeAnimation Storyboard.TargetName="PlaylistGrid"/>
+                    </Storyboard>    
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid x:Name="PlaylistGrid" HorizontalAlignment="Stretch" Holding="OnHolding" Tapped="PlaylistGridTap" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Play now" />
@@ -39,7 +59,6 @@
                     <MenuFlyoutItem Text="Refresh" Command="{Binding LoadPlaylistSongCommand}" />
                 </MenuFlyout>
             </FlyoutBase.AttachedFlyout>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>

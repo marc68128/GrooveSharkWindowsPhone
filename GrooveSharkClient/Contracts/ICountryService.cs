@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GrooveSharkClient.Models.Entity;
+using ReactiveUI;
 
 namespace GrooveSharkClient.Contracts
 {
@@ -11,6 +12,7 @@ namespace GrooveSharkClient.Contracts
     {
         IObservable<CountryInfo> CountryObs { get; }
         CountryInfo Country { get; }
-    
+
+        ReactiveCommand<CountryInfo> LoadCountryCommand { get; }
     }
 }

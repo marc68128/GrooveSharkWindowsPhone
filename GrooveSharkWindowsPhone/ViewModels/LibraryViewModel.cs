@@ -13,36 +13,27 @@ namespace GrooveSharkWindowsPhone.ViewModels
     {
         public LibraryViewModel()
         {
-            UserLibrary = new List<SongViewModel>();
+            UserLibrary = new ReactiveList<SongViewModel>();
 
-            LoadUserLibraryCommand = ReactiveCommand.CreateAsyncObservable(_user.IsDataAvailableObs, _ =>
-            {
-                return _user.ConnectedUserObs.Where(u => u != null && u.UserID != 0).Take(1).SelectMany(u =>
-                {
+            LoadUserLibraryCommand = ReactiveCommand.CreateAsyncObservable(_user.IsDataAvailableObs, _ => {
+                return _user.ConnectedUserObs.Where(u => u != null && u.UserID != 0).Take(1).SelectMany(u => {
                     _loading.AddLoadingStatus("Loading library");
                     return _client.GetUserLibrarySongs(_session.SessionId);
                 });
             });
 
-            LoadUserLibraryCommand.Where(p => p != null).Subscribe(x =>
-            {
+            LoadUserLibraryCommand.Where(p => p != null).Subscribe(x => {
                 _loading.RemoveLoadingStatus("Loading library");
                 Debug.WriteLine("[LibraryViewModel] Library : " + x.Count());
-                UserLibrary = x.Select((s, index) => new SongViewModel(s, index)).ToList();
+                UserLibrary.Clear();
+                UserLibrary.AddRange(x.Select((s, index) => new SongViewModel(s, index)));
             });
 
-            LoadUserLibraryCommand.ThrownExceptions.OfType<WebException>().Do(_ =>  _loading.RemoveLoadingStatus("Loading library")).BindTo(this, self => self.WebException);
+            LoadUserLibraryCommand.ThrownExceptions.OfType<WebException>().Do(_ => _loading.RemoveLoadingStatus("Loading library")).BindTo(this, self => self.WebException);
             LoadUserLibraryCommand.ThrownExceptions.OfType<GrooveSharkException>().Do(_ => _loading.RemoveLoadingStatus("Loading library")).BindTo(this, self => self.GrooveSharkException);
         }
 
-        private List<SongViewModel> _userLiabrary;
-        public List<SongViewModel> UserLibrary
-        {
-            get { return _userLiabrary; }
-            set { this.RaiseAndSetIfChanged(ref _userLiabrary, value); }
-        }
-
-        
+        public ReactiveList<SongViewModel> UserLibrary { get; set; }
 
         public ReactiveCommand<Song[]> LoadUserLibraryCommand { get; private set; }
     }

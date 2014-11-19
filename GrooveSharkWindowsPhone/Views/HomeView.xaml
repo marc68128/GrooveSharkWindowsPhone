@@ -8,8 +8,9 @@
     xmlns:userControls="using:GrooveSharkWindowsPhone.UserControls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
     <local:BaseView.Resources>
-        <Storyboard x:Name="HideHeader">
+        <Storyboard x:Name="HideHeaderStoryboard">
             <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseIn"></BackEase>
@@ -45,7 +46,7 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Name="ShowHeader">
+        <Storyboard x:Name="ShowHeaderStoryboard">
             <DoubleAnimation From="-40" To="0" Duration="0:0:0.2" BeginTime="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseOut"></BackEase>
@@ -77,7 +78,16 @@
 
             <DoubleAnimation From="0" To="1" Duration="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="HeaderStackPanel"/>
         </Storyboard>
-
+        <Storyboard x:Name="UpSearchStoryboard">
+            <DoubleAnimation From="85" To="0" Duration="0:0:0.2" BeginTime="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="UcSearch">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseInOut"></CircleEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Name="DownSearchStoryboard">
+            <DoubleAnimation From="0" To="85" Duration="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="UcSearch" />
+        </Storyboard>
     </local:BaseView.Resources>
 
     <Grid x:Name="RootGrid">
@@ -109,7 +119,10 @@
             </PivotItem>
 
             <PivotItem Margin="14,0,14,0" Header="Search" DataContext="{Binding SearchViewModel}">
-                <userControls:UCSearch Margin="0,85,0,0"></userControls:UCSearch>
+                <userControls:UCSearch x:Name="UcSearch" ShowHeader="SearchShowHeader" HideHeader="SearchHideHeader" RenderTransformOrigin="0.5,0.5">
+                	<userControls:UCSearch.RenderTransform>
+                		<CompositeTransform TranslateY="85"/>
+                	</userControls:UCSearch.RenderTransform></userControls:UCSearch>
             </PivotItem>
             
             <PivotItem Margin="14,0,14,0" Header="Librairy">
@@ -123,7 +136,7 @@
             </PivotItem>
 
             <PivotItem Margin="14,0,14,0" Header="Playlists">
-                <ListView x:Name="PlaylistList" ItemsSource="{Binding PlaylistViewModel.UserPlaylists}" ItemContainerStyle="{StaticResource CustomListViewPlaylistStyle}" ItemTemplate="{StaticResource PlaylistDataTemplate}" Background="Transparent">
+                <ListView x:Name="PlaylistList" ItemsSource="{Binding PlaylistViewModel.UserPlaylists}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemTemplate="{StaticResource PlaylistDataTemplate}" Background="Transparent">
                     <ListView.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Height="85"/>
@@ -133,7 +146,7 @@
             </PivotItem>
 
             <PivotItem Margin="14,0,14,0" Header="Favourites">
-                <ListView x:Name="FavouritesList" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding FavouritesViewModel.UserFavourites}" ItemTemplate="{StaticResource FavoriteTemplate}" Background="Transparent">
+                <ListView x:Name="FavouritesList" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding FavouritesViewModel.UserFavourites, Mode=OneWay}" ItemTemplate="{StaticResource FavoriteTemplate}" Background="Transparent">
                     <ListView.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Height="85"/>
@@ -161,15 +174,15 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Tapped="SelectPopularTap" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Tapped="HeaderSelectorTap" Background="Gray" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Path x:Name="PopularPath" Margin="14,5,5,5" HorizontalAlignment="Left" Data="F1M-1194.75,903.661L-1185.96,931.291 -1156.97,931.114 -1180.52,948.014 -1171.41,975.531 -1194.75,958.348 -1218.11,975.531 -1208.99,948.014 -1232.54,931.114 -1203.55,931.291 -1194.75,903.661z" Stretch="Uniform" Fill="#FFFFFFFF" Width="26" Height="26" RenderTransformOrigin="0.5,0.5">
                         <Path.RenderTransform>
                             <CompositeTransform/>
                         </Path.RenderTransform>
                     </Path>
                 </Grid>
-           
-                <Grid Tapped="SelectSearchTap" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                <Grid Tapped="HeaderSelectorTap" Background="Gray" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -182,7 +195,7 @@
                     </Path>
                 </Grid>
 
-                <Grid Tapped="SelectCollectionTap" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Tapped="HeaderSelectorTap" Background="Gray" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Path x:Name="CollectionPath" HorizontalAlignment="Center" Margin="5" Data="M18.698001,56.938L18.698001,59.728001 31.349,59.728001 31.349,56.938z M1.8610001,56.938L1.8610001,59.727997 11.535001,59.727997 11.535001,56.938z M59.898386,55.058998L45.885002,57.419712 46.34852,60.171997 60.362001,57.811481z M52.786489,12.724999L38.773001,15.086076 39.236515,17.838997 53.250002,15.477921z M1.8610001,10.271L1.8610001,13.061001 11.535001,13.061001 11.535001,10.271z M54.079065,9.757L62.307001,61.243523 45.055634,64 36.829,12.513545z M0,5.21L13.394,5.21 13.394,64 0,64z M18.698001,4.9379997L18.698001,7.7279997 31.349,7.7279997 31.349,4.9379997z M17.023001,0L33.023001,0 33.023001,64 17.023001,64z" Stretch="Uniform" Fill="#FFFFFFFF" Width="26" Height="26" RenderTransformOrigin="0.5,0.5" >
                         <Path.RenderTransform>
                             <CompositeTransform/>
@@ -190,7 +203,7 @@
                     </Path>
                 </Grid>
 
-                <Grid Tapped="SelectPlaylistTap" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Tapped="HeaderSelectorTap" Background="Gray" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -203,7 +216,7 @@
                     </Path>
                 </Grid>
 
-                <Grid Tapped="SelectFavouritesTap" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Tapped="HeaderSelectorTap" Background="Gray" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Path x:Name="FavouritesPath" Margin="5,5,14,5" HorizontalAlignment="Right" Data="F1M42.7161,9.77081C43.3776,9.77081 44.0781,9.80597 44.8307,9.88019 49.401,10.3242 54.6901,14.5117 55.3333,22.5352L55.3333,25.2031C54.7369,32.8802 48.9375,42.3496 32,54.2305 15.0598,42.3496 9.26563,32.8802 8.66663,25.2031L8.66663,22.5352C9.30981,14.5117 14.5963,10.3242 19.1692,9.88019 19.9192,9.80597 20.6223,9.77081 21.2813,9.77081 26.5625,9.77081 29.0989,12.0534 32,15.5104 34.901,12.0534 37.4323,9.77081 42.7161,9.77081" Stretch="Uniform" Fill="#FFFFFFFF" Width="26" Height="26" RenderTransformOrigin="0.5,0.5" >
                         <Path.RenderTransform>
                             <CompositeTransform/>
@@ -225,12 +238,25 @@
             </Grid>
         </Grid>
 
-
+        <userControls:UCSessionError Grid.Row="1" ReloadTap="ReloadDataTap"  Visibility="Collapsed" x:Name="SessionError"></userControls:UCSessionError>  
+        
     </Grid>
+    
     <Page.BottomAppBar>
-        <CommandBar Background="{ThemeResource GrooveSharkOrangeBrush}" ClosedDisplayMode="Minimal">
+        <CommandBar Foreground="White" x:Name="ApplicationBar" Background="{ThemeResource GrooveSharkOrangeBrush}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="PlayButton" Label="Play All">
+                    <AppBarButton.Icon>
+                        <BitmapIcon HorizontalAlignment="Center" VerticalAlignment="Center" UriSource="/Assets/Icons/play.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="RefreshButton" Label="Refresh">
+                    <AppBarButton.Icon>
+                        <BitmapIcon HorizontalAlignment="Center" VerticalAlignment="Center" UriSource="/Assets/Icons/refresh.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Home" Command="{Binding NavigateToHomeCommand}"></AppBarButton>
                 <AppBarButton Label="Settings" Command="{Binding NavigateToSettingsCommand}"></AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>

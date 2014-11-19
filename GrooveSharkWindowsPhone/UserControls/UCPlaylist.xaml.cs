@@ -36,6 +36,7 @@ namespace GrooveSharkWindowsPhone.UserControls
         {
             this.InitializeComponent();
             Loaded += SetupBindings;
+            
         }
 
         private void SetupBindings(object sender, RoutedEventArgs routedEventArgs)
@@ -102,5 +103,17 @@ namespace GrooveSharkWindowsPhone.UserControls
 
             FlyoutBase.ShowAttachedFlyout(element);
         }
+
+        private void StartPress(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Pressed", true);
+        }
+
+        private void StopPress(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Normal", true);
+        }
+
+      
     }
 }

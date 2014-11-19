@@ -26,7 +26,9 @@ namespace GrooveSharkWindowsPhone.ViewModels
             Title = "Login";
             UserNameLabel = "UserName";
             PasswordLabel = "Password";
+#if DEBUG
             UserName = "marc68128";
+#endif
 
             this.WhenAnyValue(self => self.UserName).BindTo(_user, service => service.Username);
             this.WhenAnyValue(self => self.Password).Select(MD5.GetHashString).BindTo(_user, service => service.Password);

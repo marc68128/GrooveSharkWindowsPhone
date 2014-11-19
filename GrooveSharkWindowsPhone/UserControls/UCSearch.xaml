@@ -61,17 +61,17 @@
             </Pivot.TitleTemplate>
 
             <PivotItem x:Name="Songs" Margin="0" HorizontalAlignment="Stretch">
-                <ListView ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}">
+                <ListView x:Name="SongList" ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}">
                 </ListView>
             </PivotItem>
             <PivotItem x:Name="Artists" Margin="0">
-                <ListView Background="Transparent" ItemsSource="{Binding SearchResult.Item3, Mode=OneWay}"></ListView>
+                <ListView x:Name="ArtistList" Background="Transparent" ItemsSource="{Binding SearchResult.Item3, Mode=OneWay}"></ListView>
             </PivotItem>
             <PivotItem x:Name="Albums" Margin="0">
-                <ListView Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListView>
+                <ListView x:Name="AlbumList" Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListView>
             </PivotItem>
             <PivotItem x:Name="Playlists" Margin="0">
-                <ListView Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
+                <ListView x:Name="PlaylistList" Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
                 </ListView>
             </PivotItem>
 

@@ -82,9 +82,21 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             NavigateToSettingsCommand = ReactiveCommand.Create();
             NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof (SettingsView)));
+
+            ReloadAllCommand = ReactiveCommand.Create();
+            ReloadAllCommand.Subscribe(_ =>
+            {
+                _session.LoadSessionId.Execute(null);
+                _country.LoadCountryCommand.Execute(null);
+                PopularSongViewModel.LoadPopularSongsCommand.Execute(null);
+                LibraryViewModel.LoadUserLibraryCommand.Execute(null);
+                FavouritesViewModel.LoadUserFavouritesCommand.Execute(null);
+                PlaylistViewModel.LoadUserPlaylistsCommand.Execute(null);
+            });
         }
 
         public ReactiveCommand<object> NavigateToSettingsCommand { get; private set; }
+        public ReactiveCommand<object> ReloadAllCommand { get; private set; }
 
 
     }

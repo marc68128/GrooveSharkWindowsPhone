@@ -34,5 +34,15 @@ namespace GrooveSharkWindowsPhone.UserControls
 
             FlyoutBase.ShowAttachedFlyout(element);
         }
+
+        private void StartPress(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Pressed", true);
+        }
+
+        private void StopPress(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Normal", true);
+        }
     }
 }
