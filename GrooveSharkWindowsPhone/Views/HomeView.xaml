@@ -10,74 +10,74 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <local:BaseView.Resources>
         <Storyboard x:Name="HideHeader">
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="CollectionPath">
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="-40"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PlaylistPath">
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.073" Value="0"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.127" Value="-40"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="FavouritesPath">
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.103" Value="0"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.157" Value="-40"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="HeaderTextBlock">
-    			<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="image">
-    			<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="HeaderStackPanel">
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.283" Value="0"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
-    			<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.053" Value="-40"/>
-    		</DoubleAnimationUsingKeyFrames>
-    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SearchPath">
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.023" Value="0"/>
-    			<EasingDoubleKeyFrame KeyTime="0:0:0.077" Value="-40"/>
-    		</DoubleAnimationUsingKeyFrames>
-    	</Storyboard>
-        <Storyboard x:Name="ShowHeader">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="CollectionPath">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-40"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PlaylistPath">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="-40"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="FavouritesPath">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-40"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="HeaderTextBlock">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="image">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="HeaderStackPanel">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
-                <EasingDoubleKeyFrame KeyTime="0" Value="-40"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SearchPath">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-40"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" BeginTime="0:0:0.025" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SearchPath">
+            <DoubleAnimation.EasingFunction>
+                <BackEase EasingMode="EaseIn"></BackEase>
+            </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" BeginTime="0:0:0.05" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="CollectionPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" BeginTime="0:0:0.075" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PlaylistPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" BeginTime="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="FavouritesPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation From="1" To="0" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="HeaderTextBlock"/>
+            <DoubleAnimation From="1" To="0" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="image"/>
+            
+            <DoubleAnimation From="1" To="0" Duration="0:0:0.2" BeginTime="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="HeaderStackPanel">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseInOut"></CircleEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
         </Storyboard>
-    
+        <Storyboard x:Name="ShowHeader">
+            <DoubleAnimation From="-40" To="0" Duration="0:0:0.2" BeginTime="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="-40" To="0" Duration="0:0:0.2" BeginTime="0:0:0.125" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SearchPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="-40" To="0" Duration="0:0:0.2" BeginTime="0:0:0.15" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="CollectionPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="-40" To="0" Duration="0:0:0.2" BeginTime="0:0:0.175" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PlaylistPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation From="-40" To="0" Duration="0:0:0.2" BeginTime="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="FavouritesPath">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut"></BackEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+
+            <DoubleAnimation From="0" To="1" Duration="0:0:0.2" BeginTime="0:0:0.1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="HeaderTextBlock"/>
+            <DoubleAnimation From="0" To="1" Duration="0:0:0.2" BeginTime="0:0:0.1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="image"/>
+
+            <DoubleAnimation From="0" To="1" Duration="0:0:0.1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="HeaderStackPanel"/>
+        </Storyboard>
+
     </local:BaseView.Resources>
 
     <Grid x:Name="RootGrid">
