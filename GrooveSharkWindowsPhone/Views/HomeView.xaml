@@ -8,7 +8,7 @@
     xmlns:userControls="using:GrooveSharkWindowsPhone.UserControls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    
+
     <local:BaseView.Resources>
         <Storyboard x:Name="HideHeaderStoryboard">
             <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="PopularPath">
@@ -17,9 +17,9 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" BeginTime="0:0:0.025" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="SearchPath">
-            <DoubleAnimation.EasingFunction>
-                <BackEase EasingMode="EaseIn"></BackEase>
-            </DoubleAnimation.EasingFunction>
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn"></BackEase>
+                </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation From="0" To="-40" Duration="0:0:0.2" BeginTime="0:0:0.05" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="CollectionPath">
                 <DoubleAnimation.EasingFunction>
@@ -39,7 +39,7 @@
 
             <DoubleAnimation From="1" To="0" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="HeaderTextBlock"/>
             <DoubleAnimation From="1" To="0" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="image"/>
-            
+
             <DoubleAnimation From="1" To="0" Duration="0:0:0.2" BeginTime="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="HeaderStackPanel">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase EasingMode="EaseInOut"></CircleEase>
@@ -120,19 +120,33 @@
 
             <PivotItem Margin="14,0,14,0" Header="Search" DataContext="{Binding SearchViewModel}">
                 <userControls:UCSearch x:Name="UcSearch" ShowHeader="SearchShowHeader" HideHeader="SearchHideHeader" RenderTransformOrigin="0.5,0.5">
-                	<userControls:UCSearch.RenderTransform>
-                		<CompositeTransform TranslateY="85"/>
-                	</userControls:UCSearch.RenderTransform></userControls:UCSearch>
+                    <userControls:UCSearch.RenderTransform>
+                        <CompositeTransform TranslateY="85"/>
+                    </userControls:UCSearch.RenderTransform>
+                </userControls:UCSearch>
             </PivotItem>
-            
+
             <PivotItem Margin="14,0,14,0" Header="Librairy">
-                <ListView x:Name="LibraryList" ItemsSource="{Binding LibraryViewModel.UserLibrary}" ItemTemplate="{StaticResource SongTemplate}" Background="Transparent" ItemContainerStyle="{StaticResource CustomListViewStyle}">
-                    <ListView.HeaderTemplate>
-                        <DataTemplate>
-                            <StackPanel Height="85"/>
-                        </DataTemplate>
-                    </ListView.HeaderTemplate>
-                </ListView>
+                <Grid>
+                    <ListView x:Name="LibraryList" ItemsSource="{Binding LibraryViewModel.UserLibrary}" ItemTemplate="{StaticResource SongTemplate}" Background="Transparent" ItemContainerStyle="{StaticResource CustomListViewStyle}">
+                        <ListView.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Height="85"/>
+                            </DataTemplate>
+                        </ListView.HeaderTemplate>
+                    </ListView>
+                    <Grid Background="White" Visibility="Collapsed" x:Name="LibraryLoginGrid">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock HorizontalAlignment="Center" FontSize="25" TextWrapping="Wrap" TextAlignment="Center">
+                                You have to be connected to access to your favourites !
+                            </TextBlock>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Margin="5" HorizontalAlignment="Center" Content="Login" Command="{Binding NavigateToLoginCommand}"></Button>
+                                <Button Margin="5" HorizontalAlignment="Center" Content="Register"></Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </PivotItem>
 
             <PivotItem Margin="14,0,14,0" Header="Playlists">
@@ -238,10 +252,10 @@
             </Grid>
         </Grid>
 
-        <userControls:UCSessionError Grid.Row="1" ReloadTap="ReloadDataTap"  Visibility="Collapsed" x:Name="SessionError"></userControls:UCSessionError>  
-        
+        <userControls:UCSessionError Grid.Row="1" ReloadTap="ReloadDataTap"  Visibility="Collapsed" x:Name="SessionError"></userControls:UCSessionError>
+
     </Grid>
-    
+
     <Page.BottomAppBar>
         <CommandBar Foreground="White" x:Name="ApplicationBar" Background="{ThemeResource GrooveSharkOrangeBrush}">
             <CommandBar.PrimaryCommands>

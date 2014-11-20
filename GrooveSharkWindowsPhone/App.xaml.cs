@@ -20,7 +20,6 @@ using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Services;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
-using Microsoft.Practices.Unity;
 using ReactiveUI;
 using Splat;
 

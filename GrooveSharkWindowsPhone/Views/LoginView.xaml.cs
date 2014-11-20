@@ -19,7 +19,6 @@ using Windows.UI.Xaml.Navigation;
 using GrooveSharkClient.Contracts;
 using GrooveSharkWindowsPhone.UserControls;
 using GrooveSharkWindowsPhone.ViewModels;
-using Microsoft.Practices.Unity;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.Views

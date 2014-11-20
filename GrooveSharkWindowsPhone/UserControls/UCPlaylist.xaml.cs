@@ -22,7 +22,6 @@ using GrooveSharkClient.Models;
 using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.ViewModels;
-using Microsoft.Practices.ObjectBuilder2;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.UserControls

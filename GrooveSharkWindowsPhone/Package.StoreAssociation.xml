@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
   <Publisher>CN=6BB7806C-0912-45E2-BC31-BE72F03CF77C</Publisher>
-  <PublisherDisplayName>Marc68128</PublisherDisplayName>
+  <PublisherDisplayName>Marc Unterseh</PublisherDisplayName>
   <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
   <SupportedLocales>
     <Language Code="af" InMinimumRequirementSet="true" />
@@ -190,20 +190,16 @@
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
-    <MainPackageIdentityName>37129Marc68128.APerfectCircleDiscographie</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.Airbournediscographie</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.AirbourneDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.ArcticMonkeysDiscography</MainPackageIdentityName>
-    <MainPackageIdentityName>37129Marc68128.AvengedSevenfoldDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.DiscographieNirvana</MainPackageIdentityName>
-    <MainPackageIdentityName>37129Marc68128.FiveFingerDeathPunchDiscographie</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.GunsRosesDiscographie</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.GunsNRosesDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.LoveMeterforWindows8</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.NirvanaDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.TheKooksDiscographie</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.Timeto</MainPackageIdentityName>
-    <MainPackageIdentityName>37129Marc68128.TimetoChristmas</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.VelvetRevolverDiscographie</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=17a1d3e0-cf54-40b9-b6da-5154983e29de" />

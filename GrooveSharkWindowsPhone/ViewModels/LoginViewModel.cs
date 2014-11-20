@@ -10,7 +10,6 @@ using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
-using Microsoft.Practices.Unity;
 using ReactiveUI;
 using Splat;
 using xBrainLab.Security.Cryptography;

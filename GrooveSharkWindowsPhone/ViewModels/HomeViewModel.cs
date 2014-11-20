@@ -12,7 +12,6 @@ using GrooveSharkClient.Models;
 using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
-using Microsoft.Practices.ObjectBuilder2;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
@@ -39,6 +38,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _connectedUser; }
             private set { this.RaiseAndSetIfChanged(ref _connectedUser, value); }
         }
+
+        #region ViewModels
 
         private PlaylistsViewModel _playlistViewModel;
         public PlaylistsViewModel PlaylistViewModel
@@ -75,13 +76,15 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _searchViewModel, value); }
         }
 
-
-
+        #endregion
 
         private void InitCommands()
         {
             NavigateToSettingsCommand = ReactiveCommand.Create();
             NavigateToSettingsCommand.Subscribe(_ => NavigationHelper.Navigate(typeof (SettingsView)));
+
+            NavigateToLoginCommand = ReactiveCommand.Create();
+            NavigateToLoginCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(LoginView)));
 
             ReloadAllCommand = ReactiveCommand.Create();
             ReloadAllCommand.Subscribe(_ =>
@@ -95,6 +98,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             });
         }
 
+        public ReactiveCommand<object> NavigateToLoginCommand { get; private set; }
         public ReactiveCommand<object> NavigateToSettingsCommand { get; private set; }
         public ReactiveCommand<object> ReloadAllCommand { get; private set; }
 

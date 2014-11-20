@@ -10,8 +10,6 @@ using Windows.UI.Popups;
 using Windows.Web.Syndication;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
 using ReactiveUI;
 
 namespace GrooveSharkClient.Services

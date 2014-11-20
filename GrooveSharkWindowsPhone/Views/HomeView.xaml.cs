@@ -56,6 +56,12 @@ namespace GrooveSharkWindowsPhone.Views
             ViewModel.ShowSessionErrorObs.Select(x => x ? Visibility.Visible : Visibility.Collapsed)
                 .BindTo(SessionError, s => s.Visibility);
 
+            ViewModel.WhenAnyValue(vm => vm.ConnectedUser)
+                .Select(u => (u != null && u.UserID != 0) ? Visibility.Collapsed : Visibility.Visible)
+                .Subscribe(v => {
+                    LibraryLoginGrid.Visibility = v;
+                });
+
             ViewModel.FavouritesViewModel.UserFavourites.Changed.Subscribe(_ => FavouritesList.ItemsSource = ViewModel.FavouritesViewModel.UserFavourites);
             ViewModel.PlaylistViewModel.UserPlaylists.Changed.Subscribe(_ => PlaylistList.ItemsSource = ViewModel.PlaylistViewModel.UserPlaylists);
             ViewModel.LibraryViewModel.UserLibrary.Changed.Subscribe(_ => LibraryList.ItemsSource = ViewModel.LibraryViewModel.UserLibrary);

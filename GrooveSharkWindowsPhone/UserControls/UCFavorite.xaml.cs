@@ -26,16 +26,10 @@ namespace GrooveSharkWindowsPhone.UserControls
         public UCFavorite()
         {
             this.InitializeComponent();
-
-            Loaded += (sender, args) => SetupBindings();
+            DataContextChanged += OnDataContextChanged;
         }
 
-        private SongViewModel ViewModel
-        {
-            get { return DataContext as SongViewModel; }
-        }
-
-        private void SetupBindings()
+        private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             if (ViewModel == null)
                 return;
@@ -46,8 +40,14 @@ namespace GrooveSharkWindowsPhone.UserControls
 
             ViewModel.WhenAnyValue(vm => vm.IsFavorite)
                 .Select(x => !x ? Visibility.Collapsed : Visibility.Visible)
-                .BindTo(RemoveFromFavouritesFlyoutItem, item => item.Visibility);
+                .BindTo(RemoveFromFavouritesFlyoutItem, item => item.Visibility);  
         }
+
+        private SongViewModel ViewModel
+        {
+            get { return DataContext as SongViewModel; }
+        }
+
 
         private void UIElement_OnHolding(object sender, HoldingRoutedEventArgs e)
         {
@@ -57,6 +57,16 @@ namespace GrooveSharkWindowsPhone.UserControls
             if (element == null) return;
 
             FlyoutBase.ShowAttachedFlyout(element);
+        }
+
+        private void StartPress(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Pressed", true);
+        }
+
+        private void StopPress(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Normal", true);
         }
     }
 }

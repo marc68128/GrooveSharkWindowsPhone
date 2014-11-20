@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="062b9614-b04d-4fb9-8ccb-8a5b1a7389bc" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>GrooveShark Player</DisplayName>
-    <PublisherDisplayName>Marc68128</PublisherDisplayName>
+    <PublisherDisplayName>Marc Unterseh</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
