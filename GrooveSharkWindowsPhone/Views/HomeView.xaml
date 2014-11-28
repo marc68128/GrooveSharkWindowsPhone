@@ -271,6 +271,7 @@
                 </AppBarButton>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Player" Command="{Binding NavigateToPlayerCommand}"></AppBarButton>
                 <AppBarButton Label="Settings" Command="{Binding NavigateToSettingsCommand}"></AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>

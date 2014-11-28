@@ -82,19 +82,29 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\AudioPlayer\AudioPlayer.csproj">
+      <Project>{30eca932-5e26-4a3b-830a-1884a5b192bc}</Project>
+      <Name>AudioPlayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
       <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
       <Name>GrooveSharkClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Constants.cs">
+      <Link>App\Constants.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="App\AppSettings.cs" />
+    <Compile Include="AudioPlayer\AudioPlayerService.cs" />
     <Compile Include="App\DI.cs" />
+    <Compile Include="AudioPlayer\IAudioPlayerService.cs" />
+    <Compile Include="AudioPlayer\PlaylistManager.cs" />
     <Compile Include="Converters\BoolToVisibilityInvertConverter.cs" />
     <Compile Include="Converters\NullOrEmptyToVisibilityConverter.cs" />
-    <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Helpers\ObservableExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +132,7 @@
     <Compile Include="ViewModels\FavouritesViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\PopularSongViewModel.cs" />
@@ -138,6 +149,9 @@
     <Compile Include="Views\BaseView.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlayerView.xaml.cs">
+      <DependentUpon>PlayerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RegisterView.xaml.cs">
       <DependentUpon>RegisterView.xaml</DependentUpon>
@@ -235,6 +249,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlayerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

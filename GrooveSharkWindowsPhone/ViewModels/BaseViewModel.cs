@@ -1,5 +1,6 @@
 ﻿using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
+using GrooveSharkWindowsPhone.AudioPlayer;
 using ReactiveUI;
 using Splat;
 using System;
@@ -16,6 +17,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         protected ICountryService _country;
         protected IUserService _user;
         protected ILoadingService _loading;
+        protected IAudioPlayerService _audioPlayer;
 
         public BaseViewModel()
         {
@@ -24,6 +26,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _country = Locator.Current.GetService<ICountryService>();
             _user = Locator.Current.GetService<IUserService>();
             _loading = Locator.Current.GetService<ILoadingService>();
+            _audioPlayer = Locator.Current.GetService<IAudioPlayerService>();
 
 
             ShowSessionErrorObs = _loading.IsLoadingObs.CombineLatest(_session.IsDataAvailableObs, (b, b1) => !b && !b1);

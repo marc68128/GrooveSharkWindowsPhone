@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveSharkWindowsPhone", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveSharkUnitTest", "GrooveSharkUnitTest\GrooveSharkUnitTest.csproj", "{9AFB7EBC-1E18-4D22-8C16-6A4BE7089F7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioPlayer", "AudioPlayer\AudioPlayer.csproj", "{30ECA932-5E26-4A3B-830A-1884A5B192BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,22 @@ Global
 		{9AFB7EBC-1E18-4D22-8C16-6A4BE7089F7C}.Release|x86.ActiveCfg = Release|x86
 		{9AFB7EBC-1E18-4D22-8C16-6A4BE7089F7C}.Release|x86.Build.0 = Release|x86
 		{9AFB7EBC-1E18-4D22-8C16-6A4BE7089F7C}.Release|x86.Deploy.0 = Release|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|ARM.Build.0 = Debug|ARM
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|x86.ActiveCfg = Debug|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Debug|x86.Build.0 = Debug|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|ARM.ActiveCfg = Release|ARM
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|ARM.Build.0 = Release|ARM
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|Mixed Platforms.Build.0 = Release|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|x86.ActiveCfg = Release|x86
+		{30ECA932-5E26-4A3B-830A-1884A5B192BC}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -31,7 +31,7 @@
         <FlyoutBase.AttachedFlyout>
             <MenuFlyout>
                 <MenuFlyoutItem Text="Play now" />
-                <MenuFlyoutItem Text="Play next" />
+                <MenuFlyoutItem Text="Play next" Command="{Binding PlayNextCommand}" />
                 <MenuFlyoutItem x:Name="AddToFavouritesFlyoutItem" Text="Add to favourites" Command="{Binding AddSongToUserFavouritesCommand}" />
                 <MenuFlyoutItem x:Name="RemoveFromFavouritesFlyoutItem" Text="Remove from favourites" Command="{Binding RemoveSongFromUserFavouritesCommand}" />
                 <MenuFlyoutItem Text="Add to playlist" Command="{Binding AddToPlaylistCommand}"></MenuFlyoutItem>

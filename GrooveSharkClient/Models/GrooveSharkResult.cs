@@ -114,9 +114,28 @@ namespace GrooveSharkClient.Models
 
         #endregion
 
+        #region StreamInfos
+
+        [DataMember(Name = "StreamKey")]
+        public string StreamKey { get; set; }
+
+         [DataMember(Name = "url")]
+        public string Url { get; set; }
+
+         [DataMember(Name = "StreamServerID")]
+        public int StreamServerID { get; set; }
+
+         [DataMember(Name = "uSecs")]
+        public int Usecs { get; set; }
+
+         [DataMember(Name = "warning")]
+        public string Warning { get; set; }
+
+        #endregion
+
+
     }
 
-    
 
 
 

@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F0245F27-2779-49DD-BC62-4C379735E261}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{30ECA932-5E26-4A3B-830A-1884A5B192BC}</ProjectGuid>
+    <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GrooveSharkClient</RootNamespace>
-    <AssemblyName>GrooveSharkClient</AssemblyName>
+    <RootNamespace>AudioPlayer</RootNamespace>
+    <AssemblyName>AudioPlayer</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -79,62 +79,52 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Contracts\ICountryService.cs" />
-    <Compile Include="Contracts\IGrooveSharkClient.cs" />
-    <Compile Include="Contracts\ILoadingService.cs" />
-    <Compile Include="Contracts\IService.cs" />
-    <Compile Include="Contracts\IUserService.cs" />
-    <Compile Include="GrooveSharkClient.cs" />
-    <Compile Include="Helpers\AppSettings.cs" />
-    <Compile Include="Helpers\Constants.cs" />
-    <Compile Include="Helpers\HmacMd5.cs" />
-    <Compile Include="Models\Entity\Album.cs" />
-    <Compile Include="Models\Entity\Artist.cs" />
-    <Compile Include="Models\Entity\CountryInfo.cs" />
-    <Compile Include="Models\Entity\Playlist.cs" />
-    <Compile Include="Models\Entity\StreamInfo.cs" />
-    <Compile Include="Models\Exception\GrooveSharkException.cs" />
-    <Compile Include="Models\GrooveSharkResult.cs" />
-    <Compile Include="Models\Entity\Song.cs" />
-    <Compile Include="Models\Entity\User.cs" />
-    <Compile Include="NetworkClient.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Contracts\ISessionService.cs" />
-    <Compile Include="Services\CountryService.cs" />
-    <Compile Include="Services\LoadingService.cs" />
-    <Compile Include="Services\SessionService.cs" />
-    <Compile Include="Services\UserService.cs" />
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
+      <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
+      <Name>GrooveSharkClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="ReactiveUI">
+    <Compile Include="..\Shared\Constants.cs">
+      <Link>Constants.cs</Link>
+    </Compile>
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="AudioPlayer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ReactiveUI, Version=6.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\reactiveui-core.6.2.0\lib\Portable-Win81+WPA81\ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="Splat">
+    <Reference Include="Splat, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Splat.1.5.1\lib\Portable-Win81+Wpa81\Splat.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Core">
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Core.2.2.5\lib\portable-win81+wpa81\System.Reactive.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces">
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\portable-win81+wpa81\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Linq">
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Linq.2.2.5\lib\portable-win81+wpa81\System.Reactive.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\portable-win81+wpa81\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Windows.Threading">
+    <Reference Include="System.Reactive.Windows.Threading, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\portable-win81+wpa81\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.WindowsRuntime">
+    <Reference Include="System.Reactive.WindowsRuntime, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-WinRT.2.2.5\lib\portable-win81+wpa81\System.Reactive.WindowsRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="xBrainLab.Security.Cryptography">
-      <HintPath>..\ext\xBrainLab.Security.Cryptography.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

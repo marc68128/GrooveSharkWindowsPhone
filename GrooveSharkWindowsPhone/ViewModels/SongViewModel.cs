@@ -8,7 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
+using AudioPlayer;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
 using ReactiveUI;
@@ -88,6 +90,21 @@ namespace GrooveSharkWindowsPhone.ViewModels
             AddToPlaylistCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(AddSongToPlaylistView), new[] { _s.SongID }));
 
             #endregion
+
+            #region PlayNexCommand
+            PlayNextCommand = ReactiveCommand.Create();
+            PlayNextCommand.Subscribe(_ =>
+            {
+                _audioPlayer.AddSongToPlaylist(this, true);
+            });
+            #endregion
+
+            #region GetStreamInfoCommand
+
+            GetStreamInfoCommand = ReactiveCommand.CreateAsyncObservable(_ => _client.GetStreamInfo(_session.SessionId,
+                                         _country.Country.GetCountryInfoAsJsonString(), _s.SongID.ToString()));
+
+            #endregion
         }
 
         public string ArtistName { get { return _s.ArtistName; } }
@@ -119,6 +136,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public ReactiveCommand<bool> AddSongToUserFavouritesCommand { get; private set; }
         public ReactiveCommand<bool> RemoveSongFromUserFavouritesCommand { get; private set; }
         public ReactiveCommand<object> AddToPlaylistCommand { get; private set; }
+        public ReactiveCommand<object> PlayNextCommand { get; private set; }
+        public ReactiveCommand<StreamInfo> GetStreamInfoCommand { get; private set; }
     }
 
 }

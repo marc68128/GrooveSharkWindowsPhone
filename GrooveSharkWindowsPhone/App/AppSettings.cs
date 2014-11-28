@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Windows.Security.Credentials;
 using Windows.Storage;
 
-namespace GrooveSharkWindowsPhone.Helpers
+namespace GrooveSharkWindowsPhone
 {
     public static class AppSettings
     {

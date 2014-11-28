@@ -89,6 +89,9 @@ namespace GrooveSharkWindowsPhone.ViewModels
             NavigateToRegisterCommand = ReactiveCommand.Create();
             NavigateToRegisterCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(RegisterView)));
 
+            NavigateToPlayerCommand = ReactiveCommand.Create();
+            NavigateToPlayerCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(PlayerView)));
+
             ReloadAllCommand = ReactiveCommand.Create();
             ReloadAllCommand.Subscribe(_ =>
             {
@@ -104,8 +107,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public ReactiveCommand<object> NavigateToLoginCommand { get; private set; }
         public ReactiveCommand<object> NavigateToRegisterCommand { get; private set; }
         public ReactiveCommand<object> NavigateToSettingsCommand { get; private set; }
+        public ReactiveCommand<object> NavigateToPlayerCommand { get; private set; }
         public ReactiveCommand<object> ReloadAllCommand { get; private set; }
-
-
+       
     }
 }

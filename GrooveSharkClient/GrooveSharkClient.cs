@@ -421,7 +421,7 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var songs = "[" + songIds.Select(i => i.ToString()).Aggregate((a, b) => a + "," + b ) + "]";
+                var songs = "[" + songIds.Select(i => i.ToString()).Aggregate((a, b) => a + "," + b) + "]";
                 var param = new Dictionary<string, object> { { "songIDs", songs }, { "name", playlistName } };
 
 
@@ -460,6 +460,7 @@ namespace GrooveSharkClient
                 throw new WebException("Unable to set playlist songs");
             });
         }
+
         public IObservable<bool> AddSongToUserFavourites(string session, string songId)
         {
             return Observable.Start(() =>
@@ -519,6 +520,31 @@ namespace GrooveSharkClient
                     if (sessionResult.Errors != null && sessionResult.Errors.Any())
                         throw sessionResult.Errors.First();
                     return new Playlist(sessionResult);
+                }
+                throw new WebException("Unable to get Playlist");
+
+            });
+        }
+
+        public IObservable<StreamInfo> GetStreamInfo(string session, string country, string songId, bool lowBitrate = false)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object>
+                {
+                    { "country", country },
+                    { "songID", songId }
+                };
+
+                var response = SendHttpRequest("getSubscriberStreamKey", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var gsResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (gsResult.Errors != null && gsResult.Errors.Any())
+                        throw gsResult.Errors.First();
+                    return new StreamInfo(gsResult);
                 }
                 throw new WebException("Unable to get Playlist");
 
