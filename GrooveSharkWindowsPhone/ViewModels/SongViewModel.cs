@@ -7,7 +7,10 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 using GrooveSharkClient.Models;
+using GrooveSharkWindowsPhone.Helpers;
+using GrooveSharkWindowsPhone.Views;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
@@ -38,7 +41,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             AddSongToUserFavouritesCommand.Subscribe(x =>
             {
-                IsFavorite = true; 
+                IsFavorite = true;
                 _loading.RemoveLoadingStatus("Adding song to your favorites...");
                 new MessageDialog(SongName + " added to your favourites.").ShowAsync();
             });
@@ -59,7 +62,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 _ =>
                 {
                     _loading.AddLoadingStatus("Removing song from your favorites...");
-                    return _client.RemoveUserFavoriteSongs(_s.SongID.ToString() , _session.SessionId);
+                    return _client.RemoveUserFavoriteSongs(_s.SongID.ToString(), _session.SessionId);
                 });
 
             RemoveSongFromUserFavouritesCommand.Subscribe(x =>
@@ -76,6 +79,13 @@ namespace GrooveSharkWindowsPhone.ViewModels
             RemoveSongFromUserFavouritesCommand.ThrownExceptions.OfType<GrooveSharkException>()
                 .Do(_ => _loading.RemoveLoadingStatus("Removing song from your favorites..."))
                 .BindTo(this, self => self.GrooveSharkException);
+
+            #endregion
+
+            #region AddToPlaylistCommand
+
+            AddToPlaylistCommand = ReactiveCommand.Create();
+            AddToPlaylistCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(AddSongToPlaylistView), new[] { _s.SongID }));
 
             #endregion
         }
@@ -108,7 +118,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
         public ReactiveCommand<bool> AddSongToUserFavouritesCommand { get; private set; }
         public ReactiveCommand<bool> RemoveSongFromUserFavouritesCommand { get; private set; }
-
+        public ReactiveCommand<object> AddToPlaylistCommand { get; private set; }
     }
 
 }

@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -16,8 +14,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
-using GrooveSharkClient.Contracts;
-using GrooveSharkWindowsPhone.UserControls;
 using GrooveSharkWindowsPhone.ViewModels;
 using ReactiveUI;
 
@@ -26,25 +22,36 @@ namespace GrooveSharkWindowsPhone.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginView 
+    public sealed partial class AddSongToPlaylistView
     {
-        public LoginView() : base(new LoginViewModel())
+        public AddSongToPlaylistView()
+            : base(new AddSongToPlaylistViewModel())
         {
             this.InitializeComponent();
+            ViewModel.PlaylistsViewModel.LoadUserPlaylistsCommand.Execute(null);
 
-            ViewModel.WebExceptionObs.Where(ex => ex != null).Subscribe(ex => new MessageDialog("No network !").ShowAsync());
-            ViewModel.GrooveSharkExceptionObs.Where(ex => ex != null).Subscribe(ex => new MessageDialog(ex.Description).ShowAsync());
-
+            SetupBindings();
         }
 
-        private LoginViewModel ViewModel
+        private void SetupBindings()
         {
-            get { return DataContext as LoginViewModel; }
+            ViewModel.PlaylistsViewModel.UserPlaylists.Changed.Subscribe(
+                _ => PlaylistList.ItemsSource = ViewModel.PlaylistsViewModel.UserPlaylists);
+
+            ViewModel.WhenAnyValue(vm => vm.IsAddFormOpen).Subscribe(b => {
+                if (b)
+                    OpenAddForm.Begin();
+                else
+                    CloseAddForm.Begin();
+            });
         }
+
+        private AddSongToPlaylistViewModel ViewModel { get { return DataContext as AddSongToPlaylistViewModel; } }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-
+            ViewModel.SongIds = e.Parameter as int[];
         }
+
     }
 }

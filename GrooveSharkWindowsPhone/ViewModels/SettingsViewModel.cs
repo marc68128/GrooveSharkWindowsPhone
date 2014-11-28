@@ -25,22 +25,10 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
 
 
-            this.WhenAnyValue(self => self.CurrentUser)
-                .Where(u => u != null)
-                .Subscribe(u =>
-                {
-                    if (u.UserID != 0)
-                    {
-                        CurrentUserMessage = "Hello " + u.FName;
-                        ToggleConnectionLabel = "Logout";
+            IsUserConnectedObs = 
+                this.WhenAnyValue(self => self.CurrentUser)
+                .Select(u => u != null && u.UserID != 0);
 
-                    }
-                    else
-                    {
-                        CurrentUserMessage = "You are not connected !";
-                        ToggleConnectionLabel = "LoginCommand";
-                    }
-                });
 
         }
 
@@ -48,37 +36,30 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             RefreshCurrentUserCommand = _user.RefreshConnectedUserCommand;
 
+            NavigateToRegisterCommand = ReactiveCommand.Create();
+            NavigateToRegisterCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(RegisterView)));
+
+            NavigateToLoginCommand = ReactiveCommand.Create();
+            NavigateToLoginCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(LoginView)));
+
             LogoutCommand = ReactiveCommand.CreateAsyncObservable(_session.IsDataAvailableObs, _ => _client.Logout(_session.SessionId));
-            LogoutCommand
-                .Do(s => RefreshCurrentUserCommand.Execute(null))
-                .Subscribe(b =>
+            LogoutCommand.Subscribe(b => {
+                RefreshCurrentUserCommand.Execute(null);
+                if (b)
                 {
-                    if (b)
-                    {
-                        AppSettings.RemoveCredential();
-                    }
-                    var message = b ? "Logout successfull" : "Error : failed to logout";
-                    new MessageDialog(message).ShowAsync();
-                });
-
-
-            ToggleConnectionCommand = ReactiveCommand.Create(LogoutCommand.CanExecuteObservable.CombineLatest(this.WhenAnyValue(self => self.CurrentUser).Select(u => u != null), (b, b1) => b & b1));
-            ToggleConnectionCommand.Subscribe(_ =>
-            {
-                if (CurrentUser.UserID == 0)
-                    NavigationHelper.Navigate(typeof(LoginView), typeof(SettingsView));
-                else
-                    LogoutCommand.Execute(null);
+                    AppSettings.RemoveCredential();
+                }
+                var message = b ? "Logout successfull" : "Error : failed to logout";
+                new MessageDialog(message).ShowAsync();
             });
-
 
         }
 
-        public ReactiveCommand<User> RefreshCurrentUserCommand { get; set; }
+        public ReactiveCommand<object> NavigateToRegisterCommand { get; private set; }
+        public ReactiveCommand<object> NavigateToLoginCommand { get; private set; }
+        public ReactiveCommand<bool> LogoutCommand { get; private set; }
+        public ReactiveCommand<User> RefreshCurrentUserCommand { get; private set; }
 
-        public ReactiveCommand<object> ToggleConnectionCommand { get; set; }
-
-        public ReactiveCommand<bool> LogoutCommand { get; set; }
 
         private User _currentUser;
         public User CurrentUser
@@ -87,19 +68,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _currentUser, value); }
         }
 
-        private string _currentUserMessage;
-        public string CurrentUserMessage
-        {
-            get { return _currentUserMessage; }
-            set { this.RaiseAndSetIfChanged(ref _currentUserMessage, value); }
-        }
-
-        private string _toggleConnectionLabel;
-        public string ToggleConnectionLabel
-        {
-            get { return _toggleConnectionLabel; }
-            set { this.RaiseAndSetIfChanged(ref _toggleConnectionLabel, value); }
-        }
+        public IObservable<bool> IsUserConnectedObs { get; set; } 
 
         private string _registerLabel;
         public string RegisterLabel

@@ -1,0 +1,65 @@
+﻿<local:BaseView
+    x:Class="GrooveSharkWindowsPhone.Views.AddSongToPlaylistView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GrooveSharkWindowsPhone.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	<local:BaseView.Resources>
+		<Storyboard x:Name="OpenAddForm">
+            <DoubleAnimation EnableDependentAnimation="True" Duration="0:0:0.4" To="60" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="AddNewPlaylist">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseInOut"></CircleEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+		</Storyboard>
+        <Storyboard x:Name="CloseAddForm">
+            <DoubleAnimation EnableDependentAnimation="True" Duration="0:0:0.4" To="0" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="AddNewPlaylist">
+                <DoubleAnimation.EasingFunction>
+                    <CircleEase EasingMode="EaseInOut"></CircleEase>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </local:BaseView.Resources>
+
+    <Grid x:Name="LayoutRoot" Margin="0">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="AddNewPlaylist" Height="0" Background="{StaticResource GrooveSharkOrangeBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="10" PlaceholderText="Playlist Name" Text="{Binding PlaylistName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Button Grid.Column="1" BorderBrush="White" Foreground="White" Command="{Binding AddPlaylistCommand}">Add</Button>
+        </Grid>
+
+        <ListView Margin="14,0" SelectedItem="{Binding SelectedPlaylist, Mode=TwoWay}" x:Name="PlaylistList" Grid.Row="1" ItemsSource="{Binding PlaylistsViewModel.UserPlaylists}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemTemplate="{StaticResource NotOpenablePlaylistDataTemplate}" Background="Transparent">
+        </ListView>
+
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar Foreground="White" x:Name="ApplicationBar" Background="{ThemeResource GrooveSharkOrangeBrush}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="AddButton" Label="Add playlist" Command="{Binding ToggleAddFormCommand}">
+                    <AppBarButton.Icon>
+                        <BitmapIcon HorizontalAlignment="Center" VerticalAlignment="Center" UriSource="/Assets/Icons/add.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+
+        </CommandBar>
+    </Page.BottomAppBar>
+</local:BaseView>

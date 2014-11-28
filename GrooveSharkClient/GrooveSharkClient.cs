@@ -37,7 +37,7 @@ namespace GrooveSharkClient
 
         private bool ShouldHaveQuote(object value)
         {
-            return (value is string && !(value as string).StartsWith("{") && !(value as string).EndsWith("}"));
+            return (value is string && !(value as string).StartsWith("{") && !(value as string).EndsWith("}") && !(value as string).StartsWith("[") && !(value as string).EndsWith("]"));
         }
 
         private async Task<HttpResponseMessage> SendHttpRequest(string method, Dictionary<string, object> parameters = null, string sessionId = null, CancellationToken ct = default(CancellationToken), TimeSpan timeOut = default(TimeSpan))
@@ -135,6 +135,30 @@ namespace GrooveSharkClient
 
                     if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
                         throw grooveSharkResult.Errors.First();
+
+                    return new User(grooveSharkResult);
+                }
+                throw new WebException("Unable To Connect");
+            });
+        }
+
+        public IObservable<User> Register(string emailAddress, string password, string fullName, string session, string userName = null)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object> { { "emailAddress", emailAddress }, { "password", password }, { "fullName", fullName } };
+
+                if (userName != null)
+                    param.Add("username", userName);
+
+                var response = SendHttpRequest("registerUser", param, session, timeOut: _defautTimeOut).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+
+                    if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
+                        throw new GrooveSharkException { Description = grooveSharkResult.Result.Description, Code = grooveSharkResult.Errors.First().Code };
 
                     return new User(grooveSharkResult);
                 }
@@ -393,11 +417,54 @@ namespace GrooveSharkClient
             });
         }
 
+        public IObservable<bool> AddPlaylist(int[] songIds, string playlistName, string session)
+        {
+            return Observable.Start(() =>
+            {
+                var songs = "[" + songIds.Select(i => i.ToString()).Aggregate((a, b) => a + "," + b ) + "]";
+                var param = new Dictionary<string, object> { { "songIDs", songs }, { "name", playlistName } };
+
+
+                var response = SendHttpRequest("createPlaylist", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Success;
+                }
+                throw new WebException("Unable to create playlist");
+            });
+        }
+
+        public IObservable<bool> SetPlaylistSongs(int[] songIds, int playlistId, string session)
+        {
+            return Observable.Start(() =>
+            {
+                var songs = "[" + songIds.Select(i => i.ToString()).Aggregate((a, b) => a + "," + b) + "]";
+                var param = new Dictionary<string, object> { { "songIDs", songs }, { "playlistID", playlistId } };
+
+
+                var response = SendHttpRequest("setPlaylistSongs", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Success;
+                }
+                throw new WebException("Unable to set playlist songs");
+            });
+        }
         public IObservable<bool> AddSongToUserFavourites(string session, string songId)
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object>{{"songID", songId}};
+                var param = new Dictionary<string, object> { { "songID", songId } };
 
 
                 var response = SendHttpRequest("addUserFavoriteSong", param, session).Result;
@@ -418,7 +485,7 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object>{{"playlistID", playlistId}};
+                var param = new Dictionary<string, object> { { "playlistID", playlistId } };
                 if (limit != 0)
                     param.Add("limit", limit);
 

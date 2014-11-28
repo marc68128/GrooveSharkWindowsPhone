@@ -12,7 +12,6 @@
     <Grid x:Name="SongGrid" Height="75" Holding="UIElement_OnHolding" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
-
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Pressed" To="Normal">
                         <Storyboard>
@@ -35,6 +34,7 @@
                 <MenuFlyoutItem Text="Play next" />
                 <MenuFlyoutItem x:Name="AddToFavouritesFlyoutItem" Text="Add to favourites" Command="{Binding AddSongToUserFavouritesCommand}" />
                 <MenuFlyoutItem x:Name="RemoveFromFavouritesFlyoutItem" Text="Remove from favourites" Command="{Binding RemoveSongFromUserFavouritesCommand}" />
+                <MenuFlyoutItem Text="Add to playlist" Command="{Binding AddToPlaylistCommand}"></MenuFlyoutItem>
             </MenuFlyout>
         </FlyoutBase.AttachedFlyout>
         <Grid.RowDefinitions>

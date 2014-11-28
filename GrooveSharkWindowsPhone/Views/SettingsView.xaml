@@ -7,29 +7,72 @@
     xmlns:views="using:GrooveSharkWindowsPhone.Views"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-   
+
     <Pivot Title="{Binding Title, FallbackValue=Settings}" Style="{StaticResource GrooveSharkPivotTemplate}">
         <PivotItem Header="General">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+                <Grid x:Name="NoLoginGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.ColumnSpan="2" Margin="20" FontSize="25" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding CurrentUserMessage, Mode=OneWay}"></TextBlock>
+                    <StackPanel Grid.ColumnSpan="2" Margin="20">
+                        <TextBlock Margin="0,0,0,10" Text="You are not connected !" FontSize="25"></TextBlock>
+                        <TextBlock FontStyle="Italic" Text="If you want to use all the features of this application (such as playlists, favourites, library and audio player) you should register or login." FontSize="15" TextWrapping="Wrap"></TextBlock>
+                    </StackPanel>
 
-                <Button Grid.Column="0" Grid.Row="1" Command="{Binding ToggleConnectionCommand}" Content="{Binding ToggleConnectionLabel, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="10"></Button>
-                <Button Grid.Column="1" Grid.Row="1" Content="{Binding RegisterLabel, Mode=OneWay}" HorizontalAlignment="Stretch" Margin="10"></Button>
+                    <Button Grid.Column="0" Grid.Row="1" Command="{Binding NavigateToLoginCommand}" Content="Login" HorizontalAlignment="Stretch" Margin="10"></Button>
+                    <Button Grid.Column="1" Grid.Row="1" Command="{Binding NavigateToRegisterCommand}" Content="Register" HorizontalAlignment="Stretch" Margin="10"></Button>
+                </Grid>
+                <Grid x:Name="LoginGrid">
+                    <StackPanel>
+                        <TextBlock FontSize="20" FontWeight="Bold" Text="Connected User Infos :" Margin="0,0,0,10"></TextBlock>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Email :" Margin="0,10,15,10" FontSize="20"></TextBlock>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentUser.Email, Mode=OneWay, FallbackValue=toto@toto.fr}" TextTrimming="CharacterEllipsis" Margin="0,10,0,10" FontSize="20" FontWeight="Bold"></TextBlock>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Username :" Margin="0,10,15,10" FontSize="20"></TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentUser.Username, Mode=OneWay, FallbackValue=toto}" TextTrimming="CharacterEllipsis" Margin="0,10,0,10" FontSize="20" FontWeight="Bold"></TextBlock>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Full Name :" Margin="0,10,15,10" FontSize="20"></TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentUser.FName, Mode=OneWay, FallbackValue=Marc Unterseh}" TextTrimming="CharacterEllipsis" Margin="0,10,0,10" FontSize="20" FontWeight="Bold"></TextBlock>
+
+                        </Grid>
+                        <TextBlock FontSize="20" Text="Subscription :" FontWeight="Bold" Margin="0,15,0,0"></TextBlock>
+                        
+                        <CheckBox IsChecked="{Binding CurrentUser.IsPlus, Mode=OneWay}" IsHitTestVisible="False" Margin="0,0,0,-20">
+                            <TextBlock Text="Plus" VerticalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding CurrentUser.IsPremium, Mode=OneWay}" IsHitTestVisible="False" Margin="0,0,0,-20">
+                            <TextBlock Text="Premium" VerticalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding CurrentUser.IsAnywhere, Mode=OneWay}" IsHitTestVisible="False" Margin="0,0,0,-20">
+                            <TextBlock Text="Anywhere" VerticalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                        </CheckBox>
+
+                        <Button Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Right" Margin="0,20,0,0"></Button>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </PivotItem>
         <PivotItem Header="About">
-           
+
         </PivotItem>
     </Pivot>
 </views:BaseView>

@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
+using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.ViewModels;
 using ReactiveUI;
 
@@ -30,6 +31,11 @@ namespace GrooveSharkWindowsPhone.Views
         {
             this.InitializeComponent();
             ViewModel.RefreshCurrentUserCommand.Execute(null);
+
+            ViewModel.IsUserConnectedObs.Select(u => u ? Visibility.Collapsed : Visibility.Visible)
+                .BindTo(NoLoginGrid, grid => grid.Visibility);
+            ViewModel.IsUserConnectedObs.Select(u => u ? Visibility.Visible : Visibility.Collapsed)
+                .BindTo(LoginGrid, grid => grid.Visibility);
         }
 
         private SettingsViewModel ViewModel

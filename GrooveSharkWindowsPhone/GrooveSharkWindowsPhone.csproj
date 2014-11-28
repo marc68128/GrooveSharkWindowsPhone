@@ -116,6 +116,7 @@
     <Compile Include="UserControls\UCSongMinimized.xaml.cs">
       <DependentUpon>UCSongMinimized.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AddSongToPlaylistViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\FavouritesViewModel.cs" />
@@ -124,15 +125,22 @@
     <Compile Include="ViewModels\PlaylistsViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\PopularSongViewModel.cs" />
+    <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SongViewModel.cs" />
+    <Compile Include="Views\AddSongToPlaylistView.xaml.cs">
+      <DependentUpon>AddSongToPlaylistView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BaseView.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RegisterView.xaml.cs">
+      <DependentUpon>RegisterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -144,6 +152,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\add.png" />
     <Content Include="Assets\Icons\refresh.png" />
     <Content Include="Assets\Icons\play.png" />
     <Content Include="Assets\Images\Icons\Album.png" />
@@ -217,11 +226,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AddSongToPlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RegisterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

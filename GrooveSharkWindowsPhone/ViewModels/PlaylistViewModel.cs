@@ -26,6 +26,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             if (!minimized) 
                 LoadPlaylistInfoCommand.Execute(null);
         }
+        public string PlaylistId { get { return _playlistId; } }
 
         private string _playlistName;
         public string PlaylistName

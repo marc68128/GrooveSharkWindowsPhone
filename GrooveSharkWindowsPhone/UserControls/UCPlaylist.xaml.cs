@@ -29,7 +29,10 @@ namespace GrooveSharkWindowsPhone.UserControls
     public sealed partial class UCPlaylist : UserControl
     {
         private bool isOpen;
-        public static readonly DependencyProperty MinimizedProperty = DependencyProperty.Register("Minimized", typeof (bool), typeof (UCPlaylist), new PropertyMetadata(default(bool)));
+
+        public static readonly DependencyProperty MinimizedProperty = DependencyProperty.Register("Minimized", typeof(bool), typeof(UCPlaylist), new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty CanOpenProperty = DependencyProperty.Register("CanOpen", typeof(bool), typeof(UCPlaylist), new PropertyMetadata(true));
+        public static readonly DependencyProperty DisableFlyoutProperty = DependencyProperty.Register("DisableFlyout", typeof(bool), typeof(UCPlaylist), new PropertyMetadata(default(bool)));
 
         public UCPlaylist()
         {
@@ -42,11 +45,13 @@ namespace GrooveSharkWindowsPhone.UserControls
         {
             if (Minimized)
                 ThumbnailImage.Visibility = Visibility.Collapsed;
+            if (!CanOpen)
+                ArrowStackPanel.Visibility = Visibility.Collapsed;
 
             if (ViewModel == null)
                 return;
 
-            ViewModel.WhenAnyValue(vm => vm.Songs).WhereNotNull().Subscribe(s =>
+            ViewModel.WhenAnyValue(vm => vm.Songs).WhereNotNull().Where(_ => CanOpen).Subscribe(s =>
             {
                 SongStackPanel.Children.Clear();
                 int i = 1;
@@ -60,7 +65,7 @@ namespace GrooveSharkWindowsPhone.UserControls
                 }
             });
 
-            ViewModel.WhenAnyValue(vm => vm.IsOpen).Subscribe(x =>
+            ViewModel.WhenAnyValue(vm => vm.IsOpen).Where(_ => CanOpen).Subscribe(x =>
             {
                 if (x)
                 {
@@ -87,15 +92,27 @@ namespace GrooveSharkWindowsPhone.UserControls
             get { return (bool) GetValue(MinimizedProperty); }
             set { SetValue(MinimizedProperty, value); }
         }
-
+        public bool CanOpen
+        {
+            get { return (bool)GetValue(CanOpenProperty); }
+            set { SetValue(CanOpenProperty, value); }
+        }
+        public bool DisableFlyout
+        {
+            get { return (bool)GetValue(DisableFlyoutProperty); }
+            set { SetValue(DisableFlyoutProperty, value); }
+        }
         private void PlaylistGridTap(object sender, TappedRoutedEventArgs e)
         {
-            ViewModel.ToggleOpenCloseCommand.Execute(null);
+            if (CanOpen)
+            {
+                 ViewModel.ToggleOpenCloseCommand.Execute(null);
+            }     
         }
 
         private void OnHolding(object sender, HoldingRoutedEventArgs e)
         {
-            if (e.HoldingState != HoldingState.Started) return;
+            if (e.HoldingState != HoldingState.Started || DisableFlyout) return;
 
             var element = sender as FrameworkElement;
             if (element == null) return;

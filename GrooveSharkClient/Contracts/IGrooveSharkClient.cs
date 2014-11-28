@@ -13,6 +13,7 @@ namespace GrooveSharkClient.Contracts
         IObservable<string> CreateSession();
         IObservable<CountryInfo> GetCountry();
         IObservable<User> Login(string userName, string md5Password, string session);
+        IObservable<User> Register(string emailAddress, string password, string fullName, string session, string userName = null);
         IObservable<bool> Logout(string session);
         IObservable<Song[]> GetPopularSongToday(string session);
         IObservable<User> GetUserInfo(string session);
@@ -22,6 +23,8 @@ namespace GrooveSharkClient.Contracts
         IObservable<Song[]> GetUserFavoriteSongs(string session, int limit = 0);
         IObservable<Song[]> GetUserLibrarySongs(string session, int limit = 0);
         IObservable<bool> RemoveUserFavoriteSongs(string songId, string session);
+        IObservable<bool> AddPlaylist(int[] songIds, string playlistName, string session);
+        IObservable<bool> SetPlaylistSongs(int[] songIds, int playlistId, string session);
         IObservable<bool> AddSongToUserFavourites(string session, string songId);
         IObservable<Song[]> SearchSong(string query, string country, string session, int limit = 0, int offset = 0);
         IObservable<Playlist[]> SearchPlaylist(string query, string session, int limit = 0);

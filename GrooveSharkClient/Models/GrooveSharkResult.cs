@@ -57,6 +57,9 @@ namespace GrooveSharkClient.Models
         [DataMember(Name = "IsPremium")]
         public bool? IsPremium { get; set; }
 
+        [DataMember(Name = "description")]
+        public string Description { get; set; }
+
         [DataMember(Name = "songs")]
         public Song[] Songs { get; set; }
 

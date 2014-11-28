@@ -142,7 +142,7 @@
                             </TextBlock>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button Margin="5" HorizontalAlignment="Center" Content="Login" Command="{Binding NavigateToLoginCommand}"></Button>
-                                <Button Margin="5" HorizontalAlignment="Center" Content="Register"></Button>
+                                <Button Margin="5" HorizontalAlignment="Center" Content="Register" Command="{Binding NavigateToRegisterCommand}"></Button>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

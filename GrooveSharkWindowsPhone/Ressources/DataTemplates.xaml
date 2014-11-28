@@ -19,4 +19,8 @@
         <userControls:UCPlaylist Minimized="true"></userControls:UCPlaylist>
     </DataTemplate>
 
+    <DataTemplate x:Name="NotOpenablePlaylistDataTemplate">
+        <userControls:UCPlaylist CanOpen="False" DisableFlyout="True"></userControls:UCPlaylist>
+    </DataTemplate>
+
 </ResourceDictionary>
