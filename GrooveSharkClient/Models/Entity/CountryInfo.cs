@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace GrooveSharkClient.Models.Entity
 {
@@ -26,28 +20,15 @@ namespace GrooveSharkClient.Models.Entity
             IPR = r.Result.IPR;
         }
 
-        [DataMember(Name = "ID")]
         public int ID { get; set; }
-
-        [DataMember(Name = "CC1")]
         public int CC1 { get; set; }
-
-        [DataMember(Name = "CC2")]
         public int CC2 { get; set; }
-
-        [DataMember(Name = "CC3")]
         public int CC3 { get; set; }
-
-        [DataMember(Name = "CC4")]
         public int CC4 { get; set; }
-
-        [DataMember(Name = "DMA")]
         public int DMA { get; set; }
-
-        [DataMember(Name = "IPR")]
         public int IPR { get; set; }
 
-        public string GetCountryInfoAsJsonString()
+        public string Serialize()
         {
             return JsonConvert.SerializeObject(this);
         }

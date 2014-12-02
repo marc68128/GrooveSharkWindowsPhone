@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
-namespace GrooveSharkClient.Models
+namespace GrooveSharkClient.Models.Exception
 {
-    public class GrooveSharkException : Exception
+    public class GrooveSharkException : System.Exception
     {
         [DataMember(Name = "code")]
         public int Code { get; set; }
@@ -21,7 +15,7 @@ namespace GrooveSharkClient.Models
             get { return Description; }
         }
 
-        public GrooveSharkException(Exception e) : base("", e)
+        public GrooveSharkException(System.Exception e) : base("", e)
         {
             Description = e.Message;
         }

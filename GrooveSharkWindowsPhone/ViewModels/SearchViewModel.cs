@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrooveSharkClient.Models;
 using GrooveSharkClient.Models.Entity;
 using ReactiveUI;
 
@@ -19,7 +16,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 _ =>
                 {
                     _loading.AddLoadingStatus("Search...");
-                   return  _client.SearchAll(SearchTerm, _country.Country.GetCountryInfoAsJsonString(), _session.SessionId);
+                   return  _client.SearchAll(SearchTerm, _country.Country.Serialize(), _session.SessionId);
                 });
 
             SearchCommand.Do(_ => _loading.RemoveLoadingStatus("Search...")).BindTo(this, self => self.SearchResult);

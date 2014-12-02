@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Popups;
-using Windows.Web.Syndication;
 using GrooveSharkClient.Contracts;
-using GrooveSharkClient.Models;
 using ReactiveUI;
 
 namespace GrooveSharkClient.Services
@@ -56,7 +48,7 @@ namespace GrooveSharkClient.Services
         public bool IsDataAvailable
         {
             get { return _isDataAvailable; }
-            set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
+            private set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
         }
         public IObservable<bool> IsDataAvailableObs
         {
@@ -71,9 +63,8 @@ namespace GrooveSharkClient.Services
         public Exception ThrownException
         {
             get { return _thrownException; }
-            set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
+            private set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
         }
-
         public IObservable<Exception> ThrownExceptionObs
         {
             get

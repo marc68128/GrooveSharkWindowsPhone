@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Popups;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Exception;
 using GrooveSharkWindowsPhone.Helpers;
 using ReactiveUI;
 
@@ -80,7 +78,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             AddSongToSelectedPlaylistCommand = ReactiveCommand.CreateAsyncObservable(this.WhenAnyValue(self => self.SongIds).Select(s => s != null && s.Any()), _ =>
             {
                 _loading.AddLoadingStatus("Adding song to playlist...");
-                return _client.SetPlaylistSongs(SongIds, int.Parse(SelectedPlaylist.PlaylistId), _session.SessionId);
+                return _client.SetPlaylistSongs(SongIds, SelectedPlaylist.PlaylistId, _session.SessionId);
             });
 
             AddSongToSelectedPlaylistCommand.Subscribe(b =>

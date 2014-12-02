@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Reactive.Windows.Foundation;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.UI.Popups;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Entity;
+using GrooveSharkClient.Models.Exception;
 using GrooveSharkWindowsPhone.Helpers;
 using ReactiveUI;
 using xBrainLab.Security.Cryptography;

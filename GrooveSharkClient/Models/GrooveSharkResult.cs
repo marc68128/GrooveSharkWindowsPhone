@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 using GrooveSharkClient.Models.Entity;
+using GrooveSharkClient.Models.Exception;
 
 namespace GrooveSharkClient.Models
 {
@@ -17,7 +13,6 @@ namespace GrooveSharkClient.Models
         public Result Result { get; set; }
         [DataMember(Name = "errors")]
         public GrooveSharkException[] Errors { get; set; }
-
     }
 
     [DataContract]
@@ -88,7 +83,6 @@ namespace GrooveSharkClient.Models
 
         #endregion
 
-
         #region CountryInfos
 
         [DataMember(Name = "ID")]
@@ -132,11 +126,5 @@ namespace GrooveSharkClient.Models
         public string Warning { get; set; }
 
         #endregion
-
-
     }
-
-
-
-
 }

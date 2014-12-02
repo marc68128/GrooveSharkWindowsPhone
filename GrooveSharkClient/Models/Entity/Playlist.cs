@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GrooveSharkClient.Models.Entity
+﻿namespace GrooveSharkClient.Models.Entity
 {
     public class Playlist
     {
@@ -24,7 +18,8 @@ namespace GrooveSharkClient.Models.Entity
             PlaylistDescription = result.Result.PlaylistDescription;
             Songs = result.Result.Songs;
         }
-        public string PlaylistID { get; set; }
+
+        public int PlaylistID { get; set; }
         public int UserID { get; set; }
         public string FName { get; set; }
         public string LName { get; set; }

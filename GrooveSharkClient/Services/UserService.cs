@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Entity;
 using ReactiveUI;
 
 namespace GrooveSharkClient.Services
@@ -91,7 +88,7 @@ namespace GrooveSharkClient.Services
         public User ConnectedUser
         {
             get { return _connectedUser; }
-            set { this.RaiseAndSetIfChanged(ref _connectedUser, value); }
+            private set { this.RaiseAndSetIfChanged(ref _connectedUser, value); }
         }
         public IObservable<User> ConnectedUserObs
         {
@@ -109,7 +106,7 @@ namespace GrooveSharkClient.Services
         public bool IsDataAvailable
         {
             get { return _isDataAvailable; }
-            set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
+            private set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
         }
         public IObservable<bool> IsDataAvailableObs
         {
@@ -124,15 +121,11 @@ namespace GrooveSharkClient.Services
         public Exception ThrownException
         {
             get { return _thrownException; }
-            set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
+            private set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
         }
-
         public IObservable<Exception> ThrownExceptionObs
         {
-            get
-            {
-                return this.WhenAnyValue(self => self.ThrownException);
-            }
+            get { return this.WhenAnyValue(self => self.ThrownException); }
         }
 
         #endregion

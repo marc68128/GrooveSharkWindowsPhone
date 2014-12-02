@@ -1,17 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
-using GrooveSharkClient.Contracts;
-using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
 using ReactiveUI;
-using Splat;
 using xBrainLab.Security.Cryptography;
 
 namespace GrooveSharkWindowsPhone.ViewModels

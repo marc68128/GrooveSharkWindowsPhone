@@ -1,10 +1,10 @@
 ﻿using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models;
+using GrooveSharkClient.Models.Exception;
 using GrooveSharkWindowsPhone.AudioPlayer;
 using ReactiveUI;
 using Splat;
 using System;
-using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
 

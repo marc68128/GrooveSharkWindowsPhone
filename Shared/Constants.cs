@@ -4,11 +4,6 @@ This source is subject to the Microsoft Public License (Ms-PL).
 All other rights reserved.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace GrooveSharkShared
 {
     /// <summary>
@@ -32,6 +27,6 @@ namespace GrooveSharkShared
         public const string Trackchanged = "songchanged";
         public const string ForegroundAppActive = "Active";
         public const string ForegroundAppSuspended = "Suspended";
-        public const string AddSongIdToPlaylist = "addsongidtoplaylist";
+        public const string AddSongToPlaylist = "addsongtoplaylist";
     }
 }

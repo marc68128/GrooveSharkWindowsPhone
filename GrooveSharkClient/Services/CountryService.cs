@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models.Entity;
 using ReactiveUI;
@@ -15,19 +11,16 @@ namespace GrooveSharkClient.Services
     {
         public CountryService(IGrooveSharkClient client, LoadingService loadingService)
         {
-            LoadCountryCommand = ReactiveCommand.CreateAsyncObservable(_ =>
-            {
+            LoadCountryCommand = ReactiveCommand.CreateAsyncObservable(_ => {
                 loadingService.AddLoadingStatus("Loading Country...");
                 return client.GetCountry();
             });
-            LoadCountryCommand.Where(c => c != null).Subscribe(c =>
-            {
+            LoadCountryCommand.Where(c => c != null).Subscribe(c => {
                 loadingService.RemoveLoadingStatus("Loading Country...");
                 IsDataAvailable = true;
-                Country = c; 
+                Country = c;
             });
-            LoadCountryCommand.ThrownExceptions.Subscribe(ex =>
-            {
+            LoadCountryCommand.ThrownExceptions.Subscribe(ex => {
                 Debug.WriteLine("[CountryService]" + ex);
                 ThrownException = ex;
                 loadingService.RemoveLoadingStatus("Loading Country...");
@@ -37,15 +30,12 @@ namespace GrooveSharkClient.Services
             LoadCountryCommand.Execute(null);
         }
 
-
         private CountryInfo _country;
-
         public CountryInfo Country
         {
             get { return _country; }
             private set { this.RaiseAndSetIfChanged(ref _country, value); }
         }
-
         public IObservable<CountryInfo> CountryObs
         {
             get { return this.WhenAnyValue(self => self.Country); }
@@ -59,7 +49,7 @@ namespace GrooveSharkClient.Services
         public bool IsDataAvailable
         {
             get { return _isDataAvailable; }
-            set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
+            private set { this.RaiseAndSetIfChanged(ref _isDataAvailable, value); }
         }
         public IObservable<bool> IsDataAvailableObs
         {
@@ -74,9 +64,8 @@ namespace GrooveSharkClient.Services
         public Exception ThrownException
         {
             get { return _thrownException; }
-            set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
+            private set { this.RaiseAndSetIfChanged(ref _thrownException, value); }
         }
-
         public IObservable<Exception> ThrownExceptionObs
         {
             get

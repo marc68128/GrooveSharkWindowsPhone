@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Reactive.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using Windows.UI.Core;
-using GrooveSharkClient.Contracts;
 using GrooveSharkShared;
 using GrooveSharkWindowsPhone.AudioPlayer;
 using GrooveSharkWindowsPhone.Helpers;
@@ -20,39 +16,33 @@ namespace GrooveSharkWindowsPhone
     public class AudioPlayerService : IAudioPlayerService
     {
         private AutoResetEvent _sererInitialized;
-        private PlaylistManager _playlistManager;
 
         public AudioPlayerService()
         {
             _sererInitialized = new AutoResetEvent(false);
-            _playlistManager = new PlaylistManager();
             StartBackgroundAudioTask();
 
-            _playlistManager.ActualSongObs.WhereNotNull().Subscribe(svm =>
-            {
-                svm.GetStreamInfoCommand.Execute(null);
-                svm.GetStreamInfoCommand.Subscribe(si =>
-                {
-                    BackgroundMediaPlayer.Current
-                        .SetUriSource(new Uri(si.Url,
-                            UriKind.Absolute));
-                    BackgroundMediaPlayer.Current.Play();
-                });
-            });
+
         }
 
         public void AddSongToPlaylist(SongViewModel svm, bool addNext = false, bool play = false)
         {
-            _playlistManager.AddSongLast(svm, addNext, play);
+            svm.GetStreamInfoCommand.Execute(null);
+            svm.GetStreamInfoCommand.Take(1).Subscribe(_ => {
+                var valueSet = new ValueSet();
+                valueSet.Add(Constants.AddSongToPlaylist, svm.Serialize());
+                BackgroundMediaPlayer.SendMessageToBackground(valueSet);
+            });
+
         }
 
-        public IObservable<SongViewModel> CurrentSongObs { get { return _playlistManager.ActualSongObs; } } 
+        public IObservable<SongViewModel> CurrentSongObs { get; private set; }
+
 
         private void StartBackgroundAudioTask()
         {
             AddMediaPlayerEventHandlers();
-            var backgroundtaskinitializationresult = CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
+            var backgroundtaskinitializationresult = CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                 bool result = _sererInitialized.WaitOne(2000);
                 if (!result)
                 {

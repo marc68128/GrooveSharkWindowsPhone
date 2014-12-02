@@ -4,19 +4,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Helpers;
 using GrooveSharkClient.Models;
 using GrooveSharkClient.Models.Entity;
+using GrooveSharkClient.Models.Exception;
 using Newtonsoft.Json;
-using ReactiveUI;
 
 namespace GrooveSharkClient
 {
@@ -28,7 +24,7 @@ namespace GrooveSharkClient
         private const string RequestPatern = "{\"method\":\"{0}\",\"parameters\":{{1}},\"header\":{{2}}}";
         private readonly TimeSpan _defautTimeOut = new TimeSpan(0, 0, 15);
 
-        private NetworkClient _networkClient;
+        private readonly NetworkClient _networkClient;
 
         public GrooveSharkClient()
         {
@@ -111,7 +107,7 @@ namespace GrooveSharkClient
                         throw grooveSharkResult.Errors.First();
 
                     var countryInfo = new CountryInfo(grooveSharkResult);
-                    Debug.WriteLine("Country : " + countryInfo.GetCountryInfoAsJsonString());
+                    Debug.WriteLine("Country : " + countryInfo.Serialize());
                     return new CountryInfo(grooveSharkResult);
 
                 }
@@ -397,7 +393,7 @@ namespace GrooveSharkClient
             });
         }
 
-        public IObservable<bool> RemoveUserFavoriteSongs(string songId, string session)
+        public IObservable<bool> RemoveUserFavoriteSongs(int songId, string session)
         {
             return Observable.Start(() =>
             {
@@ -461,7 +457,7 @@ namespace GrooveSharkClient
             });
         }
 
-        public IObservable<bool> AddSongToUserFavourites(string session, string songId)
+        public IObservable<bool> AddSongToUserFavourites(string session, int songId)
         {
             return Observable.Start(() =>
             {
@@ -482,7 +478,7 @@ namespace GrooveSharkClient
             });
         }
 
-        public IObservable<Playlist> GetPlaylist(string session, string playlistId, int limit = 0)
+        public IObservable<Playlist> GetPlaylist(string session, int playlistId, int limit = 0)
         {
             return Observable.Start(() =>
             {
@@ -505,7 +501,7 @@ namespace GrooveSharkClient
             });
         }
 
-        public IObservable<Playlist> GetPlaylistInfos(string session, string playlistId)
+        public IObservable<Playlist> GetPlaylistInfos(string session, int playlistId)
         {
             return Observable.Start(() =>
             {
@@ -526,7 +522,7 @@ namespace GrooveSharkClient
             });
         }
 
-        public IObservable<StreamInfo> GetStreamInfo(string session, string country, string songId, bool lowBitrate = false)
+        public IObservable<StreamInfo> GetStreamInfo(string session, string country, int songId, bool lowBitrate = false)
         {
             return Observable.Start(() =>
             {

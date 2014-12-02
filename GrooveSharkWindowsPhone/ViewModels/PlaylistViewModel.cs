@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using GrooveSharkClient.Models;
 using GrooveSharkClient.Models.Entity;
+using GrooveSharkClient.Models.Exception;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
     public class PlaylistViewModel : BaseViewModel
     {
-        private string _playlistId;
+        private int _playlistId;
         public PlaylistViewModel(Playlist playlist, bool minimized = false)
         {
             _playlistId = playlist.PlaylistID;
@@ -26,7 +23,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             if (!minimized) 
                 LoadPlaylistInfoCommand.Execute(null);
         }
-        public string PlaylistId { get { return _playlistId; } }
+        public int PlaylistId { get { return _playlistId; } }
 
         private string _playlistName;
         public string PlaylistName

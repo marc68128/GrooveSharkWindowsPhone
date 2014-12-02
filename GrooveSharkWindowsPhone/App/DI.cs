@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GrooveSharkClient.Contracts;
+﻿using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Services;
 using GrooveSharkWindowsPhone.AudioPlayer;
-using GrooveSharkWindowsPhone.Helpers;
 using Splat;
 
 namespace GrooveSharkWindowsPhone
