@@ -79,18 +79,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
-      <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
-      <Name>GrooveSharkClient</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\Shared\Constants.cs">
       <Link>Constants.cs</Link>
     </Compile>
     <Compile Include="AppSettings.cs" />
     <Compile Include="AudioPlayer.cs" />
+    <Compile Include="AudioPlayerClient.cs" />
+    <Compile Include="GrooveSharkResult.cs" />
+    <Compile Include="HmacMd5.cs" />
     <Compile Include="PlaylistManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SongViewModel.cs" />
@@ -131,6 +127,9 @@
     <Reference Include="System.Reactive.WindowsRuntime, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-WinRT.2.2.5\lib\portable-win81+wpa81\System.Reactive.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="xBrainLab.Security.Cryptography">
+      <HintPath>..\ext\xBrainLab.Security.Cryptography.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

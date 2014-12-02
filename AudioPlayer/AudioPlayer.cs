@@ -8,7 +8,6 @@ using Windows.ApplicationModel.Background;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Playback;
-using GrooveSharkClient.Models;
 using GrooveSharkShared;
 
 
@@ -16,29 +15,19 @@ namespace AudioPlayer
 {
     public sealed class AudioPlayer : IBackgroundTask
     {
-        private SystemMediaTransportControls _systemmediatransportcontrol;
         private BackgroundTaskDeferral _deferral;
         private PlaylistManager _playlistManager; 
   
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            taskInstance.Canceled += TaskInstance_Canceled;
+            taskInstance.Canceled += TaskCanceled;
+            taskInstance.Task.Completed += TaskCompleted;
+            AppSettings.AddValue(Constants.IsBackgroundTaskRunning, true);
+
             BackgroundMediaPlayer.MessageReceivedFromForeground += MessageReceivedFromForeground;
             
             _playlistManager = new PlaylistManager();
-            _playlistManager.SongChanged += PlaylistManagerOnSongChanged;
-            
 
-            _systemmediatransportcontrol = SystemMediaTransportControls.GetForCurrentView();
-            _systemmediatransportcontrol.ButtonPressed += systemmediatransportcontrol_ButtonPressed;
-            _systemmediatransportcontrol.PropertyChanged += systemmediatransportcontrol_PropertyChanged;
-            _systemmediatransportcontrol.IsEnabled = true;
-            _systemmediatransportcontrol.IsPauseEnabled = true;
-            _systemmediatransportcontrol.IsPlayEnabled = true;
-            _systemmediatransportcontrol.IsNextEnabled = true;
-            _systemmediatransportcontrol.IsPreviousEnabled = true;
-
-            AppSettings.AddValue(Constants.BackgroundTaskState, Constants.BackgroundTaskRunning);
             _deferral = taskInstance.GetDeferral();
 
             var message = new ValueSet(); 
@@ -46,30 +35,18 @@ namespace AudioPlayer
             BackgroundMediaPlayer.SendMessageToForeground(message);
         }
 
-        private void PlaylistManagerOnSongChanged(object sender, SongViewModel svm)
-        {
-            BackgroundMediaPlayer.Current.SetUriSource(new Uri(svm.StreamUrl, UriKind.Absolute));
-            BackgroundMediaPlayer.Current.Play();
-            _systemmediatransportcontrol.PlaybackStatus = MediaPlaybackStatus.Playing;
-            _systemmediatransportcontrol.DisplayUpdater.Type = MediaPlaybackType.Music;
-            _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Title = svm.SongName;
-            _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Artist = svm.ArtistName;
-            _systemmediatransportcontrol.DisplayUpdater.MusicProperties.AlbumArtist = svm.AlbumName;
-            _systemmediatransportcontrol.DisplayUpdater.Update();
-        }
 
-        private void systemmediatransportcontrol_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
 
-        private void systemmediatransportcontrol_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("MyBackgroundAudioTask " + sender.TaskId + " Completed...");
+            AppSettings.AddValue(Constants.IsBackgroundTaskRunning, false);
+            _deferral.Complete();
         }
-
-        private void TaskInstance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        private void TaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
+            Debug.WriteLine("MyBackgroundAudioTask Canceled... Reason : " + reason);
+            AppSettings.AddValue(Constants.IsBackgroundTaskRunning, false);
             _deferral.Complete();
         }
 

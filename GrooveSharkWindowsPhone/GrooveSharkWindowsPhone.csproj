@@ -81,17 +81,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\AudioPlayer\AudioPlayer.csproj">
-      <Project>{30eca932-5e26-4a3b-830a-1884a5b192bc}</Project>
-      <Name>AudioPlayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
-      <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
-      <Name>GrooveSharkClient</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\Shared\Constants.cs">
       <Link>App\Constants.cs</Link>
     </Compile>
@@ -296,6 +285,16 @@
     <Reference Include="xBrainLab.Security.Cryptography">
       <HintPath>..\ext\xBrainLab.Security.Cryptography.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioPlayer\AudioPlayer.csproj">
+      <Project>{30eca932-5e26-4a3b-830a-1884a5b192bc}</Project>
+      <Name>AudioPlayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
+      <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
+      <Name>GrooveSharkClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

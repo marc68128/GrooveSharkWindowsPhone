@@ -2,9 +2,6 @@
 using System.Net;
 using System.Reactive.Linq;
 using Windows.UI.Popups;
-using GrooveSharkClient.Models;
-using GrooveSharkClient.Models.Entity;
-using GrooveSharkClient.Models.Exception;
 using Newtonsoft.Json;
 using ReactiveUI;
 

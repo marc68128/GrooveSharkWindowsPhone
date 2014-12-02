@@ -11,9 +11,9 @@ namespace GrooveSharkShared
     /// </summary>
     class Constants
     {
-        public const string CurrentTrack = "trackname";
+        public const string CurrentSongChanged = "currentsongchanged";
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
-        public const string BackgroundTaskRunning = "BackgroundTaskRunning";
+        public const string IsBackgroundTaskRunning = "BackgroundTaskRunning";
         public const string BackgroundTaskCancelled = "BackgroundTaskCancelled";
         public const string AppSuspended = "appsuspend";
         public const string AppResumed = "appresumed";
