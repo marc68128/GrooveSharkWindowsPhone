@@ -21,11 +21,11 @@ namespace AudioPlayer
         public string SessionId { get; set; }
         public string CountryInfos { get; set; }
 
-        public IObservable<SongViewModel> GetStreamInfos(SongViewModel vm)
+        public async Task<StreamInfo> GetStreamInfos(SongViewModel vm)
         {
 
             var header = "\"wsKey\":\"" + ServerKey + "\"";
-                header += ",\"sessionID\":\"" + SessionId + "\"";
+            header += ",\"sessionID\":\"" + SessionId + "\"";
 
             var parameter = "\"country\":" + CountryInfos + ",\"songID\":" + vm.SongId;
 
@@ -49,21 +49,23 @@ namespace AudioPlayer
 
 
             var client = new HttpClient();
-                client.Timeout = new TimeSpan(0,0,0,10);
+            client.Timeout = new TimeSpan(0, 0, 0, 10);
 
-            var res =  client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead).ToObservable();
+            var res = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead);
 
-            res.Select(r =>
+            if (res.IsSuccessStatusCode)
             {
-                if (r.IsSuccessStatusCode)
-                {
-                    var responceTxt = r.Content.ReadAsStringAsync().Result;
-                    var gsResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (gsResult.Errors != null && gsResult.Errors.Any())
-                        throw gsResult.Errors.First();
-                    return new StreamInfo(gsResult);
-                }
-            })
+                var responceTxt = res.Content.ReadAsStringAsync().Result;
+                var gsResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                if (gsResult.Errors != null && gsResult.Errors.Any())
+                    throw gsResult.Errors.First();
+                return new StreamInfo(gsResult);
+            }
+            else
+            {
+                return null;
+            }
+
 
         }
     }
