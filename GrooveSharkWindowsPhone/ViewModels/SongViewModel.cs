@@ -89,41 +89,24 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             #endregion
 
-            #region PlayNexCommand
+            #region PlayNextCommand
+            
             PlayNextCommand = ReactiveCommand.Create();
-            PlayNextCommand.Subscribe(_ => {
-                _audioPlayer.AddSongToPlaylist(this, true);
-            });
+            PlayNextCommand.Subscribe(_ => _audioPlayer.AddSongToPlaylist(this, true));
+
             #endregion
 
-            #region GetStreamInfoCommand
+            #region PlayNowCommand
+            
+            PlayNowCommand = ReactiveCommand.Create();
+            PlayNowCommand.Subscribe(_ => _audioPlayer.AddSongToPlaylist(this, true, true));
 
-            GetStreamInfoCommand = ReactiveCommand.CreateAsyncObservable(_ =>
-            {
-                _loading.AddLoadingStatus("Loading song...");
-                return _client.GetStreamInfo(_session.SessionId, _country.Country.Serialize(), SongId);
-            });
+            #endregion
 
-            GetStreamInfoCommand.WhereNotNull().Subscribe(si =>
-            {
-                _loading.RemoveLoadingStatus("Loading song...");
-                StreamUrl = si.Url;
-                StreamKey=  si.StreamKey;
-                StreamServerId = si.StreamServerID;
-                StreamUsecs = si.Usecs;
-            });
+            #region PlayLastCommand
 
-            GetStreamInfoCommand.ThrownExceptions
-               .OfType<GrooveSharkException>()
-               .Do(e => _loading.RemoveLoadingStatus("Loading song..."))
-               .Do(e => Debug.WriteLine("[SongViewModel] : " + e.Description))
-               .BindTo(this, self => self.GrooveSharkException);
-
-            GetStreamInfoCommand.ThrownExceptions
-                .OfType<WebException>()
-                .Do(e => _loading.RemoveLoadingStatus("Loading song..."))
-                .Do(e => Debug.WriteLine("[SongViewModel] : " + e.Message))
-                .BindTo(this, self => self.WebException);
+            PlayLastCommand = ReactiveCommand.Create();
+            PlayLastCommand.Subscribe(_ => _audioPlayer.AddSongToPlaylist(this));
 
             #endregion
         }
@@ -177,40 +160,15 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _isFavorite, value); }
         }
 
-        private string _streamUrl;
-        public string StreamUrl
-        {
-            get { return _streamUrl; }
-            set { this.RaiseAndSetIfChanged(ref _streamUrl, value); }
-        }
 
-        private string _streamKey;
-        public string StreamKey
-        {
-            get { return _streamKey; }
-            set { this.RaiseAndSetIfChanged(ref _streamKey, value); }
-        }
-
-        private int _streamServerId;
-        public int StreamServerId
-        {
-            get { return _streamServerId; }
-            set { this.RaiseAndSetIfChanged(ref _streamServerId, value); }
-        }
-
-        private int _streamUsecs;
-        public int StreamUsecs
-        {
-            get { return _streamUsecs; }
-            set { this.RaiseAndSetIfChanged(ref _streamUsecs, value); }
-        }
 
 
         public ReactiveCommand<bool> AddSongToUserFavouritesCommand { get; private set; }
         public ReactiveCommand<bool> RemoveSongFromUserFavouritesCommand { get; private set; }
         public ReactiveCommand<object> AddToPlaylistCommand { get; private set; }
         public ReactiveCommand<object> PlayNextCommand { get; private set; }
-        public ReactiveCommand<StreamInfo> GetStreamInfoCommand { get; private set; }
+        public ReactiveCommand<object> PlayNowCommand { get; private set; }
+        public ReactiveCommand<object> PlayLastCommand { get; private set; }
 
         public static SongViewModel Deserialize(string json)
         {
@@ -220,16 +178,13 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 SongId = int.Parse(splited[1]),
                 AlbumName = splited[2],
                 ArtistName = splited[3],
-                ThumbnailUrl = splited[4],
-                StreamUrl = splited[5],
-                StreamKey = splited[6],
-                StreamServerId = int.Parse(splited[7]),
-                StreamUsecs = int.Parse(splited[8])
+                ThumbnailUrl = splited[4]
             };
         }
+
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(SongName + ";" + SongId + ";" + AlbumName + ";" + ArtistName + ";" + ThumbnailUrl + ";" + StreamUrl + ";" + StreamKey + ";" + StreamServerId + ";" + StreamUsecs);
+            return JsonConvert.SerializeObject(SongName + ";" + SongId + ";" + AlbumName + ";" + ArtistName + ";" + ThumbnailUrl);
         }
 
         

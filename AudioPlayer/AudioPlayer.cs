@@ -16,8 +16,8 @@ namespace AudioPlayer
     public sealed class AudioPlayer : IBackgroundTask
     {
         private BackgroundTaskDeferral _deferral;
-        private PlaylistManager _playlistManager; 
-  
+        private PlaylistManager _playlistManager;
+
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             taskInstance.Canceled += TaskCanceled;
@@ -25,12 +25,12 @@ namespace AudioPlayer
             AppSettings.AddValue(Constants.IsBackgroundTaskRunning, true);
 
             BackgroundMediaPlayer.MessageReceivedFromForeground += MessageReceivedFromForeground;
-            
+
             _playlistManager = new PlaylistManager();
 
             _deferral = taskInstance.GetDeferral();
 
-            var message = new ValueSet(); 
+            var message = new ValueSet();
             message.Add(Constants.BackgroundTaskStarted, "");
             BackgroundMediaPlayer.SendMessageToForeground(message);
         }
@@ -61,9 +61,25 @@ namespace AudioPlayer
                     case Constants.Play:
                         Debug.WriteLine(BackgroundMediaPlayer.Current.CurrentState);
                         break;
-
+                    case Constants.SessionIdChanged:
+                        _playlistManager.SessionId = e.Data[key].ToString();
+                        Debug.WriteLine("[AudioPlayer] SessionIdChanged : " + _playlistManager.SessionId);
+                        break;
+                    case Constants.CountryInfosChanged:
+                        _playlistManager.CountryInfos = e.Data[key].ToString();
+                        Debug.WriteLine("[AudioPlayer] CountryInfosChanged : " + _playlistManager.CountryInfos);
+                        break;
                     case Constants.AddSongToPlaylist:
-                        _playlistManager.AddSong(SongViewModel.Deserialize(e.Data[key].ToString()));
+                        _playlistManager.AddSong(SongViewModel.Deserialize(e.Data[key].ToString()), false);
+                        break;
+                    case Constants.AddNextSongToPlaylist:
+                        _playlistManager.AddSong(SongViewModel.Deserialize(e.Data[key].ToString()), true);
+                        break;
+                    case Constants.SkipNext:
+                        _playlistManager.SkipToNext();
+                        break;
+                    case Constants.SkipPrevious:
+                        _playlistManager.SkipToPrevious();
                         break;
                 }
             }

@@ -27,6 +27,19 @@
             <TextBlock Text="{Binding Title}" Margin="19,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
         
-        <userControls:UCSong DataContext="{Binding CurrentSong}" Grid.Row="1"></userControls:UCSong>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <userControls:UCSong DataContext="{Binding PreviousSong, Mode=OneWay}" Grid.Row="1"></userControls:UCSong>
+            <userControls:UCSong DataContext="{Binding CurrentSong, Mode=OneWay}" Grid.Row="2"></userControls:UCSong>
+            <userControls:UCSong DataContext="{Binding NextSong, Mode=OneWay}" Grid.Row="3"></userControls:UCSong>
+        </Grid>
+        
+       
     </Grid>
 </local:BaseView>

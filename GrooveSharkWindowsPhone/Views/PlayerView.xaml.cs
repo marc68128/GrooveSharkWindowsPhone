@@ -10,7 +10,6 @@ namespace GrooveSharkWindowsPhone.Views
         public PlayerView() : base(new PlayerViewModel())
         {
             this.InitializeComponent();
-
         }
 
         private PlayerViewModel ViewModel

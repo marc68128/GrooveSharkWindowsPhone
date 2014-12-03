@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Newtonsoft.Json;
 
 namespace AudioPlayer
@@ -21,7 +22,8 @@ namespace AudioPlayer
         public string SessionId { get; set; }
         public string CountryInfos { get; set; }
 
-        public async Task<StreamInfo> GetStreamInfos(SongViewModel vm)
+
+        private async Task<StreamInfo> GetStreamInfosInternal(SongViewModel vm)
         {
 
             var header = "\"wsKey\":\"" + ServerKey + "\"";
@@ -56,7 +58,7 @@ namespace AudioPlayer
             if (res.IsSuccessStatusCode)
             {
                 var responceTxt = res.Content.ReadAsStringAsync().Result;
-                var gsResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                var gsResult = JsonConvert.DeserializeObject<GrooveSharkResult>(responceTxt);
                 if (gsResult.Errors != null && gsResult.Errors.Any())
                     throw gsResult.Errors.First();
                 return new StreamInfo(gsResult);
@@ -67,6 +69,11 @@ namespace AudioPlayer
             }
 
 
+        }
+
+        public IAsyncOperation<StreamInfo> GetStreamInfos(SongViewModel vm)
+        {
+            return GetStreamInfosInternal(vm).AsAsyncOperation();
         }
     }
 }

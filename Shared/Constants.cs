@@ -11,6 +11,8 @@ namespace GrooveSharkShared
     /// </summary>
     class Constants
     {
+
+        public const string SessionIdChanged = "sessionidchanged";
         public const string CurrentSongChanged = "currentsongchanged";
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string IsBackgroundTaskRunning = "BackgroundTaskRunning";
@@ -28,5 +30,7 @@ namespace GrooveSharkShared
         public const string ForegroundAppActive = "Active";
         public const string ForegroundAppSuspended = "Suspended";
         public const string AddSongToPlaylist = "addsongtoplaylist";
+        public const string AddNextSongToPlaylist = "addnextsongtoplaylist";
+        public const string CountryInfosChanged = "countryinfoschanged";
     }
 }

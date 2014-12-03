@@ -79,6 +79,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Constants.cs">
+      <Link>Helpers\Constants.cs</Link>
+    </Compile>
     <Compile Include="Contracts\ICountryService.cs" />
     <Compile Include="Contracts\IGrooveSharkClient.cs" />
     <Compile Include="Contracts\ILoadingService.cs" />
@@ -86,7 +89,6 @@
     <Compile Include="Contracts\IUserService.cs" />
     <Compile Include="GrooveSharkClient.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
-    <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\HmacMd5.cs" />
     <Compile Include="Models\Entity\Album.cs" />
     <Compile Include="Models\Entity\Artist.cs" />
@@ -139,6 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioPlayer\AudioPlayer.csproj">
+      <Project>{30eca932-5e26-4a3b-830a-1884a5b192bc}</Project>
+      <Name>AudioPlayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

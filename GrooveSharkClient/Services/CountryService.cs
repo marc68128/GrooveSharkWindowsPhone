@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using Windows.Foundation.Collections;
+using Windows.Media.Playback;
 using GrooveSharkClient.Contracts;
 using GrooveSharkClient.Models.Entity;
+using GrooveSharkShared;
 using ReactiveUI;
 
 namespace GrooveSharkClient.Services
@@ -15,11 +18,16 @@ namespace GrooveSharkClient.Services
                 loadingService.AddLoadingStatus("Loading Country...");
                 return client.GetCountry();
             });
+
             LoadCountryCommand.Where(c => c != null).Subscribe(c => {
                 loadingService.RemoveLoadingStatus("Loading Country...");
                 IsDataAvailable = true;
                 Country = c;
+                var valueSet = new ValueSet();
+                valueSet.Add(Constants.CountryInfosChanged, c.Serialize());
+                BackgroundMediaPlayer.SendMessageToBackground(valueSet);
             });
+
             LoadCountryCommand.ThrownExceptions.Subscribe(ex => {
                 Debug.WriteLine("[CountryService]" + ex);
                 ThrownException = ex;

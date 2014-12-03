@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using Windows.Foundation.Collections;
+using Windows.Media.Playback;
 using GrooveSharkClient.Contracts;
+using GrooveSharkShared;
 using ReactiveUI;
 
 namespace GrooveSharkClient.Services
@@ -22,6 +25,11 @@ namespace GrooveSharkClient.Services
             {
                 Debug.WriteLine("[SessionService] Session : " + s);
                 SessionId = s;
+
+                var valueSet = new ValueSet(); 
+                valueSet.Add(Constants.SessionIdChanged, s);
+                BackgroundMediaPlayer.SendMessageToBackground(valueSet);
+
                 loadingService.RemoveLoadingStatus("Stating Session...");
                 IsDataAvailable = true;
             });

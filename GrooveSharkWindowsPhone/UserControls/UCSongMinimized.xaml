@@ -30,9 +30,12 @@
         </VisualStateManager.VisualStateGroups>
         <FlyoutBase.AttachedFlyout>
             <MenuFlyout>
-                <MenuFlyoutItem Text="Play now" />
-                <MenuFlyoutItem Text="Play next" />
-                <MenuFlyoutItem Text="Add to favourites" Command="{Binding AddSongToUserFavouritesCommand}" />
+                <MenuFlyoutItem Text="Play now" Command="{Binding PlayNowCommand}" />
+                <MenuFlyoutItem Text="Play next" Command="{Binding PlayNextCommand}" />
+                <MenuFlyoutItem Text="Play Last" Command="{Binding PlayLastCommand}" />
+                <MenuFlyoutItem x:Name="AddToFavouritesFlyoutItem" Text="Add to favourites" Command="{Binding AddSongToUserFavouritesCommand}" />
+                <MenuFlyoutItem x:Name="RemoveFromFavouritesFlyoutItem" Text="Remove from favourites" Command="{Binding RemoveSongFromUserFavouritesCommand}" />
+                <MenuFlyoutItem Text="Add to playlist" Command="{Binding AddToPlaylistCommand}"></MenuFlyoutItem>
             </MenuFlyout>
         </FlyoutBase.AttachedFlyout>
         <TextBlock Width="15" Margin="0,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#888888">

@@ -21,23 +21,18 @@ namespace AudioPlayer
 
         public static SongViewModel Deserialize(string json)
         {
-            var splited = json.Replace("\"", "").Split(';');
+            var splited = json.Split(';');
             return new SongViewModel() {
                 SongName = splited[0],
                 SongId = int.Parse(splited[1]),
                 AlbumName = splited[2],
                 ArtistName = splited[3],
-                ThumbnailUrl = splited[4],
-                StreamUrl = splited[5],
-                StreamKey = splited[6],
-                StreamServerId = int.Parse(splited[7]),
-                StreamUsecs = int.Parse(splited[8])
+                ThumbnailUrl = splited[4]
             };
         }
-
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(SongName + ";" + SongId + ";" + AlbumName + ";" + ArtistName + ";" + ThumbnailUrl + ";" + StreamUrl + ";" + StreamKey + ";" + StreamServerId + ";" + StreamUsecs);
+            return JsonConvert.SerializeObject(SongName + ";" + SongId + ";" + AlbumName + ";" + ArtistName + ";" + ThumbnailUrl);
         }
     }
 

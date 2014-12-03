@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Reactive.Subjects;
+using System.Reactive.Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage.Streams;
 using GrooveSharkShared;
 
 namespace AudioPlayer
@@ -18,10 +20,13 @@ namespace AudioPlayer
         private SystemMediaTransportControls _systemmediatransportcontrol;
         private List<SongViewModel> _playlist;
         private int _current = -1;
+        private AudioPlayerClient _client;
 
         public PlaylistManager()
         {
             _playlist = new List<SongViewModel>();
+            _client = new AudioPlayerClient();
+
             BackgroundMediaPlayer.Current.MediaEnded += OnMediaEnded;
             BackgroundMediaPlayer.Current.CurrentStateChanged += OnCurrentStateChanged;
 
@@ -69,27 +74,33 @@ namespace AudioPlayer
             }
         }
 
-        private void SkipToPrevious()
+        public void SkipToPrevious()
         {
             if (_current != 0)
             {
-                BackgroundMediaPlayer.Current.SetUriSource(new Uri(_playlist[--_current].StreamUrl, UriKind.Absolute));
-
-                var valueSet = new ValueSet();
-                valueSet.Add(Constants.CurrentSongChanged, _current);
-                BackgroundMediaPlayer.SendMessageToForeground(valueSet);
-
-                BackgroundMediaPlayer.Current.Play();
-
-                UpdateSystemMediaTransportControl();
-
-            }   
+                PlaySongAtIndex(_current - 1);
+            }
         }
-        private void SkipToNext()
+        public void SkipToNext()
         {
             if (_current != _playlist.Count - 1)
             {
-                BackgroundMediaPlayer.Current.SetUriSource(new Uri(_playlist[++_current].StreamUrl, UriKind.Absolute));
+                PlaySongAtIndex(_current + 1);
+            }
+        }
+
+        private void PlaySongAtIndex(int index)
+        {
+            _current = index;
+            var streamInfoObs = _client.GetStreamInfos(_playlist[_current]).ToObservable();
+
+            streamInfoObs.Subscribe(streamInfo => {
+                _playlist[_current].StreamUrl = streamInfo.Url;
+                _playlist[_current].StreamServerId = streamInfo.StreamServerID;
+                _playlist[_current].StreamKey = streamInfo.StreamKey;
+                _playlist[_current].StreamUsecs = streamInfo.Usecs;
+
+                BackgroundMediaPlayer.Current.SetUriSource(new Uri(_playlist[_current].StreamUrl, UriKind.Absolute));
 
                 var valueSet = new ValueSet();
                 valueSet.Add(Constants.CurrentSongChanged, _current);
@@ -98,11 +109,9 @@ namespace AudioPlayer
                 BackgroundMediaPlayer.Current.Play();
 
                 UpdateSystemMediaTransportControl();
-
-            }
+            });
         }
 
-       
         private void OnCurrentStateChanged(MediaPlayer sender, object args)
         {
             var state = BackgroundMediaPlayer.Current.CurrentState;
@@ -119,29 +128,18 @@ namespace AudioPlayer
         }
         private void OnMediaEnded(MediaPlayer sender, object args)
         {
-            SkipToNext(); 
+            SkipToNext();
         }
-        public void AddSong(SongViewModel svm)
+        public void AddSong(SongViewModel svm, bool next)
         {
-            _playlist.Add(svm);
+            if (next)
+               _playlist.Insert(_current + 1, svm);
+            else
+               _playlist.Add(svm);
 
             if (_current == -1)
-            {
-                _current = 0;
+               PlaySongAtIndex(0);
 
-                var valueSet = new ValueSet();
-                valueSet.Add(Constants.CurrentSongChanged, _current);
-                BackgroundMediaPlayer.SendMessageToForeground(valueSet);
-
-                BackgroundMediaPlayer.Current.SetUriSource(new Uri(svm.StreamUrl, UriKind.Absolute));
-                BackgroundMediaPlayer.Current.Play();
-
-                _systemmediatransportcontrol.DisplayUpdater.Type = MediaPlaybackType.Music;
-                _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Title = svm.SongName;
-                _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Artist = svm.ArtistName;
-                _systemmediatransportcontrol.DisplayUpdater.MusicProperties.AlbumArtist = svm.AlbumName;
-                _systemmediatransportcontrol.DisplayUpdater.Update();
-            }
             UpdateSystemMediaTransportControl();
         }
 
@@ -155,6 +153,17 @@ namespace AudioPlayer
             _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Artist = _playlist[_current].ArtistName;
             _systemmediatransportcontrol.DisplayUpdater.MusicProperties.AlbumArtist = _playlist[_current].AlbumName;
             _systemmediatransportcontrol.DisplayUpdater.Update();
+        }
+
+        public string SessionId 
+        {
+            get { return _client.SessionId;  }
+            set { _client.SessionId = value; }
+        }
+        public string CountryInfos
+        {
+            get { return _client.CountryInfos; }
+            set { _client.CountryInfos = value; }
         }
     }
 }

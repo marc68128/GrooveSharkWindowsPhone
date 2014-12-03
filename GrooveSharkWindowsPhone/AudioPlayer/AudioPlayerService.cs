@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using Windows.UI.Core;
+using GrooveSharkClient.Models.Entity;
 using GrooveSharkShared;
 using GrooveSharkWindowsPhone.AudioPlayer;
 using GrooveSharkWindowsPhone.Helpers;
@@ -16,27 +20,47 @@ namespace GrooveSharkWindowsPhone
     public class AudioPlayerService : IAudioPlayerService
     {
         private AutoResetEvent _sererInitialized;
+        private int _current = 0;
+        private List<SongViewModel> _playList;
 
         public AudioPlayerService()
         {
             _sererInitialized = new AutoResetEvent(false);
+            _playList = new List<SongViewModel>();
             StartBackgroundAudioTask();
-
-
         }
 
         public void AddSongToPlaylist(SongViewModel svm, bool addNext = false, bool play = false)
         {
-            svm.GetStreamInfoCommand.Execute(null);
-            svm.GetStreamInfoCommand.Take(1).Subscribe(_ => {
+            if (addNext)
+            {
+                var valueSet = new ValueSet();
+                valueSet.Add(Constants.AddNextSongToPlaylist, svm.Serialize());
+                BackgroundMediaPlayer.SendMessageToBackground(valueSet);
+                if (!_playList.Any())
+                    _playList.Add(svm);
+                else
+                    _playList.Insert(_current + 1, svm);
+            }
+            else
+            {
                 var valueSet = new ValueSet();
                 valueSet.Add(Constants.AddSongToPlaylist, svm.Serialize());
                 BackgroundMediaPlayer.SendMessageToBackground(valueSet);
-            });
-
+                _playList.Add(svm);
+            }
+            if (play)
+            {
+                var valueSet = new ValueSet();
+                valueSet.Add(Constants.SkipNext, svm.Serialize());
+                BackgroundMediaPlayer.SendMessageToBackground(valueSet);
+            }
+            UpdateActualSongs();
         }
 
-        public IObservable<SongViewModel> CurrentSongObs { get; private set; }
+        public SongViewModel CurrentSong { get; private set; }
+        public SongViewModel NextSong { get; private set; }
+        public SongViewModel PreviousSong { get; private set; }
 
 
         private void StartBackgroundAudioTask()
@@ -70,8 +94,21 @@ namespace GrooveSharkWindowsPhone
                         Debug.WriteLine("Background Task started");
                         _sererInitialized.Set();
                         break;
+                    case Constants.CurrentSongChanged:
+                        _current = Convert.ToInt32(e.Data[key]);
+                        UpdateActualSongs();
+                        break;
                 }
             }
+        }
+
+        private void UpdateActualSongs()
+        {
+            CurrentSong =_playList[_current];
+            if (_playList.Count - 1 > _current)
+                NextSong =_playList[_current + 1];
+            if (_current > 0)
+                PreviousSong = _playList[_current - 1];
         }
 
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
