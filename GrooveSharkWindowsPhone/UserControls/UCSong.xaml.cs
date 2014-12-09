@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -42,6 +43,14 @@ namespace GrooveSharkWindowsPhone.UserControls
         private void UIElement_OnHolding(object sender, HoldingRoutedEventArgs e)
         {
             if (e.HoldingState != HoldingState.Started) return;
+
+            if (ViewModel.CurrentUser == null || ViewModel.CurrentUser.UserID == 0)
+            {
+                new MessageDialog(
+                    "If you want to use all the features of this application (such as playlists, favourites, library and audio player) you should register or login.")
+                    .ShowAsync();
+                return;
+            }
 
             var element = sender as FrameworkElement;
             if (element == null) return;

@@ -10,6 +10,7 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage.Streams;
 using GrooveSharkShared;
+using Newtonsoft.Json;
 
 namespace AudioPlayer
 {
@@ -89,6 +90,16 @@ namespace AudioPlayer
             }
         }
 
+        public string GetSerializedPlaylistInfos()
+        {
+            SongViewModel[] actualState = new SongViewModel[3];
+            actualState[0] = _current == 0 ? new SongViewModel() : _playlist[_current - 1];
+            actualState[1] = _playlist[_current];
+            actualState[2] = _current + 1 < _playlist.Count ? _playlist[_current + 1] : new SongViewModel();
+
+            return JsonConvert.SerializeObject(actualState.Select(p => p.Serialize()));
+        }
+
         private void PlaySongAtIndex(int index)
         {
             _current = index;
@@ -103,7 +114,7 @@ namespace AudioPlayer
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri(_playlist[_current].StreamUrl, UriKind.Absolute));
 
                 var valueSet = new ValueSet();
-                valueSet.Add(Constants.CurrentSongChanged, _current);
+                valueSet.Add(Constants.PlaylistInfos, GetSerializedPlaylistInfos());
                 BackgroundMediaPlayer.SendMessageToForeground(valueSet);
 
                 BackgroundMediaPlayer.Current.Play();

@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using System.Reactive.Linq;
+using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
@@ -7,9 +8,10 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public PlayerViewModel()
         {
             Title = "Player";
-            _audioPlayer.WhenAnyValue(p => p.CurrentSong).BindTo(this, self => self.CurrentSong);
-            _audioPlayer.WhenAnyValue(p => p.NextSong).BindTo(this, self => self.NextSong);
-            _audioPlayer.WhenAnyValue(p => p.PreviousSong).BindTo(this, self => self.PreviousSong);
+            _audioPlayer.WhenAnyValue(p => p.CurrentSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.CurrentSong);
+            _audioPlayer.WhenAnyValue(p => p.NextSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.NextSong);
+            _audioPlayer.WhenAnyValue(p => p.PreviousSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
+            _audioPlayer.RefreshPlaylist();
         }
 
         private SongViewModel _currentSong;
