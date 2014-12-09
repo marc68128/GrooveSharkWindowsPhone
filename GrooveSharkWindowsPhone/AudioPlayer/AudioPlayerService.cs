@@ -29,6 +29,15 @@ namespace GrooveSharkWindowsPhone
         {
             _sererInitialized = new AutoResetEvent(false);
             StartBackgroundAudioTask();
+
+            Observable.Interval(new TimeSpan(0, 0, 0, 1)).Subscribe(_ =>
+            {
+                if (BackgroundMediaPlayer.Current != null)
+                {
+                    Debug.WriteLine("Natural duration : " + BackgroundMediaPlayer.Current.NaturalDuration);
+                    Debug.WriteLine("Position : " + BackgroundMediaPlayer.Current.Position); 
+                }
+            });
         }
 
         public void AddSongToPlaylist(SongViewModel svm, bool addNext = false, bool play = false)
@@ -112,7 +121,7 @@ namespace GrooveSharkWindowsPhone
                 switch (key)
                 {
                     case Constants.PlaylistInfos:
-                        var pl = JsonConvert.DeserializeObject<List<string>>(e.Data[key] as string).Select(SongViewModel.Deserialize).ToList();
+                        var pl = JsonConvert.DeserializeObject<List<SongViewModel>>(e.Data[key] as string);
                         PreviousSong = pl[0].SongId == 0 ? null : pl[0];
                         CurrentSong = pl[1];
                         NextSong = pl[2].SongId == 0 ? null : pl[2];          

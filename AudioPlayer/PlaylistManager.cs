@@ -97,7 +97,7 @@ namespace AudioPlayer
             actualState[1] = _playlist[_current];
             actualState[2] = _current + 1 < _playlist.Count ? _playlist[_current + 1] : new SongViewModel();
 
-            return JsonConvert.SerializeObject(actualState.Select(p => p.Serialize()));
+            return JsonConvert.SerializeObject(actualState);
         }
 
         private void PlaySongAtIndex(int index)

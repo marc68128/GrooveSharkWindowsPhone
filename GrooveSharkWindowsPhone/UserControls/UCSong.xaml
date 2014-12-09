@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid x:Name="SongGrid" Height="75" Holding="UIElement_OnHolding" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
+    <Grid x:Name="SongGrid" Height="75" Tapped="OnTapped" Holding="UIElement_OnHolding" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
                 <VisualStateGroup.Transitions>

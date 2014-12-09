@@ -67,5 +67,25 @@ namespace GrooveSharkWindowsPhone.UserControls
         {
             VisualStateManager.GoToState(this, "Normal", true);
         }
+
+        private void OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ViewModel.CurrentUser == null || ViewModel.CurrentUser.UserID == 0)
+            {
+                new MessageDialog(
+                    "If you want to use all the features of this application (such as playlists, favourites, library and audio player) you should register or login.")
+                    .ShowAsync();
+                return;
+            }
+            if (!ViewModel.CurrentUser.IsAnywhere)
+            {
+                new MessageDialog(
+                    "If you want to stream songs on your device, you have to upgrade your account.")
+                    .ShowAsync();
+                return;
+            }
+            ViewModel.PlayNowCommand.Execute(null);
+
+        }
     }
 }

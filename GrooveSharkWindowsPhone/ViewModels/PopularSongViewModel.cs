@@ -46,13 +46,25 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             #endregion
 
+            #region PlayAllCommand
+
+            PlayAllCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(c => c != null  && c.UserID!= 0 && c.IsAnywhere));
+            PlayAllCommand.Subscribe(_ =>
+            {
+                foreach (var song in PopularSongs)
+                {
+                    song.PlayLastCommand.Execute(null);
+                }
+            });
+
+            #endregion
         }
 
 
-        public ReactiveList<SongViewModel> PopularSongs { get; set; }
+        public ReactiveList<SongViewModel> PopularSongs { get; private set; }
 
-
-        public ReactiveCommand<Song[]> LoadPopularSongsCommand { get; set; }
+        public ReactiveCommand<Song[]> LoadPopularSongsCommand { get; private set; }
+        public ReactiveCommand<object> PlayAllCommand { get; private set; }
 
     }
 }

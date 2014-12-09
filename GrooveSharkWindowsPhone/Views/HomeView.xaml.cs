@@ -157,6 +157,7 @@ namespace GrooveSharkWindowsPhone.Views
                     PlayButton.Visibility = Visibility.Visible;
                     RefreshButton.Visibility = Visibility.Visible;
                     RefreshButton.Command = ViewModel.PopularSongViewModel.LoadPopularSongsCommand;
+                    PlayButton.Command = ViewModel.PopularSongViewModel.PlayAllCommand;
                     HeaderTextBlock.Text = "Popular";
                     PopularPath.Fill = grooveSharkOrange;
                     break;

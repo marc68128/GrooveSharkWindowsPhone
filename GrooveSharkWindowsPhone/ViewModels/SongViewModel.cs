@@ -14,6 +14,7 @@ using ReactiveUI;
 namespace GrooveSharkWindowsPhone.ViewModels
 {
     [DataContract]
+    [JsonObject(MemberSerialization.OptOut)]
     public class SongViewModel : BaseViewModel
     {
         public SongViewModel(Song s, int position, bool isFavorite = false)
@@ -30,7 +31,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         }
         public SongViewModel()
         {
-            _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser); 
+            _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
         }
 
         private void InitCommands()
@@ -165,6 +166,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _isFavorite, value); }
         }
 
+        [JsonIgnore]
         public User CurrentUser { get; set; }
 
 
@@ -177,20 +179,11 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
         public static SongViewModel Deserialize(string json)
         {
-            var splited = json.Replace("\"\\\"", "").Replace("\\\"\"", "").Split(';');
-            return new SongViewModel()
-            {
-                SongName = splited[0],
-                SongId = int.Parse(splited[1]),
-                AlbumName = splited[2],
-                ArtistName = splited[3],
-                ThumbnailUrl = splited[4]
-            };
+            return JsonConvert.DeserializeObject<SongViewModel>(json);
         }
-
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(SongName + ";" + SongId + ";" + AlbumName + ";" + ArtistName + ";" + ThumbnailUrl);
+            return JsonConvert.SerializeObject(this);
         }
 
 
