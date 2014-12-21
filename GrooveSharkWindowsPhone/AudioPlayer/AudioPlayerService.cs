@@ -14,10 +14,11 @@ using GrooveSharkShared;
 using GrooveSharkWindowsPhone.AudioPlayer;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.ViewModels;
+using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone
 {
-    public class AudioPlayerService : IAudioPlayerService
+    public class AudioPlayerService : ReactiveObject, IAudioPlayerService
     {
         private AutoResetEvent _sererInitialized;
         private int _current = 0;
@@ -58,9 +59,34 @@ namespace GrooveSharkWindowsPhone
             UpdateActualSongs();
         }
 
-        public SongViewModel CurrentSong { get; private set; }
-        public SongViewModel NextSong { get; private set; }
-        public SongViewModel PreviousSong { get; private set; }
+        private SongViewModel _currentSong;
+        public SongViewModel CurrentSong
+        {
+            get { return _currentSong; }
+            private set { this.RaiseAndSetIfChanged(ref _currentSong, value); }
+        }
+
+        private SongViewModel _nextSong;
+        public SongViewModel NextSong
+        {
+            get { return _nextSong; }
+            private set { this.RaiseAndSetIfChanged(ref _nextSong, value); }
+        }
+
+        private SongViewModel _previousSong;
+        public SongViewModel PreviousSong
+        {
+            get { return _previousSong; }
+            private set { this.RaiseAndSetIfChanged(ref _previousSong, value); }
+        }
+
+        private bool _isPlaying;
+        public bool IsPlaying
+        {
+            get { return _isPlaying; }
+            private set { this.RaiseAndSetIfChanged(ref _isPlaying, value); }
+        }
+
 
 
         private void StartBackgroundAudioTask()
@@ -105,6 +131,8 @@ namespace GrooveSharkWindowsPhone
         private void UpdateActualSongs()
         {
             CurrentSong =_playList[_current];
+            NextSong = null;
+            PreviousSong = null; 
             if (_playList.Count - 1 > _current)
                 NextSong =_playList[_current + 1];
             if (_current > 0)
@@ -118,11 +146,11 @@ namespace GrooveSharkWindowsPhone
             switch (sender.CurrentState)
             {
                 case MediaPlayerState.Playing:
-
+                    IsPlaying = true;
                     break;
 
                 case MediaPlayerState.Paused:
-
+                    IsPlaying = false; 
                     break;
             }
         }
@@ -137,6 +165,7 @@ namespace GrooveSharkWindowsPhone
             {
                 Debug.WriteLine("Background Audio Task could not initialized due to an error ::" + asyncinfo.ErrorCode.ToString());
             }
+            IsPlaying = BackgroundMediaPlayer.IsMediaPlaying();
         }
     }
 }

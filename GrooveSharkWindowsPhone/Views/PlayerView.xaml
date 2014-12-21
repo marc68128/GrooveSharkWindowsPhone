@@ -26,20 +26,63 @@
             <TextBlock Text="{Binding AppTitle}" Style="{ThemeResource TitleTextBlockStyle}" x:Name="AppTitle" Margin="19,12,0,0"/>
             <TextBlock Text="{Binding Title}" Margin="19,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
-        
+
         <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <userControls:UCSong DataContext="{Binding PreviousSong, Mode=OneWay}" Grid.Row="1"></userControls:UCSong>
-            <userControls:UCSong DataContext="{Binding CurrentSong, Mode=OneWay}" Grid.Row="2"></userControls:UCSong>
-            <userControls:UCSong DataContext="{Binding NextSong, Mode=OneWay}" Grid.Row="3"></userControls:UCSong>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" DataContext="{Binding PreviousSong, Mode=OneWay}">
+                <StackPanel.Projection>
+                    <PlaneProjection RotationY="50"/>
+                </StackPanel.Projection>
+                <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
+                <TextBlock FontSize="15" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
+                <TextBlock FontSize="15" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock FontSize="15" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" DataContext="{Binding CurrentSong, Mode=OneWay}">
+                <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
+                <TextBlock FontSize="20" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
+                <TextBlock FontSize="20" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock FontSize="20" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" VerticalAlignment="Center" DataContext="{Binding NextSong, Mode=OneWay}" RenderTransformOrigin="0.5,0.5">
+                <StackPanel.Projection>
+                    <PlaneProjection RotationY="-50"/>
+                </StackPanel.Projection>
+                <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
+                <TextBlock FontSize="15" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
+                <TextBlock FontSize="15" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock FontSize="15" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
+            </StackPanel>
         </Grid>
-        
-       
+
     </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar Foreground="White" x:Name="ApplicationBar" Background="{ThemeResource GrooveSharkOrangeBrush}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="PrevButton" Label="Previous" Command="{Binding SkipPreviousCommand}">
+                    <AppBarButton.Icon>
+                        <BitmapIcon HorizontalAlignment="Center"  VerticalAlignment="Center" UriSource="/Assets/Icons/previous.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="TogglePlayPauseButton" Label="Pause" Command="{Binding TogglePlayPauseCommand}">
+                    <AppBarButton.Icon>
+                        <BitmapIcon HorizontalAlignment="Center"  VerticalAlignment="Center" UriSource="/Assets/Icons/pause.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="NextButton" Label="Next" Command="{Binding SkipNextCommand}">
+                    <AppBarButton.Icon>
+                        <BitmapIcon HorizontalAlignment="Center" VerticalAlignment="Center" UriSource="/Assets/Icons/next.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 </local:BaseView>

@@ -1,4 +1,9 @@
-﻿using ReactiveUI;
+﻿using System;
+using System.Reactive.Linq;
+using Windows.Foundation.Collections;
+using Windows.Media.Playback;
+using GrooveSharkShared;
+using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
@@ -7,9 +12,27 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public PlayerViewModel()
         {
             Title = "Player";
-            _audioPlayer.WhenAnyValue(p => p.CurrentSong).BindTo(this, self => self.CurrentSong);
-            _audioPlayer.WhenAnyValue(p => p.NextSong).BindTo(this, self => self.NextSong);
-            _audioPlayer.WhenAnyValue(p => p.PreviousSong).BindTo(this, self => self.PreviousSong);
+
+            SetupBindings();
+            SetupCommands();
+        }
+
+        private void SetupBindings()
+        {
+            _audioPlayer.WhenAnyValue(p => p.CurrentSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.CurrentSong);
+            _audioPlayer.WhenAnyValue(p => p.NextSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.NextSong);
+            _audioPlayer.WhenAnyValue(p => p.PreviousSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
+            _audioPlayer.WhenAnyValue(p => p.IsPl).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
+        }
+
+        private void SetupCommands()
+        {
+            SkipNextCommand = ReactiveCommand.Create(this.WhenAnyValue(self => self.NextSong).Select(n => n != null));
+            SkipNextCommand.Subscribe(_ => BackgroundMediaPlayer.SendMessageToBackground(new ValueSet { { Constants.SkipNext, "" } }));
+
+            SkipPreviousCommand = ReactiveCommand.Create(this.WhenAnyValue(self => self.PreviousSong).Select(n => n != null));
+            SkipPreviousCommand.Subscribe(_ => BackgroundMediaPlayer.SendMessageToBackground(new ValueSet { { Constants.SkipPrevious, "" } }));
+
         }
 
         private SongViewModel _currentSong;
@@ -32,5 +55,17 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _previousSong; }
             set { this.RaiseAndSetIfChanged(ref _previousSong, value); }
         }
+
+        private bool _isPlaying;
+        public bool IsPlaying
+        {
+            get { return _isPlaying; }
+            private set { this.RaiseAndSetIfChanged(ref _isPlaying, value); }
+        }
+
+        public ReactiveCommand<object> SkipNextCommand { get; private set; }
+        public ReactiveCommand<object> SkipPreviousCommand { get; private set; }
+        public ReactiveCommand<object> TogglePlayPauseCommand { get; private set; }
+
     }
 }

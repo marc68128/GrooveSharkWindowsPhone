@@ -157,6 +157,9 @@
     <Content Include="Assets\Icons\add.png" />
     <Content Include="Assets\Icons\refresh.png" />
     <Content Include="Assets\Icons\play.png" />
+    <Content Include="Assets\Icons\next.png" />
+    <Content Include="Assets\Icons\pause.png" />
+    <Content Include="Assets\Icons\previous.png" />
     <Content Include="Assets\Images\Icons\Album.png" />
     <Content Include="Assets\Images\Icons\Artist.png" />
     <Content Include="Assets\Images\Icons\Playlist.png" />

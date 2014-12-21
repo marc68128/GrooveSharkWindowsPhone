@@ -10,5 +10,7 @@ namespace GrooveSharkWindowsPhone.AudioPlayer
         SongViewModel CurrentSong { get; }
         SongViewModel NextSong { get; } 
         SongViewModel PreviousSong { get; }
+
+        bool IsPlaying { get; }
     }
 }
