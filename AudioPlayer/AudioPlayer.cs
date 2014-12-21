@@ -81,6 +81,11 @@ namespace AudioPlayer
                     case Constants.SkipPrevious:
                         _playlistManager.SkipToPrevious();
                         break;
+                    case Constants.PlaylistInfos:
+                        var valueSet = new ValueSet(); 
+                        valueSet.Add(Constants.PlaylistInfos, _playlistManager.GetSerializedPlaylistInfos());
+                        BackgroundMediaPlayer.SendMessageToForeground(valueSet);
+                        break;
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System;
+
+using System;
 using System.Reactive.Linq;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
@@ -12,7 +13,6 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public PlayerViewModel()
         {
             Title = "Player";
-
             SetupBindings();
             SetupCommands();
         }
@@ -22,7 +22,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _audioPlayer.WhenAnyValue(p => p.CurrentSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.CurrentSong);
             _audioPlayer.WhenAnyValue(p => p.NextSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.NextSong);
             _audioPlayer.WhenAnyValue(p => p.PreviousSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
-            _audioPlayer.WhenAnyValue(p => p.IsPl).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
+            _audioPlayer.WhenAnyValue(p => p.IsPlaying).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.IsPlaying);
         }
 
         private void SetupCommands()

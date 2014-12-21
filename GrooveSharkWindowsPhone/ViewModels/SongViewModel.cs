@@ -14,10 +14,12 @@ using ReactiveUI;
 namespace GrooveSharkWindowsPhone.ViewModels
 {
     [DataContract]
+    [JsonObject(MemberSerialization.OptOut)]
     public class SongViewModel : BaseViewModel
     {
         public SongViewModel(Song s, int position, bool isFavorite = false)
         {
+            _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
             IsFavorite = isFavorite;
             SongPosition = position;
             SongName = s.SongName;
@@ -29,20 +31,22 @@ namespace GrooveSharkWindowsPhone.ViewModels
         }
         public SongViewModel()
         {
-
+            _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
         }
 
         private void InitCommands()
         {
             #region AddSongtoUserFavourites
 
-            AddSongToUserFavouritesCommand = ReactiveCommand.CreateAsyncObservable(this.WhenAnyValue(self => self.IsFavorite).Select(x => !x),
-                _ => {
+            AddSongToUserFavouritesCommand = ReactiveCommand.CreateAsyncObservable(this.WhenAnyValue(self => self.IsFavorite).Select(x => !x).CombineLatest(_user.ConnectedUserObs.Select(u => u != null && u.UserID != 0), (a, b) => a && b),
+                _ =>
+                {
                     _loading.AddLoadingStatus("Adding song to your favorites...");
                     return _client.AddSongToUserFavourites(_session.SessionId, SongId);
                 });
 
-            AddSongToUserFavouritesCommand.Subscribe(x => {
+            AddSongToUserFavouritesCommand.Subscribe(x =>
+            {
                 IsFavorite = true;
                 _loading.RemoveLoadingStatus("Adding song to your favorites...");
                 new MessageDialog(SongName + " added to your favourites.").ShowAsync();
@@ -61,12 +65,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
             #region RemoveSongFromUserFavourites
 
             RemoveSongFromUserFavouritesCommand = ReactiveCommand.CreateAsyncObservable(this.WhenAnyValue(self => self.IsFavorite),
-                _ => {
+                _ =>
+                {
                     _loading.AddLoadingStatus("Removing song from your favorites...");
                     return _client.RemoveUserFavoriteSongs(SongId, _session.SessionId);
                 });
 
-            RemoveSongFromUserFavouritesCommand.Subscribe(x => {
+            RemoveSongFromUserFavouritesCommand.Subscribe(x =>
+            {
                 IsFavorite = false;
                 _loading.RemoveLoadingStatus("Removing song from your favorites...");
                 new MessageDialog(SongName + " removed from your favourites.").ShowAsync();
@@ -84,28 +90,28 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             #region AddToPlaylistCommand
 
-            AddToPlaylistCommand = ReactiveCommand.Create();
+            AddToPlaylistCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.UserID != 0));
             AddToPlaylistCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(AddSongToPlaylistView), new[] { SongId }));
 
             #endregion
 
             #region PlayNextCommand
-            
-            PlayNextCommand = ReactiveCommand.Create();
+
+            PlayNextCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.IsAnywhere));
             PlayNextCommand.Subscribe(_ => _audioPlayer.AddSongToPlaylist(this, true));
 
             #endregion
 
             #region PlayNowCommand
-            
-            PlayNowCommand = ReactiveCommand.Create();
+
+            PlayNowCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.IsAnywhere));
             PlayNowCommand.Subscribe(_ => _audioPlayer.AddSongToPlaylist(this, true, true));
 
             #endregion
 
             #region PlayLastCommand
 
-            PlayLastCommand = ReactiveCommand.Create();
+            PlayLastCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.IsAnywhere));
             PlayLastCommand.Subscribe(_ => _audioPlayer.AddSongToPlaylist(this));
 
             #endregion
@@ -160,7 +166,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _isFavorite, value); }
         }
 
-
+        [JsonIgnore]
+        public User CurrentUser { get; set; }
 
 
         public ReactiveCommand<bool> AddSongToUserFavouritesCommand { get; private set; }
@@ -172,22 +179,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
         public static SongViewModel Deserialize(string json)
         {
-            var splited = json.Split(';');
-            return new SongViewModel() {
-                SongName = splited[0],
-                SongId = int.Parse(splited[1]),
-                AlbumName = splited[2],
-                ArtistName = splited[3],
-                ThumbnailUrl = splited[4]
-            };
+            return JsonConvert.DeserializeObject<SongViewModel>(json);
         }
-
         public string Serialize()
         {
-            return JsonConvert.SerializeObject(SongName + ";" + SongId + ";" + AlbumName + ";" + ArtistName + ";" + ThumbnailUrl);
+            return JsonConvert.SerializeObject(this);
         }
 
-        
+
     }
 
 }
