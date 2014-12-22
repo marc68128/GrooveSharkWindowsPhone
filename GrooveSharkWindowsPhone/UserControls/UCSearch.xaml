@@ -68,7 +68,9 @@
                 <ListView x:Name="ArtistList" Background="Transparent" ItemsSource="{Binding SearchResult.Item3, Mode=OneWay}"></ListView>
             </PivotItem>
             <PivotItem x:Name="Albums" Margin="0">
-                <ListView x:Name="AlbumList" Background="Transparent" ItemsSource="{Binding SearchResult.Item4, Mode=OneWay}"></ListView>
+                <ListView x:Name="AlbumList" Background="Transparent" ItemsSource="{Binding AlbumResult, Mode=OneWay}">
+                    
+                </ListView>
             </PivotItem>
             <PivotItem x:Name="Playlists" Margin="0">
                 <ListView x:Name="PlaylistList" Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
