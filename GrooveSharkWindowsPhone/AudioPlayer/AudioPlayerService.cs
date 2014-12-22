@@ -60,7 +60,6 @@ namespace GrooveSharkWindowsPhone
                 valueSet.Add(Constants.SkipNext, null);
                 BackgroundMediaPlayer.SendMessageToBackground(valueSet);
             }
-            UpdateActualSongs();
         }
         public void RefreshPlaylist()
         {
@@ -136,23 +135,8 @@ namespace GrooveSharkWindowsPhone
                         Debug.WriteLine("Background Task started");
                         _sererInitialized.Set();
                         break;
-                    case Constants.CurrentSongChanged:
-                        _current = Convert.ToInt32(e.Data[key]);
-                        UpdateActualSongs();
-                        break;
                 }
             }
-        }
-
-        private void UpdateActualSongs()
-        {
-        //    CurrentSong =_playList[_current];
-        //    NextSong = null;
-        //    PreviousSong = null; 
-        //    if (_playList.Count - 1 > _current)
-        //        NextSong =_playList[_current + 1];
-        //    if (_current > 0)
-        //        PreviousSong = _playList[_current - 1];
         }
 
         private void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
