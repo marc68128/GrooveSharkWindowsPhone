@@ -13,7 +13,6 @@ namespace GrooveSharkShared
     {
 
         public const string SessionIdChanged = "sessionidchanged";
-        public const string CurrentSongChanged = "currentsongchanged";
         public const string BackgroundTaskStarted = "BackgroundTaskStarted";
         public const string IsBackgroundTaskRunning = "BackgroundTaskRunning";
         public const string BackgroundTaskCancelled = "BackgroundTaskCancelled";
