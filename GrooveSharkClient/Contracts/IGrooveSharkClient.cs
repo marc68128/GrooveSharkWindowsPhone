@@ -27,5 +27,6 @@ namespace GrooveSharkClient.Contracts
         IObservable<Album[]> SearchAlbum(string query, string session, int limit = 0);
         IObservable<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchAll(string query, string country, string session, int limit = 0, int offset = 0);
         IObservable<StreamInfo> GetStreamInfo(string session, string country, int songId, bool lowBitrate = false);
+        IObservable<Song[]> GetAlbumSongs(string session, int albumId, int limit = 0);
     }
 }

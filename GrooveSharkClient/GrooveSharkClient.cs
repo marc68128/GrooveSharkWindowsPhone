@@ -279,6 +279,7 @@ namespace GrooveSharkClient
                     var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
                     if (sessionResult.Errors != null && sessionResult.Errors.Any())
                         throw sessionResult.Errors.First();
+
                     return sessionResult.Result.Artists;
                 }
                 return null;
@@ -302,6 +303,7 @@ namespace GrooveSharkClient
                     var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
                     if (sessionResult.Errors != null && sessionResult.Errors.Any())
                         throw sessionResult.Errors.First();
+
                     return sessionResult.Result.Albums;
                 }
                 return null;
@@ -543,6 +545,29 @@ namespace GrooveSharkClient
                     return new StreamInfo(gsResult);
                 }
                 throw new WebException("Unable to get Playlist");
+
+            });
+        }
+
+        public IObservable<Song[]> GetAlbumSongs(string session, int albumId, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object> { { "albumID", albumId } };
+                if (limit != 0)
+                    param.Add("limit", limit);
+
+                var response = SendHttpRequest("getAlbumSongs", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Songs;
+                }
+                throw new WebException("Unable to get Album");
 
             });
         }

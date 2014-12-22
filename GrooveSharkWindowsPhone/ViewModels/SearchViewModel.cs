@@ -24,6 +24,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             {
                 SongResult = r.Item1.Select((s, index) => new SongViewModel(s, index + 1)).ToList();
                 PlaylistResult = r.Item2.Select(p => new PlaylistViewModel(p, true)).ToList();
+                AlbumResult = r.Item4.Select(a => new AlbumViewModel(a)).ToList(); 
             });
         }
 
@@ -55,6 +56,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _playlistResult; }
             set { this.RaiseAndSetIfChanged(ref _playlistResult, value); }
         }
+
+        private List<AlbumViewModel> _albumResult;
+        public List<AlbumViewModel> AlbumResult
+        {
+            get { return _albumResult; }
+            set { this.RaiseAndSetIfChanged(ref _albumResult, value); }
+        }
+
 
         public ReactiveCommand<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchCommand { get; set; }
     }
