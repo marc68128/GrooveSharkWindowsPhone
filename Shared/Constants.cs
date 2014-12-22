@@ -23,6 +23,7 @@ namespace GrooveSharkShared
         public const string Position = "position";
         public const string AppState = "appstate";
         public const string Play = "play";
+        public const string Pause = "pause";
         public const string BackgroundTaskState = "backgroundtaskstate";
         public const string SkipPrevious = "skipprevious";
         public const string Trackchanged = "songchanged";

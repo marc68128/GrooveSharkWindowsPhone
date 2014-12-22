@@ -1,5 +1,6 @@
 
 using System;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
@@ -23,7 +24,16 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _audioPlayer.WhenAnyValue(p => p.NextSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.NextSong);
             _audioPlayer.WhenAnyValue(p => p.PreviousSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
             _audioPlayer.WhenAnyValue(p => p.IsPlaying).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.IsPlaying);
-            _audioPlayer.WhenAnyValue(p => p.IsPlaying).ObserveOn(RxApp.MainThreadScheduler).Select(b => b ? "/Assets/Icons/pause.png" : "/Assets/Icons/play.png" ).BindTo(this, self => self.TogglePlayPauseThumbnailUrl);
+            _audioPlayer.WhenAnyValue(p => p.IsPlaying).ObserveOn(RxApp.MainThreadScheduler).Select(b => new Uri(b ? "ms-appx:/Assets/Icons/pause.png" : "ms-appx:/Assets/Icons/play.png", UriKind.RelativeOrAbsolute)).BindTo(this, self => self.TogglePlayPauseThumbnailUrl);
+            Observable.Interval(new TimeSpan(0, 0, 0, 0, 200)).ObserveOn(RxApp.MainThreadScheduler).Subscribe(_ =>
+            {
+                if (BackgroundMediaPlayer.Current != null)
+                {
+                    CurrentSongDuration = BackgroundMediaPlayer.Current.NaturalDuration.Ticks;
+                    Position = BackgroundMediaPlayer.Current.Position.Ticks; 
+                    Progress = (100 * BackgroundMediaPlayer.Current.Position.Ticks) /BackgroundMediaPlayer.Current.NaturalDuration.Ticks;
+                }
+            });
         }
 
         private void SetupCommands()
@@ -33,6 +43,15 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             SkipPreviousCommand = ReactiveCommand.Create(this.WhenAnyValue(self => self.PreviousSong).Select(n => n != null));
             SkipPreviousCommand.Subscribe(_ => BackgroundMediaPlayer.SendMessageToBackground(new ValueSet { { Constants.SkipPrevious, "" } }));
+
+            TogglePlayPauseCommand = ReactiveCommand.Create();
+            TogglePlayPauseCommand.Subscribe(_ =>
+            {
+                if (IsPlaying)
+                    BackgroundMediaPlayer.Current.Pause();
+                else
+                    BackgroundMediaPlayer.Current.Play();
+            });
 
         }
 
@@ -64,11 +83,32 @@ namespace GrooveSharkWindowsPhone.ViewModels
             private set { this.RaiseAndSetIfChanged(ref _isPlaying, value); }
         }
 
-        private string _togglePlayPauseThumbnailUrl;
-        public string TogglePlayPauseThumbnailUrl
+        private Uri _togglePlayPauseThumbnailUrl;
+        public Uri TogglePlayPauseThumbnailUrl
         {
             get { return _togglePlayPauseThumbnailUrl; }
             set { this.RaiseAndSetIfChanged(ref _togglePlayPauseThumbnailUrl, value); }
+        }
+
+        private double _progress;
+        public double Progress
+        {
+            get { return _progress; }
+            set { this.RaiseAndSetIfChanged(ref _progress, value); }
+        }
+
+        private long _position;
+        public long Position
+        {
+            get { return _position; }
+            set { this.RaiseAndSetIfChanged(ref _position, value); }
+        }
+
+        private long _currentSongDuration;
+        public long CurrentSongDuration
+        {
+            get { return _currentSongDuration; }
+            set { this.RaiseAndSetIfChanged(ref _currentSongDuration, value); }
         }
         
 

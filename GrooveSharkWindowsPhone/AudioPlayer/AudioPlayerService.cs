@@ -29,15 +29,6 @@ namespace GrooveSharkWindowsPhone
         {
             _sererInitialized = new AutoResetEvent(false);
             StartBackgroundAudioTask();
-
-            Observable.Interval(new TimeSpan(0, 0, 0, 1)).Subscribe(_ =>
-            {
-                if (BackgroundMediaPlayer.Current != null)
-                {
-                    Debug.WriteLine("Natural duration : " + BackgroundMediaPlayer.Current.NaturalDuration);
-                    Debug.WriteLine("Position : " + BackgroundMediaPlayer.Current.Position); 
-                }
-            });
         }
 
         public void AddSongToPlaylist(SongViewModel svm, bool addNext = false, bool play = false)
