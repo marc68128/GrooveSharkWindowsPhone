@@ -23,6 +23,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _audioPlayer.WhenAnyValue(p => p.NextSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.NextSong);
             _audioPlayer.WhenAnyValue(p => p.PreviousSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);
             _audioPlayer.WhenAnyValue(p => p.IsPlaying).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.IsPlaying);
+            _audioPlayer.WhenAnyValue(p => p.IsPlaying).ObserveOn(RxApp.MainThreadScheduler).Select(b => b ? "/Assets/Icons/pause.png" : "/Assets/Icons/play.png" ).BindTo(this, self => self.TogglePlayPauseThumbnailUrl);
         }
 
         private void SetupCommands()
@@ -62,6 +63,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _isPlaying; }
             private set { this.RaiseAndSetIfChanged(ref _isPlaying, value); }
         }
+
+        private string _togglePlayPauseThumbnailUrl;
+        public string TogglePlayPauseThumbnailUrl
+        {
+            get { return _togglePlayPauseThumbnailUrl; }
+            set { this.RaiseAndSetIfChanged(ref _togglePlayPauseThumbnailUrl, value); }
+        }
+        
 
         public ReactiveCommand<object> SkipNextCommand { get; private set; }
         public ReactiveCommand<object> SkipPreviousCommand { get; private set; }

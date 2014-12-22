@@ -74,7 +74,7 @@
                 </AppBarButton>
                 <AppBarButton x:Name="TogglePlayPauseButton" Label="Pause" Command="{Binding TogglePlayPauseCommand}">
                     <AppBarButton.Icon>
-                        <BitmapIcon HorizontalAlignment="Center"  VerticalAlignment="Center" UriSource="/Assets/Icons/pause.png"/>
+                        <BitmapIcon HorizontalAlignment="Center"  VerticalAlignment="Center" UriSource="{Binding TogglePlayPauseThumbnailUrl}" />
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton x:Name="NextButton" Label="Next" Command="{Binding SkipNextCommand}">

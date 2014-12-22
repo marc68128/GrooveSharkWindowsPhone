@@ -96,8 +96,6 @@ namespace GrooveSharkWindowsPhone
             private set { this.RaiseAndSetIfChanged(ref _isPlaying, value); }
         }
 
-
-
         private void StartBackgroundAudioTask()
         {
             AddMediaPlayerEventHandlers();
