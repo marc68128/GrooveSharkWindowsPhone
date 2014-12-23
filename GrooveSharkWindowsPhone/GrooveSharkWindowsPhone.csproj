@@ -99,6 +99,9 @@
     <Compile Include="UserControls\UCAlbum.xaml.cs">
       <DependentUpon>UCAlbum.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UCArtist.xaml.cs">
+      <DependentUpon>UCArtist.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\UCFavorite.xaml.cs">
       <DependentUpon>UCFavorite.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,7 @@
     </Compile>
     <Compile Include="ViewModels\AddSongToPlaylistViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
+    <Compile Include="ViewModels\ArtistViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\FavouritesViewModel.cs" />
@@ -212,6 +216,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="UserControls\UCAlbum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UCArtist.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

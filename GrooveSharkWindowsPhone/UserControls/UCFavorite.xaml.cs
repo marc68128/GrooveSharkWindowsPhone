@@ -30,7 +30,11 @@ namespace GrooveSharkWindowsPhone.UserControls
 
             ViewModel.WhenAnyValue(vm => vm.IsFavorite)
                 .Select(x => !x ? Visibility.Collapsed : Visibility.Visible)
-                .BindTo(RemoveFromFavouritesFlyoutItem, item => item.Visibility);  
+                .BindTo(RemoveFromFavouritesFlyoutItem, item => item.Visibility);
+
+            ViewModel.WhenAnyValue(vm => vm.IsFavorite)
+                .Select(x => x ? 1 : 0.4)
+                .BindTo(SongGrid, item => item.Opacity);  
         }
 
         private SongViewModel ViewModel

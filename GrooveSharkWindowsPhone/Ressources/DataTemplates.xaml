@@ -19,6 +19,10 @@
         <userControls:UCAlbum></userControls:UCAlbum>
     </DataTemplate>
 
+    <DataTemplate x:Name="ArtistDataTemplate">
+        <userControls:UCArtist></userControls:UCArtist>
+    </DataTemplate>
+
     <DataTemplate x:Name="MinimizedPlaylistDataTemplate">
         <userControls:UCPlaylist Minimized="true"></userControls:UCPlaylist>
     </DataTemplate>

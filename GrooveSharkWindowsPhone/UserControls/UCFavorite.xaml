@@ -67,7 +67,7 @@
             </TextBlock>
         </StackPanel>
 
-        <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Background="Black" Opacity="0.5" Visibility="{Binding IsFavorite, Mode=OneWay, Converter={StaticResource BoolToVisibilityInvertConverter}}"></StackPanel>
+      
 
         <!--<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="0" Height="2" Background="#888888"></StackPanel>-->
     </Grid>
