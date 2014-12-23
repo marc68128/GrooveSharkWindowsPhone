@@ -107,7 +107,7 @@ namespace GrooveSharkWindowsPhone.Views
             ShowHeaderStoryboard.Begin();
             DownSearchStoryboard.Begin();
             _isHeaderClose = false;
-            ApplicationBar.ClosedDisplayMode = AppBarClosedDisplayMode.Compact;
+            ApplicationBar.ClosedDisplayMode = _appBarDefaultClosedDisplayMode;
         }
         private void HideHeader()
         {
