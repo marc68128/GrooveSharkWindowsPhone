@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     
-    <StackPanel>
+    <StackPanel Tapped="ArtistTap">
         <TextBlock Margin="0,10,0,10" Text="{Binding Name}"  FontSize="16" FontWeight="Bold"></TextBlock>
     </StackPanel>
 </UserControl>

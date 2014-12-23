@@ -17,7 +17,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public AlbumViewModel(Album album)
         {
             _albumID = album.AlbumID;
-            AlbumName = album.AlbumName;
+            AlbumName = album.AlbumName ?? album.Name;
             ThumbnailUrl = "http://images.gs-cdn.net/static/albums/70_" + album.CoverArtFilename;
             if (string.IsNullOrEmpty(album.CoverArtFilename))
                 ThumbnailUrl = "/Assets/Images/Songs/no_cover_120.png";

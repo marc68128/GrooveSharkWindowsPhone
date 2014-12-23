@@ -13,24 +13,21 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 using GrooveSharkWindowsPhone.ViewModels;
 
-namespace GrooveSharkWindowsPhone.UserControls
+namespace GrooveSharkWindowsPhone.Views
 {
-    public sealed partial class UCArtist : UserControl
+    public sealed partial class ArtistView 
     {
-        public UCArtist()
+        public ArtistView() : base(new ArtistViewModel())
         {
             this.InitializeComponent();
         }
 
-        private ArtistViewModel ViewModel { get { return DataContext as ArtistViewModel; } }
-
-        private void ArtistTap(object sender, TappedRoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            ViewModel.LoadArtistAlbumsCommand.Execute(null);
-            ViewModel.NavigateToArtistCommand.Execute(null);
+            DataContext =  e.Parameter as ArtistViewModel;
         }
     }
 }

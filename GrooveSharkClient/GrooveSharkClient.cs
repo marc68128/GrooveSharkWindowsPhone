@@ -571,5 +571,27 @@ namespace GrooveSharkClient
 
             });
         }
+
+        public IObservable<Album[]> GetArtistAlbums(string session, int artistId)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object> { { "artistID", artistId } };
+
+
+                var response = SendHttpRequest("getArtistVerifiedAlbums", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Albums;
+                }
+                throw new WebException("Unable to get Albums");
+
+            });
+        }
     }
 }
