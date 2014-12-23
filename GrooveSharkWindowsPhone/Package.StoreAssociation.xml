@@ -202,5 +202,11 @@
     <MainPackageIdentityName>37129Marc68128.Timeto</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.VelvetRevolverDiscographie</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=17a1d3e0-cf54-40b9-b6da-5154983e29de" />
+  <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=17a1d3e0-cf54-40b9-b6da-5154983e29de">
+    <PackageInfo>
+      <OsMinVersion>6.3.0.0</OsMinVersion>
+      <PackageArchitecture>neutral</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.0.0.0</PackageMaxArchitectureVersion>
+    </PackageInfo>
+  </PackageInfoList>
 </StoreAssociation>
