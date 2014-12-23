@@ -89,6 +89,7 @@
     <Compile Include="Contracts\IUserService.cs" />
     <Compile Include="GrooveSharkClient.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
+    <Compile Include="Helpers\BoolConverter.cs" />
     <Compile Include="Helpers\HmacMd5.cs" />
     <Compile Include="Models\Entity\Album.cs" />
     <Compile Include="Models\Entity\Artist.cs" />

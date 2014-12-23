@@ -22,7 +22,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
             IsFavorite = isFavorite;
             SongPosition = position;
-            SongName = s.SongName;
+            SongName = s.SongName ?? s.Name;
             ArtistName = s.ArtistName;
             AlbumName = s.AlbumName;
             SongId = s.SongID;

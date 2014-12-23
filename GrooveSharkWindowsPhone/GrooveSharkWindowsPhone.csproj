@@ -96,6 +96,9 @@
     <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Helpers\ObservableExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\UCAlbum.xaml.cs">
+      <DependentUpon>UCAlbum.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\UCFavorite.xaml.cs">
       <DependentUpon>UCFavorite.xaml</DependentUpon>
     </Compile>
@@ -207,6 +210,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="UserControls\UCAlbum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\UCFavorite.xaml">
       <SubType>Designer</SubType>

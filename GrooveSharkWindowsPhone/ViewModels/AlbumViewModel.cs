@@ -18,7 +18,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             _albumID = album.AlbumID;
             AlbumName = album.AlbumName;
-            ThumbnailUrl = "http://images.gs-cdn.net/static/album/70_" + album.CoverArtFilename;
+            ThumbnailUrl = "http://images.gs-cdn.net/static/albums/70_" + album.CoverArtFilename;
             if (string.IsNullOrEmpty(album.CoverArtFilename))
                 ThumbnailUrl = "/Assets/Images/Songs/no_cover_120.png";
             InitCommand();
@@ -78,8 +78,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 {
                     if (Songs == null || !Songs.Any())
                     {
-                        LoadPlaylistSongCommand.Execute(null);
-                        LoadPlaylistSongCommand.Take(1).Subscribe(x => IsOpen = true);
+                        LoadAlbumSongCommand.Execute(null);
+                        LoadAlbumSongCommand.Take(1).Subscribe(x => IsOpen = true);
                     }
                     else
                         IsOpen = true;
