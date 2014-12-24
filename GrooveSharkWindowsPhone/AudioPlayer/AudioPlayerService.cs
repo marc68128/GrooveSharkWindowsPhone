@@ -163,7 +163,5 @@ namespace GrooveSharkWindowsPhone
             IsPlaying = BackgroundMediaPlayer.IsMediaPlaying();
         }
 
-        private string _lastMediaPlayerStatus;
-
     }
 }
