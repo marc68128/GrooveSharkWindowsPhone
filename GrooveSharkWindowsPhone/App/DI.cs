@@ -18,8 +18,8 @@ namespace GrooveSharkWindowsPhone
            
 
             Locator.CurrentMutable.RegisterConstant(client, typeof(IGrooveSharkClient));
-            Locator.CurrentMutable.RegisterConstant(audioPlayerService, typeof(IAudioPlayerService));
             Locator.CurrentMutable.RegisterConstant(loadingService, typeof(ILoadingService));
+            Locator.CurrentMutable.RegisterConstant(audioPlayerService, typeof(IAudioPlayerService));
             Locator.CurrentMutable.RegisterConstant(sessionService, typeof(ISessionService));
             Locator.CurrentMutable.RegisterConstant(coutryService, typeof(ICountryService));
             Locator.CurrentMutable.RegisterConstant(userService, typeof(IUserService));

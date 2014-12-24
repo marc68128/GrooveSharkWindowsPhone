@@ -33,5 +33,6 @@ namespace GrooveSharkShared
         public const string AddNextSongToPlaylist = "addnextsongtoplaylist";
         public const string CountryInfosChanged = "countryinfoschanged";
         public const string PlaylistInfos = "playlistinfos";
+        public const string Loading = "loading";
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="37129Marc68128.GrooveSharkPlayer" Publisher="CN=6BB7806C-0912-45E2-BC31-BE72F03CF77C" Version="1.1.0.0" />
+  <Identity Name="37129Marc68128.GrooveSharkPlayer" Publisher="CN=6BB7806C-0912-45E2-BC31-BE72F03CF77C" Version="1.1.0.1" />
   <mp:PhoneIdentity PhoneProductId="062b9614-b04d-4fb9-8ccb-8a5b1a7389bc" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>GrooveShark Player</DisplayName>

@@ -110,7 +110,8 @@ namespace AudioPlayer
             _current = index;
             var streamInfoObs = _client.GetStreamInfos(_playlist[_current]).ToObservable();
 
-            streamInfoObs.Subscribe(streamInfo => {
+            streamInfoObs.Subscribe(streamInfo =>
+            {
                 _playlist[_current].StreamUrl = streamInfo.Url;
                 _playlist[_current].StreamServerId = streamInfo.StreamServerID;
                 _playlist[_current].StreamKey = streamInfo.StreamKey;
@@ -135,7 +136,6 @@ namespace AudioPlayer
             {
                 case MediaPlayerState.Playing:
                     _systemmediatransportcontrol.PlaybackStatus = MediaPlaybackStatus.Playing;
-
                     break;
                 case MediaPlayerState.Paused:
                     _systemmediatransportcontrol.PlaybackStatus = MediaPlaybackStatus.Paused;
@@ -149,12 +149,12 @@ namespace AudioPlayer
         public void AddSong(SongViewModel svm, bool next)
         {
             if (next)
-               _playlist.Insert(_current + 1, svm);
+                _playlist.Insert(_current + 1, svm);
             else
-               _playlist.Add(svm);
+                _playlist.Add(svm);
 
             if (_current == -1)
-               PlaySongAtIndex(0);
+                PlaySongAtIndex(0);
 
             UpdateSystemMediaTransportControl();
         }
@@ -171,9 +171,9 @@ namespace AudioPlayer
             _systemmediatransportcontrol.DisplayUpdater.Update();
         }
 
-        public string SessionId 
+        public string SessionId
         {
-            get { return _client.SessionId;  }
+            get { return _client.SessionId; }
             set { _client.SessionId = value; }
         }
         public string CountryInfos
