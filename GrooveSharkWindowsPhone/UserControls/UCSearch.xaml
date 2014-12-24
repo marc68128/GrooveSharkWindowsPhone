@@ -48,8 +48,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <StackPanel Background="White" Grid.Column="0" Tapped="TextBoxStackPanelTapped"></StackPanel>
-            <TextBox x:Name="SearchTextBox" Grid.Column="0" Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search for songs, artists or playlists" Style="{StaticResource TextBoxStyle1}" ></TextBox>
+            <TextBox IsSpellCheckEnabled="False" x:Name="SearchTextBox" Grid.Column="0" Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search for songs, artists or playlists" Style="{StaticResource TextBoxStyle1}" ></TextBox>
             <Button Style="{StaticResource GrooveSharkButton}" Grid.Column="1" Content="Go" Margin="5,0,0,0" Command="{Binding SearchCommand}"></Button>
         </Grid>
 
@@ -61,23 +60,29 @@
                 </DataTemplate>
             </Pivot.TitleTemplate>
 
-            <PivotItem x:Name="Songs" Margin="0" HorizontalAlignment="Stretch">
-                <ListView x:Name="SongList" ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}">
-                </ListView>
+            <PivotItem Margin="0" HorizontalAlignment="Stretch">
+                <Grid>
+                    <ListView x:Name="SongList" ItemTemplate="{StaticResource SongTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding SongResult, Mode=OneWay}" />
+                    <TextBlock Margin="0,-80,0,0" Text="{Binding SongStatus, Mode=OneWay}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="20"></TextBlock>
+                </Grid>
             </PivotItem>
-            <PivotItem x:Name="Artists" Margin="0">
-                <ListView x:Name="ArtistList" Background="Transparent" ItemsSource="{Binding ArtistResult, Mode=OneWay}" ItemTemplate="{StaticResource ArtistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" >
-                    
-                </ListView>
+            <PivotItem Margin="0">
+                <Grid>
+                    <ListView x:Name="ArtistList" Background="Transparent" ItemsSource="{Binding ArtistResult, Mode=OneWay}" ItemTemplate="{StaticResource ArtistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" />
+                    <TextBlock Margin="0,-80,0,0" Text="{Binding ArtistStatus, Mode=OneWay}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="20"></TextBlock>
+                </Grid>
             </PivotItem>
-            <PivotItem x:Name="Albums" Margin="0">
-                <ListView x:Name="AlbumList"  ItemTemplate="{StaticResource AlbumDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding AlbumResult, Mode=OneWay}">
-                    
-                </ListView>
+            <PivotItem Margin="0">
+                <Grid>
+                    <ListView x:Name="AlbumList"  ItemTemplate="{StaticResource AlbumDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" Background="Transparent" ItemsSource="{Binding AlbumResult, Mode=OneWay}" />
+                    <TextBlock Margin="0,-80,0,0" Text="{Binding AlbumStatus, Mode=OneWay}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="20"></TextBlock>
+                </Grid>
             </PivotItem>
-            <PivotItem x:Name="Playlists" Margin="0">
-                <ListView x:Name="PlaylistList" Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}">
-                </ListView>
+            <PivotItem Margin="0">
+                <Grid>
+                    <ListView x:Name="PlaylistList" Background="Transparent" ItemTemplate="{StaticResource MinimizedPlaylistDataTemplate}" ItemContainerStyle="{StaticResource CustomListViewStyle}" ItemsSource="{Binding PlaylistResult, Mode=OneWay}" />
+                    <TextBlock Margin="0,-80,0,0" Text="{Binding PlaylistStatus, Mode=OneWay}" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="20"></TextBlock>
+                </Grid>
             </PivotItem>
 
         </Pivot>

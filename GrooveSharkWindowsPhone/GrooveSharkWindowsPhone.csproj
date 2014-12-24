@@ -315,12 +315,6 @@
     <Reference Include="System.Reactive.Linq">
       <HintPath>..\packages\Rx-Linq.2.2.5\lib\portable-win81+wpa81\System.Reactive.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\portable-win81+wpa81\System.Reactive.PlatformServices.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Windows.Threading">
-      <HintPath>..\packages\Rx-XAML.2.2.5\lib\portable-win81+wpa81\System.Reactive.Windows.Threading.dll</HintPath>
-    </Reference>
     <Reference Include="System.Reactive.WindowsRuntime">
       <HintPath>..\packages\Rx-WinRT.2.2.5\lib\portable-win81+wpa81\System.Reactive.WindowsRuntime.dll</HintPath>
     </Reference>
@@ -329,10 +323,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AudioPlayer\AudioPlayer.csproj">
-      <Project>{30eca932-5e26-4a3b-830a-1884a5b192bc}</Project>
-      <Name>AudioPlayer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
       <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
       <Name>GrooveSharkClient</Name>

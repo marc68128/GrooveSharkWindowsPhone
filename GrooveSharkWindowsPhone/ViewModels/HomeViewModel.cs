@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
-using Windows.Media.Playback;
-using Windows.UI.Popups;
 using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
 using GrooveSharkWindowsPhone.Views;
