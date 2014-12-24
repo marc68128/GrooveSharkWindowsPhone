@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reactive.Linq;
 using GrooveSharkClient.Models.Entity;
+using GrooveSharkClient.Models.Exception;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
@@ -12,7 +14,9 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public SearchViewModel()
         {
             SearchCommand = ReactiveCommand.CreateAsyncObservable(
-                _country.IsDataAvailableObs.CombineLatest(_session.IsDataAvailableObs, (b, b1) => b && b1),
+                _country.IsDataAvailableObs
+                .CombineLatest(_session.IsDataAvailableObs, (b, b1) => b && b1)
+                .CombineLatest(this.WhenAnyValue(self => self.SearchTerm).Select(s => !string.IsNullOrEmpty(s)), (b, b1) => b & b1),
                 _ =>
                 {
                     _loading.AddLoadingStatus("Search...");
@@ -20,6 +24,16 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 });
 
             SearchCommand.Do(_ => _loading.RemoveLoadingStatus("Search...")).BindTo(this, self => self.SearchResult);
+
+            SearchCommand.ThrownExceptions.OfType<WebException>()
+              .Do(_ => _loading.RemoveLoadingStatus("Search..."))
+              .BindTo(this, self => self.WebException);
+
+            SearchCommand.ThrownExceptions.OfType<GrooveSharkException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Search..."))
+                .BindTo(this, self => self.GrooveSharkException);
+
+
             this.WhenAnyValue(self => self.SearchResult).Where(x => x != null).Subscribe(r =>
             {
                 SongResult = r.Item1.Select((s, index) => new SongViewModel(s, index + 1)).ToList();
