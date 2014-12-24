@@ -115,6 +115,8 @@ namespace GrooveSharkWindowsPhone
                 switch (key)
                 {
                     case Constants.PlaylistInfos:
+                        if (e.Data[key] == null)
+                            break;
                         var pl = JsonConvert.DeserializeObject<List<SongViewModel>>(e.Data[key] as string);
                         PreviousSong = pl[0].SongId == 0 ? null : pl[0];
                         CurrentSong = pl[1];

@@ -92,6 +92,11 @@ namespace AudioPlayer
 
         public string GetSerializedPlaylistInfos()
         {
+            if (_current == -1)
+            {
+                return null;
+            }
+
             SongViewModel[] actualState = new SongViewModel[3];
             actualState[0] = _current == 0 ? new SongViewModel() : _playlist[_current - 1];
             actualState[1] = _playlist[_current];

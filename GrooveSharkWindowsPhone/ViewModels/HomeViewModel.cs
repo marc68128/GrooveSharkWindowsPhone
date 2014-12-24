@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using Windows.Media.Playback;
 using Windows.UI.Popups;
 using GrooveSharkClient.Models.Entity;
 using GrooveSharkWindowsPhone.Helpers;
@@ -18,7 +19,6 @@ namespace GrooveSharkWindowsPhone.ViewModels
             PopularSongViewModel = new PopularSongViewModel();
             SearchViewModel = new SearchViewModel();
 
-            _user.IsDataAvailableObs.Where(x => !x).Subscribe(_ => new MessageDialog("You have to be connected to access this screen !"));
             _user.ConnectedUserObs.BindTo(this, self => self.ConnectedUser);
             InitCommands();
         

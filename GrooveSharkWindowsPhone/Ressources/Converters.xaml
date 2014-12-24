@@ -5,6 +5,7 @@
     xmlns:converters="using:GrooveSharkWindowsPhone.Converters">
     
     <converters:NullOrEmptyToVisibilityConverter x:Name="NullOrEmptyToVisibilityConverter"></converters:NullOrEmptyToVisibilityConverter>
+    <converters:NullOrEmptyToVisibilityInvertConverter x:Name="NullOrEmptyToVisibilityInvertConverter"></converters:NullOrEmptyToVisibilityInvertConverter>
     <converters:BoolToVisibilityInvertConverter x:Name="BoolToVisibilityInvertConverter"></converters:BoolToVisibilityInvertConverter>
     <converters:TimeSpanToStringConverter x:Name="TimeSpanToStringConverter"></converters:TimeSpanToStringConverter>
 

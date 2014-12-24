@@ -104,5 +104,10 @@ namespace GrooveSharkWindowsPhone.UserControls
                     break;
             }
         }
+
+        private void TextBoxStackPanelTapped(object sender, TappedRoutedEventArgs e)
+        {
+            SearchTextBox.Focus(FocusState.Pointer);
+        }
     }
 }

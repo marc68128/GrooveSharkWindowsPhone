@@ -93,6 +93,7 @@
     <Compile Include="AudioPlayer\IAudioPlayerService.cs" />
     <Compile Include="Converters\BoolToVisibilityInvertConverter.cs" />
     <Compile Include="Converters\NullOrEmptyToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullOrEmptyToVisibilityInvertConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Helpers\ObservableExt.cs" />

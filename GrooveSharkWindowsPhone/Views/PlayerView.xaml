@@ -60,6 +60,12 @@
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
             </StackPanel>
+
+            <StackPanel  Grid.Column="0" Grid.ColumnSpan="3" Margin="20,-10,20,30" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding CurrentSong, Mode=OneWay, Converter={StaticResource NullOrEmptyToVisibilityInvertConverter}}">
+                <TextBlock TextWrapping="Wrap" FontSize="20" TextAlignment="Center"  Text="There is no song playing."></TextBlock>
+                <TextBlock TextWrapping="Wrap" FontSize="20" TextAlignment="Center"  Text="Play some songs and come back here to see your playlist !"></TextBlock>
+            </StackPanel>
+
             <Grid Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
