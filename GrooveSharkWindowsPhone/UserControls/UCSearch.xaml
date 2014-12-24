@@ -26,19 +26,19 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Button BorderBrush="White" BorderThickness="0" Grid.Column="0"  Tapped="PivotSelectorTap">
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="0"  Tapped="PivotSelectorTap" Style="{StaticResource NoBackgroundButton}">
                 <Image x:Name="ImageSong" Source="/Assets/Images/Icons/Song.png" ></Image>
             </Button>
 
-            <Button BorderBrush="White" BorderThickness="0" Grid.Column="1" Tapped="PivotSelectorTap">
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="1" Tapped="PivotSelectorTap" Style="{StaticResource NoBackgroundButton}">
                 <Image x:Name="ImageArtist" Source="/Assets/Images/Icons/Artist.png"  ></Image>
             </Button>
 
-            <Button BorderBrush="White" BorderThickness="0" Grid.Column="2" Tapped="PivotSelectorTap">
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="2" Tapped="PivotSelectorTap" Style="{StaticResource NoBackgroundButton}">
                 <Image x:Name="ImageAlbum" Source="/Assets/Images/Icons/Album.png"></Image>
             </Button>
 
-            <Button BorderBrush="White" BorderThickness="0" Grid.Column="3"  Tapped="PivotSelectorTap">
+            <Button BorderBrush="White" BorderThickness="0" Grid.Column="3"  Tapped="PivotSelectorTap" Style="{StaticResource NoBackgroundButton}">
                 <Image x:Name="ImagePlaylist" Source="/Assets/Images/Icons/Playlist.png" ></Image>
             </Button>
         </Grid>
@@ -49,7 +49,7 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding SearchTerm, Mode=TwoWay}" PlaceholderText="Search for songs, artists or playlists" ></TextBox>
-            <Button Grid.Column="1" Content="Go" Margin="5,0,0,0" Command="{Binding SearchCommand}"></Button>
+            <Button Style="{StaticResource GrooveSharkButton}" Grid.Column="1" Content="Go" Margin="5,0,0,0" Command="{Binding SearchCommand}"></Button>
         </Grid>
 
 

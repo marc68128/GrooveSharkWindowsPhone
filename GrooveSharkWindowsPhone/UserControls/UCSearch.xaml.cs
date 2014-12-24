@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -81,6 +82,7 @@ namespace GrooveSharkWindowsPhone.UserControls
 
         private void PivotSelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
+           
             ImageSong.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Song.png", UriKind.RelativeOrAbsolute));
             ImageArtist.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Artist.png", UriKind.RelativeOrAbsolute));
             ImageAlbum.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Album.png", UriKind.RelativeOrAbsolute));

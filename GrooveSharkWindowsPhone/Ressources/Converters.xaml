@@ -6,5 +6,6 @@
     
     <converters:NullOrEmptyToVisibilityConverter x:Name="NullOrEmptyToVisibilityConverter"></converters:NullOrEmptyToVisibilityConverter>
     <converters:BoolToVisibilityInvertConverter x:Name="BoolToVisibilityInvertConverter"></converters:BoolToVisibilityInvertConverter>
-    
+    <converters:TimeSpanToStringConverter x:Name="TimeSpanToStringConverter"></converters:TimeSpanToStringConverter>
+
 </ResourceDictionary>

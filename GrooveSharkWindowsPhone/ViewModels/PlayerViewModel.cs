@@ -14,6 +14,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public PlayerViewModel()
         {
             Title = "Player";
+            _audioPlayer.RefreshPlaylist();
             SetupBindings();
             SetupCommands();
         }
@@ -29,9 +30,10 @@ namespace GrooveSharkWindowsPhone.ViewModels
             {
                 if (BackgroundMediaPlayer.Current != null)
                 {
-                    CurrentSongDuration = BackgroundMediaPlayer.Current.NaturalDuration.Ticks;
-                    Position = BackgroundMediaPlayer.Current.Position.Ticks; 
-                    Progress = (100 * BackgroundMediaPlayer.Current.Position.Ticks) /BackgroundMediaPlayer.Current.NaturalDuration.Ticks;
+                    CurrentSongDuration = BackgroundMediaPlayer.Current.NaturalDuration;
+                    Position = BackgroundMediaPlayer.Current.Position;
+                    if (BackgroundMediaPlayer.Current.NaturalDuration.Ticks != 0)
+                        Progress = (100 * BackgroundMediaPlayer.Current.Position.TotalSeconds) / BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds;
                 }
             });
         }
@@ -97,15 +99,15 @@ namespace GrooveSharkWindowsPhone.ViewModels
             set { this.RaiseAndSetIfChanged(ref _progress, value); }
         }
 
-        private long _position;
-        public long Position
+        private TimeSpan _position;
+        public TimeSpan Position
         {
             get { return _position; }
             set { this.RaiseAndSetIfChanged(ref _position, value); }
         }
 
-        private long _currentSongDuration;
-        public long CurrentSongDuration
+        private TimeSpan _currentSongDuration;
+        public TimeSpan CurrentSongDuration
         {
             get { return _currentSongDuration; }
             set { this.RaiseAndSetIfChanged(ref _currentSongDuration, value); }

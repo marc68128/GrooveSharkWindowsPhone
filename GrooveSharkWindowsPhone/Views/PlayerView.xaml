@@ -42,7 +42,7 @@
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
-            </StackPanel> 
+            </StackPanel>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center" DataContext="{Binding CurrentSong, Mode=OneWay}">
                 <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
@@ -60,9 +60,23 @@
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
                 <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
             </StackPanel>
-            <ProgressBar Grid.Column="0" Grid.ColumnSpan="3" IsIndeterminate="False" Value="{Binding Position, Mode=OneWay}" Maximum="{Binding CurrentSongDuration, Mode=OneWay}" VerticalAlignment="Bottom" Margin="20" Height="3"></ProgressBar>
+            <Grid Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Position, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" FontWeight="Bold"></TextBlock>
+                <ProgressBar  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" IsIndeterminate="False" Value="{Binding Progress, Mode=OneWay}" Maximum="100" Margin="0,5,0,0" Height="3" Foreground="{StaticResource GrooveSharkOrangeBrush}"></ProgressBar>
+                <TextBlock  Grid.Column="2" Grid.Row="0" Text="{Binding CurrentSongDuration, Mode=OneWay, Converter={StaticResource TimeSpanToStringConverter}}" FontWeight="Bold"></TextBlock>
+            </Grid>
         </Grid>
-        
+
     </Grid>
 
     <Page.BottomAppBar>
