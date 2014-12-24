@@ -27,19 +27,19 @@
             </Grid.ColumnDefinitions>
 
             <Button BorderBrush="White" BorderThickness="0" Grid.Column="0"  Tapped="PivotSelectorTap">
-                <Image Source="/Assets/Images/Icons/Song.png" ></Image>
+                <Image x:Name="ImageSong" Source="/Assets/Images/Icons/Song.png" ></Image>
             </Button>
 
             <Button BorderBrush="White" BorderThickness="0" Grid.Column="1" Tapped="PivotSelectorTap">
-                <Image Source="/Assets/Images/Icons/Artist.png"  ></Image>
+                <Image x:Name="ImageArtist" Source="/Assets/Images/Icons/Artist.png"  ></Image>
             </Button>
 
             <Button BorderBrush="White" BorderThickness="0" Grid.Column="2" Tapped="PivotSelectorTap">
-                <Image  Source="/Assets/Images/Icons/Album.png"></Image>
+                <Image x:Name="ImageAlbum" Source="/Assets/Images/Icons/Album.png"></Image>
             </Button>
 
             <Button BorderBrush="White" BorderThickness="0" Grid.Column="3"  Tapped="PivotSelectorTap">
-                <Image Source="/Assets/Images/Icons/Playlist.png" ></Image>
+                <Image x:Name="ImagePlaylist" Source="/Assets/Images/Icons/Playlist.png" ></Image>
             </Button>
         </Grid>
 
@@ -53,7 +53,7 @@
         </Grid>
 
 
-        <Pivot x:Name="Pivot" Grid.Row="2" IsLocked="True" VerticalAlignment="Stretch">
+        <Pivot SelectionChanged="PivotSelectedIndexChanged" x:Name="Pivot" Grid.Row="2" IsLocked="True" VerticalAlignment="Stretch">
             <Pivot.TitleTemplate>
                 <DataTemplate>
                     <StackPanel Height="0"></StackPanel>

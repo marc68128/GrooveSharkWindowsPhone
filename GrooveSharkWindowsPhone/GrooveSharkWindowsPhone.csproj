@@ -172,9 +172,13 @@
     <Content Include="Assets\Icons\pause.png" />
     <Content Include="Assets\Icons\previous.png" />
     <Content Include="Assets\Images\Icons\Album.png" />
+    <Content Include="Assets\Images\Icons\AlbumSelected.png" />
     <Content Include="Assets\Images\Icons\Artist.png" />
+    <Content Include="Assets\Images\Icons\ArtistSelected.png" />
     <Content Include="Assets\Images\Icons\Playlist.png" />
+    <Content Include="Assets\Images\Icons\PlaylistSelected.png" />
     <Content Include="Assets\Images\Icons\Song.png" />
+    <Content Include="Assets\Images\Icons\SongSelected.png" />
     <Content Include="Assets\Images\Logos\Grooveshark.png" />
     <Content Include="Assets\Images\Logos\Grooveshark_Logo_Horizontal.png" />
     <Content Include="Assets\Images\Songs\no_cover_120.png" />

@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace GrooveSharkWindowsPhone.UserControls
 {
@@ -22,7 +23,7 @@ namespace GrooveSharkWindowsPhone.UserControls
             SongList.Loaded += SubscribeHeaderVisibility;
             ArtistList.Loaded += SubscribeHeaderVisibility;
             AlbumList.Loaded += SubscribeHeaderVisibility;
-            PlaylistList.Loaded += SubscribeHeaderVisibility; 
+            PlaylistList.Loaded += SubscribeHeaderVisibility;
         }
 
         private void SubscribeHeaderVisibility(object sender, RoutedEventArgs routedEventArgs)
@@ -59,13 +60,13 @@ namespace GrooveSharkWindowsPhone.UserControls
             if (!_isHeaderClose && _scrollDown > 80)
             {
                 if (this.HideHeader != null)
-                    this.HideHeader(this, null);  
+                    this.HideHeader(this, null);
                 _isHeaderClose = true;
             }
             if (_isHeaderClose && (_scrollDown < -40 || scrollViewer.VerticalOffset < 80))
             {
                 if (this.ShowHeader != null)
-                    this.ShowHeader(this, null);  
+                    this.ShowHeader(this, null);
                 _isHeaderClose = false;
             }
 
@@ -76,6 +77,30 @@ namespace GrooveSharkWindowsPhone.UserControls
         {
             var col = (int)((sender as Button).GetValue(Grid.ColumnProperty));
             Pivot.SelectedIndex = col;
+        }
+
+        private void PivotSelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ImageSong.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Song.png", UriKind.RelativeOrAbsolute));
+            ImageArtist.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Artist.png", UriKind.RelativeOrAbsolute));
+            ImageAlbum.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Album.png", UriKind.RelativeOrAbsolute));
+            ImagePlaylist.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Playlist.png", UriKind.RelativeOrAbsolute));
+
+            switch ((sender as Pivot).SelectedIndex)
+            {
+                case 0:
+                    ImageSong.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/SongSelected.png", UriKind.RelativeOrAbsolute));
+                    break;
+                case 1:
+                    ImageArtist.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/ArtistSelected.png", UriKind.RelativeOrAbsolute));
+                    break;
+                case 2:
+                    ImageAlbum.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/AlbumSelected.png", UriKind.RelativeOrAbsolute));
+                    break;
+                case 3:
+                    ImagePlaylist.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/PlaylistSelected.png", UriKind.RelativeOrAbsolute));
+                    break;
+            }
         }
     }
 }
