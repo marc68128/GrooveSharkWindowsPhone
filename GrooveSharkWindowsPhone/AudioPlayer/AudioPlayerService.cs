@@ -145,18 +145,12 @@ namespace GrooveSharkWindowsPhone
                 if (state == MediaPlayerState.Buffering || state == MediaPlayerState.Opening)
                 {
                     _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>();
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                       {
-                           _loadingService.RemoveLoadingStatus(state + " song...");
-                       });
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => _loadingService.RemoveLoadingStatus(state + " song..."));
                 }
                 if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Buffering || BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Opening)
                 {
                     _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>();
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                        {
-                            _loadingService.AddLoadingStatus(BackgroundMediaPlayer.Current.CurrentState + " song...");
-                        });
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => _loadingService.AddLoadingStatus(BackgroundMediaPlayer.Current.CurrentState + " song..."));
                 }
                 state = BackgroundMediaPlayer.Current.CurrentState;
             }
