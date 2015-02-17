@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Playback;
@@ -26,13 +27,14 @@ namespace GrooveSharkWindowsPhone
     public class AudioPlayerService : ReactiveObject, IAudioPlayerService
     {
         private AutoResetEvent _sererInitialized;
-        private int _current = 0;
-        private ILoadingService _loading;
+        private ILoadingService _loadingService;
+        private MediaPlayerState state;
 
         public AudioPlayerService()
         {
             _sererInitialized = new AutoResetEvent(false);
             StartBackgroundAudioTask();
+            _loadingService = Locator.Current.GetService<ILoadingService>();
         }
 
         public void AddSongToPlaylist(SongViewModel svm, bool addNext = false, bool play = false)
@@ -138,6 +140,20 @@ namespace GrooveSharkWindowsPhone
 
         private async void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
         {
+            if (state != BackgroundMediaPlayer.Current.CurrentState)
+            {
+                if (state == MediaPlayerState.Buffering || state == MediaPlayerState.Opening)
+                {
+                    _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>();
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => _loadingService.RemoveLoadingStatus(state + " song..."));
+                }
+                if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Buffering || BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Opening)
+                {
+                    _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>();
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => _loadingService.AddLoadingStatus(BackgroundMediaPlayer.Current.CurrentState + " song..."));
+                }
+                state = BackgroundMediaPlayer.Current.CurrentState;
+            }
             switch (sender.CurrentState)
             {
                 case MediaPlayerState.Playing:
