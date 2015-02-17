@@ -9,7 +9,7 @@
     d:DesignHeight="30"
     d:DesignWidth="400">
 
-    <StackPanel x:Name="SongStackPanel" Orientation="Horizontal" Height="30" Background="#00000000" Holding="OnHolding" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
+    <StackPanel x:Name="SongStackPanel" Tapped="OnTapped" Orientation="Horizontal" Height="30" Background="#00000000" Holding="OnHolding" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
                 <VisualStateGroup.Transitions>

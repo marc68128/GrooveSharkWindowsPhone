@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using GrooveSharkClient.Models;
 using GrooveSharkClient.Models.Entity;
 using GrooveSharkClient.Models.Exception;
+using GrooveSharkWindowsPhone.Helpers;
 using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
@@ -20,7 +21,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             InitCommand();
 
-            if (!minimized) 
+            if (!minimized)
                 LoadPlaylistInfoCommand.Execute(null);
         }
         public int PlaylistId { get { return _playlistId; } }
@@ -57,14 +58,12 @@ namespace GrooveSharkWindowsPhone.ViewModels
         {
             #region LoadPlaylistSongCommand
 
-            LoadPlaylistSongCommand = ReactiveCommand.CreateAsyncObservable(_ =>
-            {
+            LoadPlaylistSongCommand = ReactiveCommand.CreateAsyncObservable(_ => {
                 _loading.AddLoadingStatus("Loading playlist songs...");
                 return _client.GetPlaylist(_session.SessionId, _playlistId);
             });
 
-            LoadPlaylistSongCommand.Subscribe(p =>
-            {
+            LoadPlaylistSongCommand.Subscribe(p => {
                 _loading.RemoveLoadingStatus("Loading playlist songs...");
                 ThumbnailUrl = "http://images.gs-cdn.net/static/playlists/70_" + p.CoverArtFilename;
                 if (string.IsNullOrEmpty(p.CoverArtFilename))
@@ -80,16 +79,14 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             #region LoadPlaylistInfoCommand
 
-            LoadPlaylistInfoCommand = ReactiveCommand.CreateAsyncObservable(_ =>
-            {
+            LoadPlaylistInfoCommand = ReactiveCommand.CreateAsyncObservable(_ => {
                 _loading.AddLoadingStatus("Loading playlist Infos...");
                 return _client.GetPlaylistInfos(_session.SessionId, _playlistId);
             });
 
-            LoadPlaylistInfoCommand.Subscribe(p =>
-            {
+            LoadPlaylistInfoCommand.Subscribe(p => {
                 _loading.RemoveLoadingStatus("Loading playlist Infos...");
-             
+
 
                 ThumbnailUrl = "http://images.gs-cdn.net/static/playlists/70_" + p.CoverArtFilename;
 
@@ -108,8 +105,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             ToggleOpenCloseCommand = ReactiveCommand.Create();
 
-            ToggleOpenCloseCommand.Subscribe(_ =>
-            {
+            ToggleOpenCloseCommand.Subscribe(_ => {
                 if (!IsOpen)
                 {
                     if (Songs == null || !Songs.Any())
@@ -122,15 +118,101 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 }
                 else
                     IsOpen = false;
-                
+
+            });
+
+            #endregion
+
+            #region PlayNowCommand
+
+            PlayNowCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.IsAnywhere));
+
+            PlayNowCommand.Subscribe(_ => {
+                if (this.Songs == null || !this.Songs.Any())
+                {
+                    this.WhenAnyValue(self => self.Songs).WhereNotNull().Take(1).Subscribe(s => {
+                        _audioPlayer.AddSongToPlaylist(new SongViewModel(s.First(), 0), true, true);
+                        foreach (var song in s.Skip(1).Reverse())
+                        {
+                            _audioPlayer.AddSongToPlaylist(new SongViewModel(song, 0), true, false);
+                        }
+                    });
+                    this.LoadPlaylistSongCommand.Execute(null);
+                }
+                else
+                {
+                    _audioPlayer.AddSongToPlaylist(new SongViewModel(Songs.First(), 0), false, true);
+                    foreach (var song in Songs.Skip(1).Reverse())
+                    {
+                        _audioPlayer.AddSongToPlaylist(new SongViewModel(song, 0), true, false);
+                    }
+                }
+
+            });
+
+            #endregion
+
+            #region PlayNextCommand
+
+            PlayNextCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.IsAnywhere));
+
+            PlayNextCommand.Subscribe(_ => {
+                if (this.Songs == null || !this.Songs.Any())
+                {
+                    this.WhenAnyValue(self => self.Songs).WhereNotNull().Take(1).Subscribe(s => {
+                        foreach (var song in s.Reverse())
+                        {
+                            _audioPlayer.AddSongToPlaylist(new SongViewModel(song, 0), true, false);
+                        }
+                    });
+                    this.LoadPlaylistSongCommand.Execute(null);
+                }
+                else
+                {
+                    foreach (var song in Songs.Reverse())
+                    {
+                        _audioPlayer.AddSongToPlaylist(new SongViewModel(song, 0), true, false);
+                    }
+                }
+
+            });
+
+            #endregion
+
+            #region PlayLastCommand
+
+            PlayLastCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.IsAnywhere));
+
+            PlayLastCommand.Subscribe(_ => {
+                if (this.Songs == null || !this.Songs.Any())
+                {
+                    this.WhenAnyValue(self => self.Songs).WhereNotNull().Take(1).Subscribe(s => {
+                        foreach (var song in s)
+                        {
+                            _audioPlayer.AddSongToPlaylist(new SongViewModel(song, 0), false, false);
+                        }
+                    });
+                    this.LoadPlaylistSongCommand.Execute(null);
+                }
+                else
+                {
+                    foreach (var song in Songs)
+                    {
+                        _audioPlayer.AddSongToPlaylist(new SongViewModel(song, 0), false, false);
+                    }
+                }
+
             });
 
             #endregion
         }
 
-        public ReactiveCommand<Playlist> LoadPlaylistSongCommand { get; set; }
-        public ReactiveCommand<Playlist> LoadPlaylistInfoCommand { get; set; }
-        public ReactiveCommand<object> ToggleOpenCloseCommand { get; set; }
+        public ReactiveCommand<Playlist> LoadPlaylistSongCommand { get; private set; }
+        public ReactiveCommand<Playlist> LoadPlaylistInfoCommand { get; private set; }
+        public ReactiveCommand<object> ToggleOpenCloseCommand { get; private set; }
+        public ReactiveCommand<object> PlayNowCommand { get; private set; }
+        public ReactiveCommand<object> PlayNextCommand { get; private set; }
+        public ReactiveCommand<object> PlayLastCommand { get; private set; }
 
         private bool _isOpen;
         public bool IsOpen

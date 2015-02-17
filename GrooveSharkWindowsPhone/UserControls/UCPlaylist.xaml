@@ -54,8 +54,9 @@
         <Grid x:Name="PlaylistGrid" HorizontalAlignment="Stretch" Holding="OnHolding" Tapped="PlaylistGridTap" PointerPressed="StartPress" PointerReleased="StopPress" PointerExited="StopPress" PointerCanceled="StopPress" PointerCaptureLost="StopPress">
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Play now" />
-                    <MenuFlyoutItem Text="Play next" />
+                    <MenuFlyoutItem Text="Play now" Command="{Binding PlayNowCommand}" />
+                    <MenuFlyoutItem Text="Play next" Command="{Binding PlayNextCommand}" />
+                    <MenuFlyoutItem Text="Play last" Command="{Binding PlayLastCommand}" />
                     <MenuFlyoutItem Text="Refresh" Command="{Binding LoadPlaylistSongCommand}" />
                 </MenuFlyout>
             </FlyoutBase.AttachedFlyout>
