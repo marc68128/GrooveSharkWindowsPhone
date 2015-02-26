@@ -14,7 +14,8 @@ namespace GrooveSharkWindowsPhone.UserControls
 {
     public sealed partial class UCPlaylist : UserControl
     {
-        private bool isOpen;
+        private bool _isOpen;
+        private bool _bindingsInintialized;
 
         public static readonly DependencyProperty MinimizedProperty = DependencyProperty.Register("Minimized", typeof(bool), typeof(UCPlaylist), new PropertyMetadata(default(bool)));
         public static readonly DependencyProperty CanOpenProperty = DependencyProperty.Register("CanOpen", typeof(bool), typeof(UCPlaylist), new PropertyMetadata(true));
@@ -65,6 +66,8 @@ namespace GrooveSharkWindowsPhone.UserControls
                     ReverseRotateArrow.Begin();
                 }
             });
+
+            _bindingsInintialized = true;
         }
 
 
@@ -88,14 +91,16 @@ namespace GrooveSharkWindowsPhone.UserControls
             get { return (bool)GetValue(DisableFlyoutProperty); }
             set { SetValue(DisableFlyoutProperty, value); }
         }
+
         private void PlaylistGridTap(object sender, TappedRoutedEventArgs e)
         {
-            if (CanOpen)
+            if (!_bindingsInintialized)
             {
-                 ViewModel.ToggleOpenCloseCommand.Execute(null);
-            }     
+                SetupBindings(null, null);
+            }
+            if (CanOpen)
+                ViewModel.ToggleOpenCloseCommand.Execute(null);
         }
-
         private void OnHolding(object sender, HoldingRoutedEventArgs e)
         {
             if (e.HoldingState != HoldingState.Started || DisableFlyout) return;
@@ -105,12 +110,10 @@ namespace GrooveSharkWindowsPhone.UserControls
 
             FlyoutBase.ShowAttachedFlyout(element);
         }
-
         private void StartPress(object sender, PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Pressed", true);
         }
-
         private void StopPress(object sender, PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Normal", true);
