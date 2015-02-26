@@ -16,7 +16,7 @@ namespace GrooveSharkWindowsPhone.Views
             : base(new AddSongToPlaylistViewModel())
         {
             this.InitializeComponent();
-            ViewModel.PlaylistsViewModel.LoadUserPlaylistsCommand.Execute(null);
+            ViewModel.PlaylistsViewModel.LoadDataCommand.Execute(null);
 
             SetupBindings();
         }

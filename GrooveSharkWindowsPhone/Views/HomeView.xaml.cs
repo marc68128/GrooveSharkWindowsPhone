@@ -27,10 +27,10 @@ namespace GrooveSharkWindowsPhone.Views
             : base(new HomeViewModel())
         {
             this.InitializeComponent();
-            ViewModel.PlaylistViewModel.LoadUserPlaylistsCommand.Execute(null);
-            ViewModel.FavouritesViewModel.LoadUserFavouritesCommand.Execute(null);
-            ViewModel.LibraryViewModel.LoadUserLibraryCommand.Execute(null);
-            ViewModel.PopularSongViewModel.LoadPopularSongsCommand.Execute(null);
+            ViewModel.PlaylistViewModel.LoadDataCommand.Execute(null);
+            ViewModel.FavouritesViewModel.LoadDataCommand.Execute(null);
+            ViewModel.LibraryViewModel.LoadDataCommand.Execute(null);
+            ViewModel.PopularSongViewModel.LoadDataCommand.Execute(null);
 
             SetBindings();
 
@@ -156,7 +156,7 @@ namespace GrooveSharkWindowsPhone.Views
                     _appBarDefaultClosedDisplayMode = ApplicationBar.ClosedDisplayMode = AppBarClosedDisplayMode.Compact;
                     PlayButton.Visibility = Visibility.Visible;
                     RefreshButton.Visibility = Visibility.Visible;
-                    RefreshButton.Command = ViewModel.PopularSongViewModel.LoadPopularSongsCommand;
+                    RefreshButton.Command = ViewModel.PopularSongViewModel.LoadDataCommand;
                     PlayButton.Command = ViewModel.PopularSongViewModel.PlayAllCommand;
                     HeaderTextBlock.Text = "Popular";
                     PopularPath.Fill = grooveSharkOrange;
@@ -172,7 +172,7 @@ namespace GrooveSharkWindowsPhone.Views
                     _appBarDefaultClosedDisplayMode = ApplicationBar.ClosedDisplayMode = AppBarClosedDisplayMode.Compact;
                     PlayButton.Visibility = Visibility.Visible;
                     RefreshButton.Visibility = Visibility.Visible;
-                    RefreshButton.Command = ViewModel.LibraryViewModel.LoadUserLibraryCommand;
+                    RefreshButton.Command = ViewModel.LibraryViewModel.LoadDataCommand;
                     HeaderTextBlock.Text = "Collection";
                     CollectionPath.Fill = grooveSharkOrange;
                     break;
@@ -180,7 +180,7 @@ namespace GrooveSharkWindowsPhone.Views
                     _appBarDefaultClosedDisplayMode = ApplicationBar.ClosedDisplayMode = AppBarClosedDisplayMode.Compact;
                     PlayButton.Visibility = Visibility.Collapsed;
                     RefreshButton.Visibility = Visibility.Visible;
-                    RefreshButton.Command = ViewModel.PlaylistViewModel.LoadUserPlaylistsCommand;
+                    RefreshButton.Command = ViewModel.PlaylistViewModel.LoadDataCommand;
                     HeaderTextBlock.Text = "Playlist";
                     PlaylistPath.Fill = grooveSharkOrange;
                     break;
@@ -188,7 +188,7 @@ namespace GrooveSharkWindowsPhone.Views
                     _appBarDefaultClosedDisplayMode = ApplicationBar.ClosedDisplayMode = AppBarClosedDisplayMode.Compact;
                     PlayButton.Visibility = Visibility.Visible;
                     RefreshButton.Visibility = Visibility.Visible;
-                    RefreshButton.Command = ViewModel.FavouritesViewModel.LoadUserFavouritesCommand;
+                    RefreshButton.Command = ViewModel.FavouritesViewModel.LoadDataCommand;
                     HeaderTextBlock.Text = "Favourites";
                     FavouritesPath.Fill = grooveSharkOrange;
                     break;

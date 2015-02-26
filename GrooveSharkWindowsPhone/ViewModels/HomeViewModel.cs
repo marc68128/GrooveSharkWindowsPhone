@@ -86,10 +86,10 @@ namespace GrooveSharkWindowsPhone.ViewModels
             {
                 _session.LoadSessionId.Execute(null);
                 _country.LoadCountryCommand.Execute(null);
-                PopularSongViewModel.LoadPopularSongsCommand.Execute(null);
-                LibraryViewModel.LoadUserLibraryCommand.Execute(null);
-                FavouritesViewModel.LoadUserFavouritesCommand.Execute(null);
-                PlaylistViewModel.LoadUserPlaylistsCommand.Execute(null);
+                PopularSongViewModel.LoadDataCommand.Execute(null);
+                LibraryViewModel.LoadDataCommand.Execute(null);
+                FavouritesViewModel.LoadDataCommand.Execute(null);
+                PlaylistViewModel.LoadDataCommand.Execute(null);
             });
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -10,35 +11,27 @@ using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
-    public class PlaylistsViewModel : BaseViewModel
+    public class PlaylistsViewModel : LoadingViewModel<PlaylistViewModel>
     {
         public PlaylistsViewModel()
+            : base("Loading playlists")
+        { }
+
+        public ReactiveList<PlaylistViewModel> UserPlaylists { get { return Data; } }
+
+
+        protected override IObservable<List<PlaylistViewModel>> LoadData()
         {
-            UserPlaylists = new ReactiveList<PlaylistViewModel>();
-
-            LoadUserPlaylistsCommand = ReactiveCommand.CreateAsyncObservable(_user.IsDataAvailableObs, _ => {
-                return _user.ConnectedUserObs.Where(u => u != null && u.UserID != 0).Take(1).SelectMany(u => {
-                    _loading.AddLoadingStatus("Loading playlists");
-                    return _client.GetUserPlaylists(_session.SessionId);
-                });
-            });
-
-            LoadUserPlaylistsCommand.Where(p => p != null).Subscribe(p => {
-                _loading.RemoveLoadingStatus("Loading playlists");
-                Debug.WriteLine("[AccountViewModel] Playlists : " + p.Count());
-                UserPlaylists.Clear();
-                UserPlaylists.AddRange(p.Select(pl => new PlaylistViewModel(pl)));
-            });
-
-            LoadUserPlaylistsCommand.ThrownExceptions.OfType<WebException>().Do(_ => _loading.RemoveLoadingStatus("Loading playlists")).BindTo(this, self => self.WebException);
-            LoadUserPlaylistsCommand.ThrownExceptions.OfType<GrooveSharkException>().Do(_ => _loading.RemoveLoadingStatus("Loading playlists")).BindTo(this, self => self.GrooveSharkException);
+             return _user.ConnectedUserObs.Where(u => u != null && u.UserID != 0).Take(1).SelectMany(u =>
+             {
+                 return _client.GetUserPlaylists(_session.SessionId)
+                     .Select(l => l.Select(p => new PlaylistViewModel(p)).ToList());
+             });
         }
 
-        public ReactiveList<PlaylistViewModel> UserPlaylists { get; set; }
-
-
-
-
-        public ReactiveCommand<Playlist[]> LoadUserPlaylistsCommand { get; private set; }
+        protected override IObservable<bool> CanLoadData
+        {
+            get { return _session.IsDataAvailableObs.CombineLatest(_user.IsDataAvailableObs, (s, u) => s & u); }
+        }
     }
 }

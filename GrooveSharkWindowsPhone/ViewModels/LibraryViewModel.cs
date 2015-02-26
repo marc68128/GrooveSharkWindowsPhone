@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -10,32 +11,26 @@ using ReactiveUI;
 
 namespace GrooveSharkWindowsPhone.ViewModels
 {
-    public class LibraryViewModel : BaseViewModel
+    public class LibraryViewModel : LoadingViewModel<SongViewModel>
     {
         public LibraryViewModel()
+            : base("Loading library")
         {
-            UserLibrary = new ReactiveList<SongViewModel>();
-
-            LoadUserLibraryCommand = ReactiveCommand.CreateAsyncObservable(_user.IsDataAvailableObs, _ => {
-                return _user.ConnectedUserObs.Where(u => u != null && u.UserID != 0).Take(1).SelectMany(u => {
-                    _loading.AddLoadingStatus("Loading library");
-                    return _client.GetUserLibrarySongs(_session.SessionId);
-                });
-            });
-
-            LoadUserLibraryCommand.Where(p => p != null).Subscribe(x => {
-                _loading.RemoveLoadingStatus("Loading library");
-                Debug.WriteLine("[LibraryViewModel] Library : " + x.Count());
-                UserLibrary.Clear();
-                UserLibrary.AddRange(x.Select((s, index) => new SongViewModel(s, index)));
-            });
-
-            LoadUserLibraryCommand.ThrownExceptions.OfType<WebException>().Do(_ => _loading.RemoveLoadingStatus("Loading library")).BindTo(this, self => self.WebException);
-            LoadUserLibraryCommand.ThrownExceptions.OfType<GrooveSharkException>().Do(_ => _loading.RemoveLoadingStatus("Loading library")).BindTo(this, self => self.GrooveSharkException);
         }
 
-        public ReactiveList<SongViewModel> UserLibrary { get; set; }
+        public ReactiveList<SongViewModel> UserLibrary { get { return Data; } }
 
-        public ReactiveCommand<Song[]> LoadUserLibraryCommand { get; private set; }
+        protected override IObservable<List<SongViewModel>> LoadData()
+        {
+            return _user.ConnectedUserObs.Where(u => u != null && u.UserID != 0).Take(1).SelectMany(u =>
+            {
+                return _client.GetUserLibrarySongs(_session.SessionId).Select(l => l.Select((s, i) => new SongViewModel(s, i + 1)).ToList());
+            });
+        }
+
+        protected override IObservable<bool> CanLoadData
+        {
+            get { return _session.IsDataAvailableObs.CombineLatest(_user.IsDataAvailableObs, (s, u) => s & u); }
+        }
     }
 }
