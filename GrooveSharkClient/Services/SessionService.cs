@@ -15,7 +15,7 @@ namespace GrooveSharkClient.Services
         {
             LoadSessionId = ReactiveCommand.CreateAsyncObservable(_ =>
             {
-                loadingService.AddLoadingStatus("Stating Session...");
+                loadingService.AddLoadingStatus("Starting Session...");
                 return client.CreateSession();
             });
 
@@ -30,7 +30,7 @@ namespace GrooveSharkClient.Services
                 valueSet.Add(Constants.SessionIdChanged, s);
                 BackgroundMediaPlayer.SendMessageToBackground(valueSet);
 
-                loadingService.RemoveLoadingStatus("Stating Session...");
+                loadingService.RemoveLoadingStatus("Starting Session...");
                 IsDataAvailable = true;
             });
 
@@ -40,7 +40,7 @@ namespace GrooveSharkClient.Services
             {
                 Debug.WriteLine("[SessionService]" + ex);
                 ThrownException = ex;
-                loadingService.RemoveLoadingStatus("Stating Session...");
+                loadingService.RemoveLoadingStatus("Starting Session...");
                 IsDataAvailable = false;
             });
         }
