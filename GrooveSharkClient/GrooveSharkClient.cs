@@ -310,6 +310,8 @@ namespace GrooveSharkClient
             });
         }
 
+        
+
         public IObservable<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchAll(string query, string country, string session, int limit = 0, int offset = 0)
         {
             var songsObs = SearchSong(query, country, session, limit, offset);
@@ -344,6 +346,8 @@ namespace GrooveSharkClient
 
             });
         }
+
+         
 
         public IObservable<Song[]> GetUserFavoriteSongs(string session, int limit = 0)
         {
@@ -479,6 +483,28 @@ namespace GrooveSharkClient
                 throw new WebException("Unable to Add song to user favourites");
             });
         }
+
+        public IObservable<bool> AddSongToUserLibrary(string session, List<Song> songs)
+        {
+            return Observable.Start(() =>
+            {
+                var param = new Dictionary<string, object> { { "songs", JsonConvert.SerializeObject(songs.Select(s => new { s.SongID, s.AlbumID, s.ArtistID, trackNum = s.Sort})) } };
+
+
+                var response = SendHttpRequest("addUserLibrarySongsEx", param, session).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
+                        throw sessionResult.Errors.First();
+                    return sessionResult.Result.Success;
+                }
+                throw new WebException("Unable to Add songs to user Library");
+            });
+        }
+
 
         public IObservable<Playlist> GetPlaylist(string session, int playlistId, int limit = 0)
         {

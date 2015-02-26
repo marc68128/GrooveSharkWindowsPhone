@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
@@ -17,9 +18,12 @@ namespace GrooveSharkWindowsPhone.ViewModels
     [JsonObject(MemberSerialization.OptOut)]
     public class SongViewModel : BaseViewModel
     {
+        private Song _s; 
+
         public SongViewModel(Song s, int position, bool isFavorite = false)
         {
             _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
+            _s = s; 
             IsFavorite = isFavorite;
             SongPosition = position;
             SongName = s.SongName ?? s.Name;
@@ -29,6 +33,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
             ThumbnailUrl = (!string.IsNullOrEmpty(s.CoverArtFilename) && s.CoverArtFilename != "0") ? "http://images.gs-cdn.net/static/albums/70_" + s.CoverArtFilename : "/Assets/Images/Songs/no_cover_63.png";
             InitCommands();
         }
+
         public SongViewModel()
         {
             _user.ConnectedUserObs.BindTo(this, self => self.CurrentUser);
@@ -93,6 +98,30 @@ namespace GrooveSharkWindowsPhone.ViewModels
             AddToPlaylistCommand = ReactiveCommand.Create(_user.ConnectedUserObs.Select(u => u != null && u.UserID != 0));
             AddToPlaylistCommand.Subscribe(_ => NavigationHelper.Navigate(typeof(AddSongToPlaylistView), new[] { SongId }));
 
+            #endregion
+
+            #region AddToLibraryCommand
+
+            AddToLibraryCommand = ReactiveCommand.CreateAsyncObservable(_user.IsDataAvailableObs,
+              _ =>
+              {
+                  _loading.AddLoadingStatus("Adding song to your Library...");
+                  return _client.AddSongToUserLibrary(_session.SessionId, new List<Song>(){_s});
+              });
+
+            AddToLibraryCommand.Subscribe(x =>
+            {
+                _loading.RemoveLoadingStatus("Adding song to your Library...");
+                new MessageDialog(SongName + " added to your Library.").ShowAsync();
+            });
+
+            AddToLibraryCommand.ThrownExceptions.OfType<WebException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Adding song to your Library..."))
+                .BindTo(this, self => self.WebException);
+
+            AddToLibraryCommand.ThrownExceptions.OfType<GrooveSharkException>()
+                .Do(_ => _loading.RemoveLoadingStatus("Adding song to your Library..."))
+                .BindTo(this, self => self.GrooveSharkException);
             #endregion
 
             #region PlayNextCommand
@@ -173,9 +202,11 @@ namespace GrooveSharkWindowsPhone.ViewModels
         public ReactiveCommand<bool> AddSongToUserFavouritesCommand { get; private set; }
         public ReactiveCommand<bool> RemoveSongFromUserFavouritesCommand { get; private set; }
         public ReactiveCommand<object> AddToPlaylistCommand { get; private set; }
+        public ReactiveCommand<bool> AddToLibraryCommand { get; private set; }
         public ReactiveCommand<object> PlayNextCommand { get; private set; }
         public ReactiveCommand<object> PlayNowCommand { get; private set; }
         public ReactiveCommand<object> PlayLastCommand { get; private set; }
+
 
         public static SongViewModel Deserialize(string json)
         {

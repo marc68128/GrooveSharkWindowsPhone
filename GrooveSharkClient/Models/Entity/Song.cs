@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace GrooveSharkClient.Models.Entity
 {
-    public class Song
+    public class Song 
     {
         public int SongID { get; set; }
         public string SongName { get; set; }

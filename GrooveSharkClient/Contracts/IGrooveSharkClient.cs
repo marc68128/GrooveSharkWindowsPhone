@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GrooveSharkClient.Models.Entity;
 
 namespace GrooveSharkClient.Contracts
@@ -21,6 +22,7 @@ namespace GrooveSharkClient.Contracts
         IObservable<bool> AddPlaylist(int[] songIds, string playlistName, string session);
         IObservable<bool> SetPlaylistSongs(int[] songIds, int playlistId, string session);
         IObservable<bool> AddSongToUserFavourites(string session, int songId);
+        IObservable<bool> AddSongToUserLibrary(string session, List<Song> songs);
         IObservable<Song[]> SearchSong(string query, string country, string session, int limit = 0, int offset = 0);
         IObservable<Playlist[]> SearchPlaylist(string query, string session, int limit = 0);
         IObservable<Artist[]> SearchArtist(string query, string session, int limit = 0);
