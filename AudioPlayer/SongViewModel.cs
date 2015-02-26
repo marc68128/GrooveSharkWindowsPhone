@@ -25,6 +25,8 @@ namespace AudioPlayer
         public string StreamKey { get; set; }
         [JsonIgnore]
         public string StreamUrl { get; set; }
+        [JsonIgnore]
+        public bool IsOver30S { get; set; }
 
         public static SongViewModel Deserialize(string json)
         {

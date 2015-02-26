@@ -21,6 +21,8 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
         private void SetupBindings()
         {
+            IsPlaying = _audioPlayer.IsPlaying; 
+
             _audioPlayer.WhenAnyValue(p => p.CurrentSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.CurrentSong);
             _audioPlayer.WhenAnyValue(p => p.NextSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.NextSong);
             _audioPlayer.WhenAnyValue(p => p.PreviousSong).ObserveOn(RxApp.MainThreadScheduler).BindTo(this, self => self.PreviousSong);

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml.Controls.Maps;
 using GrooveSharkShared;
 using Newtonsoft.Json;
+using ReactiveUI;
 
 namespace AudioPlayer
 {
@@ -20,7 +23,7 @@ namespace AudioPlayer
     {
         private SystemMediaTransportControls _systemmediatransportcontrol;
         private List<SongViewModel> _playlist;
-        private int _current = -1;
+        private int _current = -1, _timeToSleep;
         private AudioPlayerClient _client;
 
         public PlaylistManager()
@@ -37,13 +40,32 @@ namespace AudioPlayer
             _systemmediatransportcontrol.IsEnabled = true;
             _systemmediatransportcontrol.IsPauseEnabled = true;
             _systemmediatransportcontrol.IsPlayEnabled = true;
+
+            Observable.Interval(new TimeSpan(0, 0, 0, 1)).ObserveOn(RxApp.MainThreadScheduler).Subscribe(_ =>
+            {
+                if (BackgroundMediaPlayer.Current != null && _current != -1 && _timeToSleep-- <= 0)
+                {
+                    var position = BackgroundMediaPlayer.Current.Position;
+                    Debug.WriteLine(position.TotalSeconds);
+                    if (!_playlist[_current].IsOver30S && position.TotalSeconds > 30)
+                    {
+                        _client.MarkStreamKeyOver30S(_playlist[_current]);
+                        _playlist[_current].IsOver30S = true;
+                    }
+                    if (_playlist[_current].IsOver30S && position.TotalSeconds > BackgroundMediaPlayer.Current.NaturalDuration.TotalSeconds - 2)
+                    {
+                        _client.MarkSongComplete(_playlist[_current]);
+                        _timeToSleep = 15;
+                    }
+                }
+            });
         }
 
 
 
         private void systemmediatransportcontrol_PropertyChanged(SystemMediaTransportControls sender, SystemMediaTransportControlsPropertyChangedEventArgs args)
         {
-            throw new NotImplementedException();
+            
         }
         private void systemmediatransportcontrol_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
@@ -117,6 +139,8 @@ namespace AudioPlayer
                 _playlist[_current].StreamKey = streamInfo.StreamKey;
                 _playlist[_current].StreamUsecs = streamInfo.Usecs;
 
+                _playlist[_current].IsOver30S = false;
+
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri(_playlist[_current].StreamUrl, UriKind.Absolute));
 
                 var valueSet = new ValueSet();
@@ -124,7 +148,6 @@ namespace AudioPlayer
                 BackgroundMediaPlayer.SendMessageToForeground(valueSet);
 
                 BackgroundMediaPlayer.Current.Play();
-
                 UpdateSystemMediaTransportControl();
             });
         }
@@ -155,8 +178,6 @@ namespace AudioPlayer
 
             if (_current == -1)
                 PlaySongAtIndex(0);
-
-            UpdateSystemMediaTransportControl();
         }
 
         private void UpdateSystemMediaTransportControl()
@@ -169,6 +190,7 @@ namespace AudioPlayer
             _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Artist = _playlist[_current].ArtistName;
             _systemmediatransportcontrol.DisplayUpdater.MusicProperties.AlbumArtist = _playlist[_current].AlbumName;
             _systemmediatransportcontrol.DisplayUpdater.Update();
+            Debug.WriteLine("Media Updated !!!!!!");
         }
 
         public string SessionId
