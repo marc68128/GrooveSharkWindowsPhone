@@ -23,7 +23,6 @@ namespace GrooveSharkClient
         private const string ServerSecret = "86b91a1ef536883aa04243b863db7281";
         private const string RequestPatern = "{\"method\":\"{0}\",\"parameters\":{{1}},\"header\":{{2}}}";
         private readonly TimeSpan _defautTimeOut = new TimeSpan(0, 0, 15);
-
         private readonly NetworkClient _networkClient;
 
         public GrooveSharkClient()
@@ -31,22 +30,17 @@ namespace GrooveSharkClient
             _networkClient = new NetworkClient();
         }
 
-        private bool ShouldHaveQuote(object value)
-        {
-            return (value is string && !(value as string).StartsWith("{") && !(value as string).EndsWith("}") && !(value as string).StartsWith("[") && !(value as string).EndsWith("]"));
-        }
 
-
-        private async Task<HttpResponseMessage> SendHttpRequest(string method, Dictionary<string, object> parameters = null, string sessionId = null, CancellationToken ct = default(CancellationToken), TimeSpan timeOut = default(TimeSpan))
+        private async Task<HttpResponseMessage> SendHttpRequest(string method, Dictionary<string, string> parameters = null, string sessionId = null, CancellationToken ct = default(CancellationToken), TimeSpan timeOut = default(TimeSpan))
         {
             var header = "\"wsKey\":\"" + ServerKey + "\"";
             if (sessionId != null)
                 header += ",\"sessionID\":\"" + sessionId + "\"";
 
             var parameter = "";
-            if (parameters != null)
+            if (parameters != null && parameters.Count > 0)
                 parameter = parameters
-                    .Select(kvp => "\"" + kvp.Key + "\":" + (ShouldHaveQuote(kvp.Value) ? "\"" : "") + kvp.Value + (ShouldHaveQuote(kvp.Value) ? "\"" : ""))
+                    .Select(kvp => kvp.Key + ":" + kvp.Value)
                     .Aggregate((a, b) => a + "," + b);
 
 
@@ -77,14 +71,19 @@ namespace GrooveSharkClient
                 if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
                     throw grooveSharkResult.Errors.First();
 
-                return creator(grooveSharkResult); 
+                return creator(grooveSharkResult);
             }
             throw new WebException("Unable to access the server !\nVerify your network connection.");
         }
 
+        private Dictionary<string, string> CreateParametersDictionary(Dictionary<string, object> dic)
+        {
+            return dic
+                .Where(kvp => kvp.Key != null && kvp.Value != null) //Check if key & value are not null
+                .Where(kvp => ((kvp.Value is int) && ((int)kvp.Value) != 0) || (!(kvp.Value is int))) //check if value is an int = 0
+                .ToDictionary(pair => "\"" + pair.Key + "\"", pair => JsonConvert.SerializeObject(pair.Value));
+        }
 
-
-         
 
         public IObservable<string> CreateSession()
         {
@@ -95,7 +94,6 @@ namespace GrooveSharkClient
             };
 
             return Observable.Start(work);
-
         }
 
         public IObservable<CountryInfo> GetCountry()
@@ -108,11 +106,18 @@ namespace GrooveSharkClient
             return Observable.Start(work);
         }
 
+        #region User
+
         public IObservable<User> Login(string userName, string md5Password, string session)
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "login", userName }, { "password", md5Password } };
+                var param =
+                    CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"login", userName},
+                        {"password", md5Password}
+                    });
 
                 var response = SendHttpRequest("authenticate", param, session, timeOut: _defautTimeOut);
                 return Parse(response, result => new User(result)).Result;
@@ -123,10 +128,14 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "emailAddress", emailAddress }, { "password", password }, { "fullName", fullName } };
-                if (userName != null)
-                    param.Add("username", userName);
-
+                var param =
+                   CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"emailAddress", userName},
+                        {"password", password}, 
+                        {"fullName", fullName}, 
+                        {"username", userName}
+                    });
 
                 var response = SendHttpRequest("registerUser", param, session, timeOut: _defautTimeOut);
                 return Parse(response, result => new User(result)).Result;
@@ -151,14 +160,7 @@ namespace GrooveSharkClient
             });
         }
 
-        public IObservable<Song[]> GetPopularSongToday(string session)
-        {
-            return Observable.Start(() =>
-            {
-                var response = SendHttpRequest("getPopularSongsToday", sessionId: session, timeOut: _defautTimeOut);
-                return Parse(response, result => result.Result.Songs).Result; 
-            });
-        }
+        #endregion
 
         #region Search
 
@@ -166,12 +168,14 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "query", query }, { "country", country } };
-                if (limit != 0)
-                    param.Add("limit", limit);
-                if (offset != 0)
-                    param.Add("offset", offset);
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"query", query},
+                        {"country", country}, 
+                        {"limit", limit}, 
+                        {"offset", offset}
+                    });
                 var response = SendHttpRequest("getSongSearchResults", param, session);
                 return Parse(response, result => result.Result.Songs).Result;
             });
@@ -181,11 +185,12 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "query", query } };
-                if (limit != 0)
-                    param.Add("limit", limit);
-
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"query", query},
+                        {"limit", limit}, 
+                    });
                 var response = SendHttpRequest("getPlaylistSearchResults", param, session);
                 return Parse(response, result => result.Result.Playlists).Result;
             });
@@ -195,11 +200,12 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "query", query } };
-                if (limit != 0)
-                    param.Add("limit", limit);
-
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"query", query},
+                        {"limit", limit}, 
+                    });
                 var response = SendHttpRequest("getArtistSearchResults", param, session);
                 return Parse(response, result => result.Result.Artists).Result;
             });
@@ -209,11 +215,12 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "query", query } };
-                if (limit != 0)
-                    param.Add("limit", limit);
-
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"query", query},
+                        {"limit", limit}, 
+                    });
                 var response = SendHttpRequest("getAlbumSearchResults", param, session);
                 return Parse(response, result => result.Result.Albums).Result;
             });
@@ -231,65 +238,19 @@ namespace GrooveSharkClient
 
         #endregion
 
+        #region Playlists
+
         public IObservable<Playlist[]> GetUserPlaylists(string session, int limit = 0)
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object>();
-                if (limit != 0)
-                    param.Add("limit", limit);
-                else
-                    param = null;
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"limit", limit}, 
+                    });
                 var response = SendHttpRequest("getUserPlaylists", param, session);
                 return Parse(response, result => result.Result.Playlists).Result;
-
-            });
-        }
-
-         
-
-        public IObservable<Song[]> GetUserFavoriteSongs(string session, int limit = 0)
-        {
-            return Observable.Start(() =>
-            {
-                var param = new Dictionary<string, object>();
-                if (limit != 0)
-                    param.Add("limit", limit);
-                else
-                    param = null;
-
-                var response = SendHttpRequest("getUserFavoriteSongs", param, session);
-                return Parse(response, result => result.Result.Songs).Result;
-                
-
-            });
-        }
-
-        public IObservable<Song[]> GetUserLibrarySongs(string session, int limit = 0)
-        {
-            return Observable.Start(() =>
-            {
-                var param = new Dictionary<string, object>();
-                if (limit != 0)
-                    param.Add("limit", limit);
-                else
-                    param = null;
-
-                var response = SendHttpRequest("getUserLibrarySongs", param, session);
-                return Parse(response, result => result.Result.Songs).Result; 
-
-            });
-        }
-
-        public IObservable<bool> RemoveUserFavoriteSongs(int songId, string session)
-        {
-            return Observable.Start(() =>
-            {
-                var param = new Dictionary<string, object> { { "songIDs", songId } };
-
-                var response = SendHttpRequest("removeUserFavoriteSongs", param, session);
-                return Parse(response, result => result.Result.Success).Result;
 
             });
         }
@@ -298,10 +259,12 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var songs = "[" + songIds.Select(i => i.ToString()).Aggregate((a, b) => a + "," + b) + "]";
-                var param = new Dictionary<string, object> { { "songIDs", songs }, { "name", playlistName } };
-
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        { "songIDs", songIds}, 
+                        { "name", playlistName }
+                    });
                 var response = SendHttpRequest("createPlaylist", param, session);
                 return Parse(response, result => result.Result.Success).Result;
             });
@@ -311,11 +274,72 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var songs = "[" + songIds.Select(i => i.ToString()).Aggregate((a, b) => a + "," + b) + "]";
-                var param = new Dictionary<string, object> { { "songIDs", songs }, { "playlistID", playlistId } };
-
-
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        { "songIDs", songIds}, 
+                        { "playlistID", playlistId }
+                    });
                 var response = SendHttpRequest("setPlaylistSongs", param, session);
+                return Parse(response, result => result.Result.Success).Result;
+            });
+        }
+
+        public IObservable<Playlist> GetPlaylist(string session, int playlistId, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param = CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        { "playlistID", playlistId},
+                        { "limit", limit}
+                    });
+                var response = SendHttpRequest("getPlaylist", param, session);
+                return Parse(response, result => new Playlist(result)).Result;
+            });
+        }
+
+        public IObservable<Playlist> GetPlaylistInfos(string session, int playlistId)
+        {
+            return Observable.Start(() =>
+            {
+                var param = CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        { "playlistID", playlistId}
+                    });
+                var response = SendHttpRequest("getPlaylistInfo", param, session);
+                return Parse(response, result => new Playlist(result)).Result;
+            });
+        }
+
+        #endregion
+
+        #region Favourites
+
+        public IObservable<Song[]> GetUserFavoriteSongs(string session, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"limit", limit}, 
+                    });
+                var response = SendHttpRequest("getUserFavoriteSongs", param, session);
+                return Parse(response, result => result.Result.Songs).Result;
+            });
+        }
+
+        public IObservable<bool> RemoveUserFavoriteSongs(int songId, string session)
+        {
+            return Observable.Start(() =>
+            {
+                var param =
+                  CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"songIDs", songId}, 
+                    });
+                var response = SendHttpRequest("removeUserFavoriteSongs", param, session);
                 return Parse(response, result => result.Result.Success).Result;
             });
         }
@@ -324,11 +348,31 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "songID", songId } };
-
-
+                var param =
+                CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        { "songID", songId}
+                    });
                 var response = SendHttpRequest("addUserFavoriteSong", param, session);
                 return Parse(response, result => result.Result.Success).Result;
+            });
+        }
+
+        #endregion
+
+        #region Libraries
+
+        public IObservable<Song[]> GetUserLibrarySongs(string session, int limit = 0)
+        {
+            return Observable.Start(() =>
+            {
+                var param =
+                   CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        {"limit", limit}, 
+                    });
+                var response = SendHttpRequest("getUserLibrarySongs", param, session);
+                return Parse(response, result => result.Result.Songs).Result;
 
             });
         }
@@ -337,39 +381,24 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "songs", JsonConvert.SerializeObject(songs.Select(s => new { s.SongID, s.AlbumID, s.ArtistID, trackNum = s.Sort})) } };
-
-
+                var param =
+                CreateParametersDictionary(new Dictionary<string, object>()
+                    {
+                        { "songs", songs.Select(s => new { s.SongID, s.AlbumID, s.ArtistID, trackNum = s.Sort })}
+                    });
                 var response = SendHttpRequest("addUserLibrarySongsEx", param, session);
                 return Parse(response, result => result.Result.Success).Result;
-
             });
         }
 
+        #endregion
 
-        public IObservable<Playlist> GetPlaylist(string session, int playlistId, int limit = 0)
+        public IObservable<Song[]> GetPopularSongToday(string session)
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "playlistID", playlistId } };
-                if (limit != 0)
-                    param.Add("limit", limit);
-
-                var response = SendHttpRequest("getPlaylist", param, session);
-                return Parse(response, result => new Playlist(result)).Result;
-
-            });
-        }
-
-        public IObservable<Playlist> GetPlaylistInfos(string session, int playlistId)
-        {
-            return Observable.Start(() =>
-            {
-                var param = new Dictionary<string, object> { { "playlistID", playlistId } };
-
-                var response = SendHttpRequest("getPlaylistInfo", param, session);
-                return Parse(response, result => new Playlist(result)).Result; 
-
+                var response = SendHttpRequest("getPopularSongsToday", sessionId: session, timeOut: _defautTimeOut);
+                return Parse(response, result => result.Result.Songs).Result;
             });
         }
 
@@ -377,15 +406,13 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object>
+                var param = CreateParametersDictionary(new Dictionary<string, object>
                 {
                     { "country", country },
                     { "songID", songId }
-                };
-
+                });
                 var response = SendHttpRequest("getSubscriberStreamKey", param, session);
-                return Parse(response, result => new StreamInfo(result)).Result; 
-
+                return Parse(response, result => new StreamInfo(result)).Result;
             });
         }
 
@@ -393,14 +420,13 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "albumID", albumId } };
-                if (limit != 0)
-                    param.Add("limit", limit);
-
+                var param = CreateParametersDictionary(new Dictionary<string, object>
+                {
+                    { "albumID", albumId },
+                    { "limit", limit }
+                });
                 var response = SendHttpRequest("getAlbumSongs", param, session);
-
-                return Parse(response, result => result.Result.Songs).Result; 
-
+                return Parse(response, result => result.Result.Songs).Result;
             });
         }
 
@@ -408,12 +434,12 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var param = new Dictionary<string, object> { { "artistID", artistId } };
-
-
+                var param = CreateParametersDictionary(new Dictionary<string, object>
+                {
+                    { "artistID", artistId }
+                });
                 var response = SendHttpRequest("getArtistVerifiedAlbums", param, session);
                 return Parse(response, result => result.Result.Albums).Result;
-
             });
         }
     }
