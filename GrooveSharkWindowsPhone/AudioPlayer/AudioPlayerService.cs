@@ -116,7 +116,6 @@ namespace GrooveSharkWindowsPhone
 
         private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
-            Debug.WriteLine("BackgroundMediaPlayer_MessageReceivedFromBackground");
             foreach (string key in e.Data.Keys)
             {
                 switch (key)

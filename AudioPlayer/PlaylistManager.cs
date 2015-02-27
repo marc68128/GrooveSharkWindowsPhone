@@ -179,7 +179,6 @@ namespace AudioPlayer
             if (_current == -1)
                 PlaySongAtIndex(0);
         }
-
         private void UpdateSystemMediaTransportControl()
         {
             _systemmediatransportcontrol.IsPreviousEnabled = _current > 0;
@@ -190,9 +189,7 @@ namespace AudioPlayer
             _systemmediatransportcontrol.DisplayUpdater.MusicProperties.Artist = _playlist[_current].ArtistName;
             _systemmediatransportcontrol.DisplayUpdater.MusicProperties.AlbumArtist = _playlist[_current].AlbumName;
             _systemmediatransportcontrol.DisplayUpdater.Update();
-            Debug.WriteLine("Media Updated !!!!!!");
         }
-
         public string SessionId
         {
             get { return _client.SessionId; }

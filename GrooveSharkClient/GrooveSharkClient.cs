@@ -36,6 +36,7 @@ namespace GrooveSharkClient
             return (value is string && !(value as string).StartsWith("{") && !(value as string).EndsWith("}") && !(value as string).StartsWith("[") && !(value as string).EndsWith("]"));
         }
 
+
         private async Task<HttpResponseMessage> SendHttpRequest(string method, Dictionary<string, object> parameters = null, string sessionId = null, CancellationToken ct = default(CancellationToken), TimeSpan timeOut = default(TimeSpan))
         {
             var header = "\"wsKey\":\"" + ServerKey + "\"";
@@ -66,28 +67,31 @@ namespace GrooveSharkClient
             return await _networkClient.PostAsync(uri, httpContent, ct, null, timeOut);
         }
 
+        private async Task<T> Parse<T>(Task<HttpResponseMessage> res, Func<GrooveSharkResult, T> creator)
+        {
+            var response = await res;
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
+                if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
+                    throw grooveSharkResult.Errors.First();
+
+                return creator(grooveSharkResult); 
+            }
+            throw new WebException("Unable to access the server !\nVerify your network connection.");
+        }
+
+
+
+         
+
         public IObservable<string> CreateSession()
         {
             Func<string> work = () =>
             {
-                var response = SendHttpRequest("startSession", timeOut: _defautTimeOut).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    if (sessionResult.Result.Success)
-                    {
-                        return sessionResult.Result.SessionID;
-                    }
-                }
-                else
-                {
-                    throw new WebException("Unable to access the server !\nVerify your network connection.");
-                }
-                return null;
-
+                var response = SendHttpRequest("startSession", timeOut: _defautTimeOut);
+                return Parse(response, result => result.Result.SessionID).Result;
             };
 
             return Observable.Start(work);
@@ -98,22 +102,9 @@ namespace GrooveSharkClient
         {
             Func<CountryInfo> work = () =>
             {
-                var response = SendHttpRequest("getCountry", timeOut: _defautTimeOut).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
-                        throw grooveSharkResult.Errors.First();
-
-                    var countryInfo = new CountryInfo(grooveSharkResult);
-                    Debug.WriteLine("Country : " + countryInfo.Serialize());
-                    return new CountryInfo(grooveSharkResult);
-
-                }
-                throw new WebException("Unable to access the server !\nVerify your network connection.");
+                var response = SendHttpRequest("getCountry", timeOut: _defautTimeOut);
+                return Parse(response, result => new CountryInfo(result)).Result;
             };
-
             return Observable.Start(work);
         }
 
@@ -123,18 +114,8 @@ namespace GrooveSharkClient
             {
                 var param = new Dictionary<string, object> { { "login", userName }, { "password", md5Password } };
 
-                var response = SendHttpRequest("authenticate", param, session, timeOut: _defautTimeOut).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-
-                    if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
-                        throw grooveSharkResult.Errors.First();
-
-                    return new User(grooveSharkResult);
-                }
-                throw new WebException("Unable To Connect");
+                var response = SendHttpRequest("authenticate", param, session, timeOut: _defautTimeOut);
+                return Parse(response, result => new User(result)).Result;
             });
         }
 
@@ -143,22 +124,12 @@ namespace GrooveSharkClient
             return Observable.Start(() =>
             {
                 var param = new Dictionary<string, object> { { "emailAddress", emailAddress }, { "password", password }, { "fullName", fullName } };
-
                 if (userName != null)
                     param.Add("username", userName);
 
-                var response = SendHttpRequest("registerUser", param, session, timeOut: _defautTimeOut).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var grooveSharkResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
 
-                    if (grooveSharkResult.Errors != null && grooveSharkResult.Errors.Any())
-                        throw new GrooveSharkException { Description = grooveSharkResult.Result.Description, Code = grooveSharkResult.Errors.First().Code };
-
-                    return new User(grooveSharkResult);
-                }
-                throw new WebException("Unable To Connect");
+                var response = SendHttpRequest("registerUser", param, session, timeOut: _defautTimeOut);
+                return Parse(response, result => new User(result)).Result;
             });
         }
 
@@ -166,19 +137,8 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-
-                var response = SendHttpRequest("logout", null, session, timeOut: _defautTimeOut).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                    {
-                        throw sessionResult.Errors.First();
-                    }
-                    return sessionResult.Result.Success;
-                }
-                throw new WebException("Unable To Logout");
+                var response = SendHttpRequest("logout", null, session, timeOut: _defautTimeOut);
+                return Parse(response, result => result.Result.Success).Result;
             });
         }
 
@@ -186,14 +146,8 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var response = SendHttpRequest("getUserInfo", null, session, timeOut: _defautTimeOut).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    return new User(sessionResult);
-                }
-                return null;
+                var response = SendHttpRequest("getUserInfo", null, session, timeOut: _defautTimeOut);
+                return Parse(response, result => new User(result)).Result;
             });
         }
 
@@ -201,19 +155,12 @@ namespace GrooveSharkClient
         {
             return Observable.Start(() =>
             {
-                var response = SendHttpRequest("getPopularSongsToday", sessionId: session, timeOut: _defautTimeOut).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Songs;
-                }
-                throw new WebException("Unable To GetPopular song");
+                var response = SendHttpRequest("getPopularSongsToday", sessionId: session, timeOut: _defautTimeOut);
+                return Parse(response, result => result.Result.Songs).Result; 
             });
         }
+
+        #region Search
 
         public IObservable<Song[]> SearchSong(string query, string country, string session, int limit = 0, int offset = 0)
         {
@@ -225,17 +172,8 @@ namespace GrooveSharkClient
                 if (offset != 0)
                     param.Add("offset", offset);
 
-                var response = SendHttpRequest("getSongSearchResults", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Songs;
-                }
-                return null;
+                var response = SendHttpRequest("getSongSearchResults", param, session);
+                return Parse(response, result => result.Result.Songs).Result;
             });
         }
 
@@ -248,17 +186,8 @@ namespace GrooveSharkClient
                     param.Add("limit", limit);
 
 
-                var response = SendHttpRequest("getPlaylistSearchResults", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Playlists;
-                }
-                return null;
+                var response = SendHttpRequest("getPlaylistSearchResults", param, session);
+                return Parse(response, result => result.Result.Playlists).Result;
             });
         }
 
@@ -271,18 +200,8 @@ namespace GrooveSharkClient
                     param.Add("limit", limit);
 
 
-                var response = SendHttpRequest("getArtistSearchResults", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-
-                    return sessionResult.Result.Artists;
-                }
-                return null;
+                var response = SendHttpRequest("getArtistSearchResults", param, session);
+                return Parse(response, result => result.Result.Artists).Result;
             });
         }
 
@@ -295,22 +214,10 @@ namespace GrooveSharkClient
                     param.Add("limit", limit);
 
 
-                var response = SendHttpRequest("getAlbumSearchResults", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-
-                    return sessionResult.Result.Albums;
-                }
-                return null;
+                var response = SendHttpRequest("getAlbumSearchResults", param, session);
+                return Parse(response, result => result.Result.Albums).Result;
             });
         }
-
-        
 
         public IObservable<Tuple<Song[], Playlist[], Artist[], Album[]>> SearchAll(string query, string country, string session, int limit = 0, int offset = 0)
         {
@@ -322,6 +229,8 @@ namespace GrooveSharkClient
             return Observable.When(songsObs.And(playlistsObs).And(artistsObs).And(albumsObs).Then(Tuple.Create));
         }
 
+        #endregion
+
         public IObservable<Playlist[]> GetUserPlaylists(string session, int limit = 0)
         {
             return Observable.Start(() =>
@@ -332,17 +241,8 @@ namespace GrooveSharkClient
                 else
                     param = null;
 
-                var response = SendHttpRequest("getUserPlaylists", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Playlists;
-                }
-                throw new WebException("Unable to get User Playlists");
+                var response = SendHttpRequest("getUserPlaylists", param, session);
+                return Parse(response, result => result.Result.Playlists).Result;
 
             });
         }
@@ -359,17 +259,9 @@ namespace GrooveSharkClient
                 else
                     param = null;
 
-                var response = SendHttpRequest("getUserFavoriteSongs", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Songs;
-                }
-                throw new WebException("Unable to get User Favourites");
+                var response = SendHttpRequest("getUserFavoriteSongs", param, session);
+                return Parse(response, result => result.Result.Songs).Result;
+                
 
             });
         }
@@ -384,17 +276,8 @@ namespace GrooveSharkClient
                 else
                     param = null;
 
-                var response = SendHttpRequest("getUserLibrarySongs", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Songs;
-                }
-                throw new WebException("Unable to get User Library songs");
+                var response = SendHttpRequest("getUserLibrarySongs", param, session);
+                return Parse(response, result => result.Result.Songs).Result; 
 
             });
         }
@@ -405,17 +288,9 @@ namespace GrooveSharkClient
             {
                 var param = new Dictionary<string, object> { { "songIDs", songId } };
 
-                var response = SendHttpRequest("removeUserFavoriteSongs", param, session).Result;
+                var response = SendHttpRequest("removeUserFavoriteSongs", param, session);
+                return Parse(response, result => result.Result.Success).Result;
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Success;
-                }
-                return false;
             });
         }
 
@@ -427,17 +302,8 @@ namespace GrooveSharkClient
                 var param = new Dictionary<string, object> { { "songIDs", songs }, { "name", playlistName } };
 
 
-                var response = SendHttpRequest("createPlaylist", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Success;
-                }
-                throw new WebException("Unable to create playlist");
+                var response = SendHttpRequest("createPlaylist", param, session);
+                return Parse(response, result => result.Result.Success).Result;
             });
         }
 
@@ -449,17 +315,8 @@ namespace GrooveSharkClient
                 var param = new Dictionary<string, object> { { "songIDs", songs }, { "playlistID", playlistId } };
 
 
-                var response = SendHttpRequest("setPlaylistSongs", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Success;
-                }
-                throw new WebException("Unable to set playlist songs");
+                var response = SendHttpRequest("setPlaylistSongs", param, session);
+                return Parse(response, result => result.Result.Success).Result;
             });
         }
 
@@ -470,17 +327,9 @@ namespace GrooveSharkClient
                 var param = new Dictionary<string, object> { { "songID", songId } };
 
 
-                var response = SendHttpRequest("addUserFavoriteSong", param, session).Result;
+                var response = SendHttpRequest("addUserFavoriteSong", param, session);
+                return Parse(response, result => result.Result.Success).Result;
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Success;
-                }
-                throw new WebException("Unable to Add song to user favourites");
             });
         }
 
@@ -491,17 +340,9 @@ namespace GrooveSharkClient
                 var param = new Dictionary<string, object> { { "songs", JsonConvert.SerializeObject(songs.Select(s => new { s.SongID, s.AlbumID, s.ArtistID, trackNum = s.Sort})) } };
 
 
-                var response = SendHttpRequest("addUserLibrarySongsEx", param, session).Result;
+                var response = SendHttpRequest("addUserLibrarySongsEx", param, session);
+                return Parse(response, result => result.Result.Success).Result;
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Success;
-                }
-                throw new WebException("Unable to Add songs to user Library");
             });
         }
 
@@ -514,17 +355,8 @@ namespace GrooveSharkClient
                 if (limit != 0)
                     param.Add("limit", limit);
 
-                var response = SendHttpRequest("getPlaylist", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return new Playlist(sessionResult);
-                }
-                throw new WebException("Unable to get Playlist");
+                var response = SendHttpRequest("getPlaylist", param, session);
+                return Parse(response, result => new Playlist(result)).Result;
 
             });
         }
@@ -535,17 +367,8 @@ namespace GrooveSharkClient
             {
                 var param = new Dictionary<string, object> { { "playlistID", playlistId } };
 
-                var response = SendHttpRequest("getPlaylistInfo", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return new Playlist(sessionResult);
-                }
-                throw new WebException("Unable to get Playlist");
+                var response = SendHttpRequest("getPlaylistInfo", param, session);
+                return Parse(response, result => new Playlist(result)).Result; 
 
             });
         }
@@ -560,17 +383,8 @@ namespace GrooveSharkClient
                     { "songID", songId }
                 };
 
-                var response = SendHttpRequest("getSubscriberStreamKey", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var gsResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (gsResult.Errors != null && gsResult.Errors.Any())
-                        throw gsResult.Errors.First();
-                    return new StreamInfo(gsResult);
-                }
-                throw new WebException("Unable to get Playlist");
+                var response = SendHttpRequest("getSubscriberStreamKey", param, session);
+                return Parse(response, result => new StreamInfo(result)).Result; 
 
             });
         }
@@ -583,17 +397,9 @@ namespace GrooveSharkClient
                 if (limit != 0)
                     param.Add("limit", limit);
 
-                var response = SendHttpRequest("getAlbumSongs", param, session).Result;
+                var response = SendHttpRequest("getAlbumSongs", param, session);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Songs;
-                }
-                throw new WebException("Unable to get Album");
+                return Parse(response, result => result.Result.Songs).Result; 
 
             });
         }
@@ -605,17 +411,8 @@ namespace GrooveSharkClient
                 var param = new Dictionary<string, object> { { "artistID", artistId } };
 
 
-                var response = SendHttpRequest("getArtistVerifiedAlbums", param, session).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var sessionResult = JsonConvert.DeserializeObject<GrooveSharkResult>(content);
-                    if (sessionResult.Errors != null && sessionResult.Errors.Any())
-                        throw sessionResult.Errors.First();
-                    return sessionResult.Result.Albums;
-                }
-                throw new WebException("Unable to get Albums");
+                var response = SendHttpRequest("getArtistVerifiedAlbums", param, session);
+                return Parse(response, result => result.Result.Albums).Result;
 
             });
         }
