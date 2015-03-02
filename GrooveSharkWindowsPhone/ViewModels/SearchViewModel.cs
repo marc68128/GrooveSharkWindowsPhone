@@ -40,6 +40,7 @@ namespace GrooveSharkWindowsPhone.ViewModels
                 _ =>
                 {
                     _loading.AddLoadingStatus("Search...");
+                    AppSettings.AddValue("LastSearch", SearchTerm);
                     return _client.SearchAll(SearchTerm, _country.Country.Serialize(), _session.SessionId);
                 });
 
@@ -67,7 +68,6 @@ namespace GrooveSharkWindowsPhone.ViewModels
             get { return _searchTerm; }
             set { this.RaiseAndSetIfChanged(ref _searchTerm, value); }
         }
-
 
         private string _songStatus;
         public string SongStatus

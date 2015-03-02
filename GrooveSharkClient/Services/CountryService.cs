@@ -20,9 +20,9 @@ namespace GrooveSharkClient.Services
             });
 
             LoadCountryCommand.Where(c => c != null).Subscribe(c => {
-                loadingService.RemoveLoadingStatus("Loading Country...");
-                IsDataAvailable = true;
+                loadingService.RemoveLoadingStatus("Loading Country...");           
                 Country = c;
+                IsDataAvailable = true;
                 var valueSet = new ValueSet();
                 valueSet.Add(Constants.CountryInfosChanged, c.Serialize());
                 BackgroundMediaPlayer.SendMessageToBackground(valueSet);

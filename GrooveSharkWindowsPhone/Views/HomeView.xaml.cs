@@ -125,15 +125,22 @@ namespace GrooveSharkWindowsPhone.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            RootPivot.SelectedIndex = AppSettings.GetValue("LastPivotIndex") != null ? (int)AppSettings.GetValue("LastPivotIndex") : 0;
+            ViewModel.SearchViewModel.SearchTerm = (string)AppSettings.GetValue("LastSearch");
+            if (!string.IsNullOrEmpty(ViewModel.SearchViewModel.SearchTerm))
+                ViewModel.SearchViewModel.SearchCommand.CanExecuteObservable.Where(x => x).Take(1)
+               .Subscribe(_ => ViewModel.SearchViewModel.SearchCommand.Execute(null));
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
         }
 
         public void HeaderSelectorTap(object sender, TappedRoutedEventArgs e)
         {
             RootPivot.SelectedIndex = (int)(sender as Grid).GetValue(Grid.ColumnProperty);
         }
-
-
-
         private void PivotSelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             #region ShowHeader
@@ -149,6 +156,8 @@ namespace GrooveSharkWindowsPhone.Views
 
             CollectionPath.Fill = FavouritesPath.Fill = PlaylistPath.Fill = SearchPath.Fill = PopularPath.Fill = new SolidColorBrush(Colors.White);
             var grooveSharkOrange = Application.Current.Resources["GrooveSharkOrangeBrush"] as SolidColorBrush;
+
+            AppSettings.AddValue("LastPivotIndex", RootPivot.SelectedIndex);
 
             switch (RootPivot.SelectedIndex)
             {
@@ -194,13 +203,11 @@ namespace GrooveSharkWindowsPhone.Views
                     break;
             }
         }
-
         private void SearchShowHeader(object sender, EventArgs e)
         {
             if (_isHeaderClose)
                 ShowHeader();
         }
-
         private void SearchHideHeader(object sender, EventArgs e)
         {
             if (!_isHeaderClose)

@@ -25,6 +25,8 @@ namespace GrooveSharkWindowsPhone.UserControls
             ArtistList.Loaded += SubscribeHeaderVisibility;
             AlbumList.Loaded += SubscribeHeaderVisibility;
             PlaylistList.Loaded += SubscribeHeaderVisibility;
+
+            Pivot.SelectedIndex = AppSettings.GetValue("LastSearchIndex") != null ? (int)AppSettings.GetValue("LastSearchIndex") : 0;
         }
 
         private void SubscribeHeaderVisibility(object sender, RoutedEventArgs routedEventArgs)
@@ -82,6 +84,7 @@ namespace GrooveSharkWindowsPhone.UserControls
 
         private void PivotSelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
+            AppSettings.AddValue("LastSearchIndex", (sender as Pivot).SelectedIndex);
            
             ImageSong.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Song.png", UriKind.RelativeOrAbsolute));
             ImageArtist.Source = new BitmapImage(new Uri("ms-appx:/Assets/Images/Icons/Artist.png", UriKind.RelativeOrAbsolute));
