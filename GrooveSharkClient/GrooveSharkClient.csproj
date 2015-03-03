@@ -91,6 +91,7 @@
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="Helpers\BoolConverter.cs" />
     <Compile Include="Helpers\HmacMd5.cs" />
+    <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Models\Entity\Album.cs" />
     <Compile Include="Models\Entity\Artist.cs" />
     <Compile Include="Models\Entity\CountryInfo.cs" />
