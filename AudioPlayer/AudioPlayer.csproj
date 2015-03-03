@@ -80,17 +80,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Constants.cs">
-      <Link>Constants.cs</Link>
+      <Link>Helpers\Constants.cs</Link>
     </Compile>
-    <Compile Include="AppSettings.cs" />
+    <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="AudioPlayer.cs" />
-    <Compile Include="AudioPlayerClient.cs" />
-    <Compile Include="GrooveSharkResult.cs" />
-    <Compile Include="HmacMd5.cs" />
+    <Compile Include="Networking\AudioPlayerClient.cs" />
+    <Compile Include="Entity\GrooveSharkResult.cs" />
+    <Compile Include="Helpers\HmacMd5.cs" />
     <Compile Include="PlaylistManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SongViewModel.cs" />
-    <Compile Include="StreamInfo.cs" />
+    <Compile Include="Entity\SongViewModel.cs" />
+    <Compile Include="Entity\StreamInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

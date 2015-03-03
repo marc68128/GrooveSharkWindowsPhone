@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.System.Profile;
 using Newtonsoft.Json;
 
 namespace GrooveSharkClient.Helpers
@@ -13,9 +15,12 @@ namespace GrooveSharkClient.Helpers
     {
         public static async void Log(Log l)
         {
+            l.AppName = "GrooveShark";
+            l.PhoneId = HardwareIdentification.GetPackageSpecificToken(null).Id.ToArray().Select(b => b.ToString()).Aggregate((b, next) => b + "," + next);
+
             var jsonLog = JsonConvert.SerializeObject(l);
-            HttpContent c = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("log", jsonLog) });
-            PostAsync(@"http://theskores.fr/PhpLogger/", c, default(CancellationToken));
+            HttpContent c = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("jsonLog", jsonLog) });
+            PostAsync(@"http://loggerapi.azurewebsites.net/Home/Log", c, default(CancellationToken));
         }
         private static async void PostAsync(string requestUri, HttpContent content, CancellationToken ct, Action<HttpRequestMessage> customizeRequest = null, TimeSpan timeOut = default(TimeSpan))
         {
@@ -35,6 +40,12 @@ namespace GrooveSharkClient.Helpers
 
     public class Log
     {
+        [JsonProperty(PropertyName = "app_name")]
+        public string AppName { get; set; }
+
+        [JsonProperty(PropertyName = "phone_id")]
+        public string PhoneId { get; set; }
+
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
 

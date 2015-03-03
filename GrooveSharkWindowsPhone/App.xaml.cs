@@ -42,10 +42,7 @@ namespace GrooveSharkWindowsPhone
                 password = credential.Password;
             }
             DI.Setup(username, password);
-
-
-            string deviceId = HardwareIdentification.GetPackageSpecificToken(null).Id.ToArray().Select(b => b.ToString()).Aggregate((b, next) => b + "," + next);
-            Logger.Log(new Log { Title = "App Launched", Description = "Phone Id : " + deviceId, Level = 1 });
+            Logger.Log(new Log { Title = "App Launched", Description = "", Level = 1 });
 
 
             Frame rootFrame = Window.Current.Content as Frame;
