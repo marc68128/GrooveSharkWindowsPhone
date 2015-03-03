@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using GrooveSharkClient.Helpers;
 using GrooveSharkClient.Models.Exception;
 using ReactiveUI;
 
@@ -33,6 +34,17 @@ namespace GrooveSharkWindowsPhone.ViewModels
 
             LoadDataCommand.ThrownExceptions.OfType<WebException>().Do(_ => _loading.RemoveLoadingStatus(loadingStatus)).BindTo(this, self => self.WebException);
             LoadDataCommand.ThrownExceptions.OfType<GrooveSharkException>().Do(_ => _loading.RemoveLoadingStatus(loadingStatus)).BindTo(this, self => self.GrooveSharkException);
+
+            LoadDataCommand.ThrownExceptions.Subscribe(e =>
+            {
+                Logger.Log(new Log
+                {
+                    Title = "Loading Error : " + loadingStatus,
+                    Description = e.Message,
+                    Level = 3, 
+                    StackTrace = e.StackTrace
+                });
+            });
 
 #if DEBUG
             LoadDataCommand.ThrownExceptions.Subscribe(e => (new MessageDialog(e.Message)).ShowAsync());
