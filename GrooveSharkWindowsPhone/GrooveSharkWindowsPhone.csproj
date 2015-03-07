@@ -14,7 +14,7 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -324,6 +324,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AudioPlayer\AudioPlayer.csproj">
+      <Project>{30eca932-5e26-4a3b-830a-1884a5b192bc}</Project>
+      <Name>AudioPlayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GrooveSharkClient\GrooveSharkClient.csproj">
       <Project>{f0245f27-2779-49dd-bc62-4c379735e261}</Project>
       <Name>GrooveSharkClient</Name>

@@ -14,7 +14,6 @@ namespace GrooveSharkWindowsPhone.UserControls
 {
     public sealed partial class UCPlaylist : UserControl
     {
-        private bool _isOpen;
         private bool _bindingsInintialized;
 
         public static readonly DependencyProperty MinimizedProperty = DependencyProperty.Register("Minimized", typeof(bool), typeof(UCPlaylist), new PropertyMetadata(default(bool)));

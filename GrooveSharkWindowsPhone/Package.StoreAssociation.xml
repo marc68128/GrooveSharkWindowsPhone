@@ -184,9 +184,9 @@
     <Language Code="vi-vn" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>37129Marc68128.GrooveSharkPlayer</MainPackageIdentityName>
+    <MainPackageIdentityName>37129Marc68128.GrooveSharkMusic</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>GrooveShark Player</ReservedName>
+      <ReservedName>GrooveShark Music</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
@@ -194,6 +194,7 @@
     <MainPackageIdentityName>37129Marc68128.AirbourneDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.ArcticMonkeysDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.DiscographieNirvana</MainPackageIdentityName>
+    <MainPackageIdentityName>37129Marc68128.GrooveSharkPlayer</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.GunsRosesDiscographie</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.GunsNRosesDiscography</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.LoveMeterforWindows8</MainPackageIdentityName>
@@ -202,11 +203,11 @@
     <MainPackageIdentityName>37129Marc68128.Timeto</MainPackageIdentityName>
     <MainPackageIdentityName>37129Marc68128.VelvetRevolverDiscographie</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=17a1d3e0-cf54-40b9-b6da-5154983e29de">
+  <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=eda72379-cd95-467b-a95e-c50bb3f48944">
     <PackageInfo>
       <OsMinVersion>6.3.0.0</OsMinVersion>
       <PackageArchitecture>neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>1.1.0.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>0.1.0.0</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

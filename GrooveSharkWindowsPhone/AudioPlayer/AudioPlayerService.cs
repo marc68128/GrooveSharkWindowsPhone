@@ -28,7 +28,8 @@ namespace GrooveSharkWindowsPhone
     {
         private AutoResetEvent _sererInitialized;
         private ILoadingService _loadingService;
-        private MediaPlayerState state;
+        private MediaPlayerState _lastState;
+        private MediaPlayerState _currentState;
 
         public AudioPlayerService()
         {
@@ -139,19 +140,21 @@ namespace GrooveSharkWindowsPhone
 
         private async void MediaPlayer_CurrentStateChanged(MediaPlayer sender, object args)
         {
-            if (state != BackgroundMediaPlayer.Current.CurrentState)
+            _currentState = BackgroundMediaPlayer.Current.CurrentState;
+            Debug.WriteLine(_currentState + " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            if (_lastState != _currentState)
             {
-                if (state == MediaPlayerState.Buffering || state == MediaPlayerState.Opening)
+                if (_lastState == MediaPlayerState.Buffering || _lastState == MediaPlayerState.Opening)
+                {
+                    _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>(); 
+                    _loadingService.RemoveLoadingStatus(_lastState + " song...");
+                }
+                if (_currentState == MediaPlayerState.Buffering || _currentState == MediaPlayerState.Opening)
                 {
                     _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>();
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => _loadingService.RemoveLoadingStatus(state + " song..."));
+                    _loadingService.AddLoadingStatus(_currentState + " song...");
                 }
-                if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Buffering || BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Opening)
-                {
-                    _loadingService = _loadingService ?? Locator.Current.GetService<ILoadingService>();
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => _loadingService.AddLoadingStatus(BackgroundMediaPlayer.Current.CurrentState + " song..."));
-                }
-                state = BackgroundMediaPlayer.Current.CurrentState;
+                _lastState = BackgroundMediaPlayer.Current.CurrentState;
             }
             switch (sender.CurrentState)
             {

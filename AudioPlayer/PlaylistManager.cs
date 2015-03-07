@@ -46,7 +46,6 @@ namespace AudioPlayer
                 if (BackgroundMediaPlayer.Current != null && _current != -1 && _timeToSleep-- <= 0)
                 {
                     var position = BackgroundMediaPlayer.Current.Position;
-                    Debug.WriteLine(position.TotalSeconds);
                     if (!_playlist[_current].IsOver30S && position.TotalSeconds > 30)
                     {
                         _client.MarkStreamKeyOver30S(_playlist[_current]);

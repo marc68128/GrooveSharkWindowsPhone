@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using GrooveSharkClient.Contracts;
 using ReactiveUI;
 
@@ -14,15 +17,24 @@ namespace GrooveSharkClient.Services
             LoadingStatus = new List<string>();
         }
 
-        public void AddLoadingStatus(string status)
+        public async void AddLoadingStatus(string status)
         {
             LoadingStatus.Add(status);
-            if (!IsLoading)
+
+            TaskFactory factory = new TaskFactory();
+            factory.StartNew(() =>
             {
-                Debug.WriteLine("[LoadingService] Loading Start");
-                IsLoading = true;
-                CurrentStatus = status; 
-            }
+                if (!IsLoading)
+                {
+                    Debug.WriteLine("[LoadingService] Loading Start");
+
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        IsLoading = true;
+                        CurrentStatus = status;
+                    });
+                }
+            });
         }
 
         public void RemoveLoadingStatus(string status)
@@ -33,16 +45,24 @@ namespace GrooveSharkClient.Services
                 return;
             }
             LoadingStatus.Remove(status);
-            if (CurrentStatus == status && LoadingStatus.Any())
+             TaskFactory factory = new TaskFactory();
+            factory.StartNew(() =>
             {
-                CurrentStatus = LoadingStatus.First();
-            }
-            else if (CurrentStatus == status && LoadingStatus.Count == 0)
-            {
-                Debug.WriteLine("[LoadingService] Loading End");
-                CurrentStatus = null;
-                IsLoading = false; 
-            }
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    if (CurrentStatus == status && LoadingStatus.Any())
+                    {
+                        CurrentStatus = LoadingStatus.First();
+                    }
+                    else if (CurrentStatus == status && LoadingStatus.Count == 0)
+                    {
+                        Debug.WriteLine("[LoadingService] Loading End");
+
+                        CurrentStatus = null;
+                        IsLoading = false;
+                    }
+                });
+            });
         }
 
         protected List<string> LoadingStatus { get; set; }
@@ -54,7 +74,7 @@ namespace GrooveSharkClient.Services
             get { return _isLoading; }
             private set { this.RaiseAndSetIfChanged(ref _isLoading, value); }
         }
-        public IObservable<bool> IsLoadingObs { get { return this.WhenAnyValue(self => self.IsLoading); } } 
+        public IObservable<bool> IsLoadingObs { get { return this.WhenAnyValue(self => self.IsLoading); } }
 
         private string _currentStatus;
         public string CurrentStatus
@@ -62,7 +82,7 @@ namespace GrooveSharkClient.Services
             get { return _currentStatus; }
             private set { this.RaiseAndSetIfChanged(ref _currentStatus, value); }
         }
-        public IObservable<string> CurrentStatusObs { get { return this.WhenAnyValue(self => self.CurrentStatus); } } 
-        
+        public IObservable<string> CurrentStatusObs { get { return this.WhenAnyValue(self => self.CurrentStatus); } }
+
     }
 }
