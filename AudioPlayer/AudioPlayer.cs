@@ -40,17 +40,27 @@ namespace AudioPlayer
         void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
             Debug.WriteLine("MyBackgroundAudioTask " + sender.TaskId + " Completed...");
+            Logger.Log(new Log
+            {
+                Title = "BackgroundAudioTask Completed",
+                Description = "Task ID : " + sender.TaskId,
+                Level = 3
+            });
             AppSettings.AddValue(Constants.IsBackgroundTaskRunning, false);
             _deferral.Complete();
         }
         private void TaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             Debug.WriteLine("MyBackgroundAudioTask Canceled... Reason : " + reason);
+            Logger.Log(new Log
+            {
+                Title = "BackgroundAudioTask Canceled",
+                Description = "Reason : " + reason,
+                Level = 3
+            });
             AppSettings.AddValue(Constants.IsBackgroundTaskRunning, false);
             _deferral.Complete();
         }
-
-
 
         private void MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {

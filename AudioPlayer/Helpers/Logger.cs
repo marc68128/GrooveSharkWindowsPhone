@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Windows.System.Profile;
 using Newtonsoft.Json;
 
-namespace GrooveSharkClient.Helpers
+namespace AudioPlayer
 {
     public static class Logger
     {
@@ -40,7 +40,7 @@ namespace GrooveSharkClient.Helpers
         }
     }
 
-    public class Log
+    public sealed class Log
     {
         [JsonProperty(PropertyName = "app_name")]
         public string AppName { get; set; }
