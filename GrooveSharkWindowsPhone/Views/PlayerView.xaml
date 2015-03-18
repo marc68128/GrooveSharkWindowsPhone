@@ -18,16 +18,25 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
-        <StackPanel Grid.Row="0" Background="{ThemeResource GrooveSharkOrangeBrush}">
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Background="{ThemeResource GrooveSharkOrangeBrush}">
             <TextBlock Text="{Binding AppTitle}" Style="{ThemeResource TitleTextBlockStyle}" x:Name="AppTitle" Margin="19,12,0,0"/>
             <TextBlock Text="{Binding Title}" Margin="19,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
         <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="1" x:Name="ListGridImage" Source="/Assets/Images/icon_grid.jpg" Margin="10" Tapped="SwitchListGrid"></Image>
+        </Grid>
+        
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -38,27 +47,27 @@
                 <StackPanel.Projection>
                     <PlaneProjection RotationY="50"/>
                 </StackPanel.Projection>
-                <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
-                <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
-                <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
-                <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
+                <Image HorizontalAlignment="Stretch" Margin="20,10" Source="{Binding ThumbnailUrl}" ></Image>
+                <TextBlock FontSize="15" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="2" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
+                <TextBlock FontSize="15" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="1" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock FontSize="15" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="1" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
             </StackPanel>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center" DataContext="{Binding CurrentSong, Mode=OneWay}">
-                <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
-                <TextBlock FontSize="20" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
-                <TextBlock FontSize="20" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
-                <TextBlock FontSize="20" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
+                <Image HorizontalAlignment="Stretch" Margin="20,10" Source="{Binding ThumbnailUrl}" ></Image>
+                <TextBlock FontSize="20" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="2" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
+                <TextBlock FontSize="20" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="1" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock FontSize="20" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="1" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
             </StackPanel>
 
             <StackPanel Grid.Column="2" VerticalAlignment="Center" DataContext="{Binding NextSong, Mode=OneWay}" RenderTransformOrigin="0.5,0.5">
                 <StackPanel.Projection>
                     <PlaneProjection RotationY="-50"/>
                 </StackPanel.Projection>
-                <Image HorizontalAlignment="Stretch" Margin="10" Source="{Binding ThumbnailUrl}" ></Image>
-                <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
-                <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
-                <TextBlock FontSize="15" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
+                <Image HorizontalAlignment="Stretch" Margin="20,10" Source="{Binding ThumbnailUrl}" ></Image>
+                <TextBlock FontSize="15" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="2" TextAlignment="Center" Text="{Binding SongName}" FontWeight="Bold"></TextBlock>
+                <TextBlock FontSize="15" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="1" TextAlignment="Center" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock FontSize="15" TextWrapping="Wrap" TextTrimming="WordEllipsis" MaxLines="1" TextAlignment="Center" Text="{Binding AlbumName}"></TextBlock>
             </StackPanel>
 
             <StackPanel  Grid.Column="0" Grid.ColumnSpan="3" Margin="20,-10,20,30" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding CurrentSong, Mode=OneWay, Converter={StaticResource NullOrEmptyToVisibilityInvertConverter}}">

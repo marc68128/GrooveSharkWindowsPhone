@@ -117,13 +117,7 @@ namespace AudioPlayer
             {
                 return null;
             }
-
-            SongViewModel[] actualState = new SongViewModel[3];
-            actualState[0] = _current == 0 ? new SongViewModel() : _playlist[_current - 1];
-            actualState[1] = _playlist[_current];
-            actualState[2] = _current + 1 < _playlist.Count ? _playlist[_current + 1] : new SongViewModel();
-
-            return JsonConvert.SerializeObject(actualState);
+            return JsonConvert.SerializeObject(new Tuple<List<SongViewModel>, int>(_playlist, _current));
         }
 
         private void PlaySongAtIndex(int index)

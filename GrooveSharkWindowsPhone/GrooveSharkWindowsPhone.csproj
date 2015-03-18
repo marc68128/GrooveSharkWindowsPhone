@@ -182,6 +182,8 @@
     <Content Include="Assets\Images\Icons\PlaylistSelected.png" />
     <Content Include="Assets\Images\Icons\Song.png" />
     <Content Include="Assets\Images\Icons\SongSelected.png" />
+    <Content Include="Assets\Images\icon_grid.jpg" />
+    <Content Include="Assets\Images\icon_list.jpg" />
     <Content Include="Assets\Images\Logos\Grooveshark.png" />
     <Content Include="Assets\Images\Logos\Grooveshark_Logo_Horizontal.png" />
     <Content Include="Assets\Images\Songs\no_cover_120.png" />

@@ -34,6 +34,7 @@ namespace GrooveSharkWindowsPhone
         public AudioPlayerService()
         {
             _sererInitialized = new AutoResetEvent(false);
+            Playlist = new ReactiveList<SongViewModel>();
             StartBackgroundAudioTask();
             _loadingService = Locator.Current.GetService<ILoadingService>();
         }
@@ -66,6 +67,30 @@ namespace GrooveSharkWindowsPhone
             BackgroundMediaPlayer.SendMessageToBackground(valueSet);
         }
 
+        private void RefreshPlaylist(string jsonPlaylistInfo)
+        {
+            var pl = JsonConvert.DeserializeObject<Tuple<List<SongViewModel>, int>>(jsonPlaylistInfo);
+            Playlist.Clear();
+            Playlist.AddRange(pl.Item1);
+            CurrentIndex = pl.Item2;
+            if (CurrentIndex >= 0)
+                CurrentSong = Playlist[CurrentIndex];
+            if (CurrentIndex >= 1)
+                PreviousSong = Playlist[CurrentIndex - 1];
+            if (CurrentIndex + 1 <= Playlist.Count - 1)
+                NextSong = Playlist[CurrentIndex + 1];
+
+        }
+
+        public ReactiveList<SongViewModel> Playlist { get; private set; }
+
+        private int _currentIndex;
+        public int CurrentIndex
+        {
+            get { return _currentIndex; }
+            private set { this.RaiseAndSetIfChanged(ref _currentIndex, value); }
+        }
+
         private SongViewModel _currentSong;
         public SongViewModel CurrentSong
         {
@@ -86,6 +111,7 @@ namespace GrooveSharkWindowsPhone
             get { return _nextSong; }
             private set { this.RaiseAndSetIfChanged(ref _nextSong, value); }
         }
+
 
         private bool _isPlaying;
         public bool IsPlaying
@@ -124,10 +150,7 @@ namespace GrooveSharkWindowsPhone
                     case Constants.PlaylistInfos:
                         if (e.Data[key] == null)
                             break;
-                        var pl = JsonConvert.DeserializeObject<List<SongViewModel>>(e.Data[key] as string);
-                        PreviousSong = pl[0].SongId == 0 ? null : pl[0];
-                        CurrentSong = pl[1];
-                        NextSong = pl[2].SongId == 0 ? null : pl[2];
+                        RefreshPlaylist(e.Data[key] as string);
                         break;
                     case Constants.BackgroundTaskStarted:
                         Debug.WriteLine("Background Task started");
